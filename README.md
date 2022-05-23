@@ -1,3 +1,3 @@
 # Reinforcement Learning: An Introduction
 
-Solutions for programming exercises in "Reinforcement Learning: An Introduction" by Sutton and Barto.
+Exercise solutions and notes for the book "Reinforcement Learning: An Introduction" by Sutton and Barto.

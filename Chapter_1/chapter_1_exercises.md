@@ -44,5 +44,6 @@ Can you think of other ways to improve the reinforcement learning player? Can yo
 
 **My answer:** 
 
-NOTES:
-Use more information about the game -> we know all positions from where you can force a win -> give all those value 1 as well and play fully greadily / hard program in those moves
+One way to improve the player would be to give it more information about the game. We can figure out all states from where our player can force a win. For example, if we play the first move to the middle square and the opponent doesn't respond with a corner-move we can force a win. We could give all those objectively winning states value 1 and hardcode the policy to play the winning moves from them. Assuming that the opponent is playing a fixed policy, we should also reduce the exploration probability over time, eventually reaching 0.
+
+Again assuming that the opponent is playing a fixed policy, a better way to solve the tic-tac-toe problem would be to try to reach all states, except the ones where our player can force a win, and learn the opponent's policy. We can then use our knowledge about the game to create a fully deterministic policy that never explores, and wins whenever possible and draws otherwise.

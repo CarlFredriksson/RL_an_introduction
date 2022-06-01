@@ -8,7 +8,7 @@ Suppose, instead of playing against a random opponent, the reinforcement learnin
 
 In the early stages of training, I believe it's likely that who the winning player is will switch back and forth frequently. Let's assume that player X wins the first game. Then player O will reduce the value of the state its last move took it to and will not select that move in the next game unless selected as an exploratory move.
 
-In the long run, I think both players will learn a policy that can't lose except if an exploratory move is taken. All games will result in a draw, except when one player makes a losing exploratory nove - which the other player will have learned to capitalize on and win.
+In the long run, I think both players will learn a policy that can't lose except if an exploratory move is taken. All games will result in a draw, except when one player makes a losing exploratory move - which the other player will have learned to capitalize on and win.
 
 ## Exercise 1.2: Symmetries
 
@@ -46,4 +46,4 @@ Can you think of other ways to improve the reinforcement learning player? Can yo
 
 One way to improve the player would be to give it more information about the game. We can figure out all states from where our player can force a win. For example, if we play the first move to the middle square and the opponent doesn't respond with a corner-move we can force a win. We could give all those objectively winning states value 1 and hardcode the policy to play the winning moves from them. Assuming that the opponent is playing a fixed policy, we should also reduce the exploration probability over time, eventually reaching 0.
 
-Again assuming that the opponent is playing a fixed policy, a better way to solve the tic-tac-toe problem would be to try to reach all states, except the ones where our player can force a win, and learn the opponent's policy. We can then use our knowledge about the game to create a fully deterministic policy that never explores, and wins whenever possible and draws otherwise.
+Again assuming that the opponent is playing a fixed policy, a better way to solve the tic-tac-toe problem might be to try to reach all states quickly, except the ones where our player can force a win regardless of the opponent's policy, and learn the opponent's policy. We can then use our knowledge about the game to create a fully deterministic policy that never explores, and wins whenever possible and draws otherwise.

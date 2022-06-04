@@ -13,7 +13,7 @@ Let $n_a$ be the number of actions. Any any time step we can either explore or e
 $$
 \begin{equation}
 \begin{split}
-P(\textit{select greedy action}) &= P(exploit) * P(\textit{select greedy action} | exploit) + P(explore) * P(\textit{select greedy action} | explore) \\
+P(\textit{select greedy action}) &= P(exploit)P(\textit{select greedy action} | exploit) + P(explore)P(\textit{select greedy action} | explore) \\
 &= (1 - \epsilon) \cdot 1 + \epsilon \cdot \frac{1}{n_a} \\
 &= 0.5 + 0.5 \cdot 0.5 \\
 &= 0.75

@@ -21,4 +21,25 @@ P(\textit{select greedy action}) &= P(exploit)P(\textit{select greedy action} | 
 \end{equation}
 $$
 
-## 
+## Exercise 2.2: Bandit example
+
+Consider a $k$-armed bandit problem with $k = 4$ actions, denoted 1, 2, 3, and 4. Consider applying to this problem a bandit algorithm using $\epsilon$-greedy action selection, sample-average action-value estimates, and initial estimates of $Q_1(a) = 0$, for all $a$. Suppose the initial sequence of actions and rewards is $A_1 = 1$, $R_1 = 1$, $A_2 = 2$, $R_2 = 1$, $A_3 = 2$, $R_3 = 2$, $A_4 = 2$, $R_4 = 2$, $A_5 = 3$, $R_5 = 0$. On some of these time steps the $\epsilon$ case may have occurred, causing an action to be selected at random. On which time steps did this definitely occur? On which time steps could this possibly have occurred?
+
+**My answer:**
+
+|$t$|$A_t$|$R_t$|$Q_t(1)$|$Q_t(2)$|$Q_t(3)$|$Q_t(4)$|$\epsilon$ case|
+|:-:|:---:|:---:|:------:|:------:|:------:|:------:|:-------------:|
+| 0 |  -  |  -  |   0    |   0    |   0    |   0    |       -       |
+| 1 |  1  |  1  |   1    |   0    |   0    |   0    |    possibly   |
+| 2 |  2  |  1  |   1    |   1    |   0    |   0    |      yes      |
+| 3 |  2  |  2  |   1    |   3/2  |   0    |   0    |    possibly   |
+| 4 |  2  |  2  |   1    |   5/3  |   0    |   0    |    possibly   |
+| 5 |  3  |  0  |   1    |   5/3  |   0    |   0    |      yes      |
+
+## Exercise 2.3
+
+In the comparison shown in Figure 2.2, which method will perform best in the long run in terms of cumulative reward and probability of selecting the best action? How much better will it be? Express your answer quantitatively.
+
+**My answer:**
+
+In the long run, both $\epsilon$-greedy methods will have found the optimal action and the only difference between the two will be the frequency of exploration. The method with $\epsilon = 0.01$ will outperform the method with $\epsilon = 0.1$ due to selecting the optimal action 99% of the time compared to 90% of the time. It will be 10% better since $0.99/0.9 = 1.1$.

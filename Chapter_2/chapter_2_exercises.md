@@ -57,6 +57,9 @@ Q_{n+1} &= Q_n + \alpha_n (R_n - Q_n) \\
 &= \alpha_n R_n + (1 - \alpha_n) Q_n \\
 &= \alpha_n R_n + (1 - \alpha_n) (\alpha_{n-1} R_{n-1} + [1 - \alpha_{n-1}] Q_{n-1}) \\
 &= \alpha_n R_n + (1 - \alpha_n) \alpha_{n-1} R_{n-1} + (1 - \alpha_n) (1 - \alpha_{n-1}) Q_{n-1} \\
+&= \alpha_n R_n + (1 - \alpha_n) \alpha_{n-1} R_{n-1} + (1 - \alpha_n) (1 - \alpha_{n-1}) \alpha_{n-2} R_{n-2} + \\
+&\qquad \dots + \prod_{i=2}^{n} (1 - \alpha_i) \alpha_1 R_1 + \prod_{i=1}^{n} (1 - \alpha_i) Q_1 \\
+&= \prod_{i=1}^{n} (1 - \alpha_i) Q_1 + \alpha_n R_n + \sum_{i=1}^{n-1} \bigg[\prod_{j=i+1}^{n} (1 - \alpha_j) \bigg] \alpha_i R_i
 \end{split}
 \end{equation}
 $$

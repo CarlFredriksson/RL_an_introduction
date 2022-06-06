@@ -63,3 +63,7 @@ Q_{n+1} &= Q_n + \alpha_n (R_n - Q_n) \\
 \end{split}
 \end{equation}
 $$
+
+## Exercise 2.5 (programming)
+
+TODO: Insert plots from the program and maybe some notes?

@@ -43,3 +43,20 @@ In the comparison shown in Figure 2.2, which method will perform best in the lon
 **My answer:**
 
 In the long run, both $\epsilon$-greedy methods will have found the optimal action and the only difference between the two will be the frequency of exploration. The method with $\epsilon = 0.01$ will outperform the method with $\epsilon = 0.1$ due to selecting the optimal action 99% of the time compared to 90% of the time. It will be 10% better since $0.99/0.9 = 1.1$.
+
+## Exercise 2.4
+
+If the step-size parameters, $\alpha{_n}$, are not constant, then the estimate $Q_n$ is a weighted average of previously received rewards with a weighting different from that given by (2.6). What is the weighting on each prior reward for the general case, analogous to (2.6), in terms of the sequence of step-size parameters?
+
+**My answer:**
+
+$$
+\begin{equation}
+\begin{split}
+Q_{n+1} &= Q_n + \alpha_n (R_n - Q_n) \\
+&= \alpha_n R_n + (1 - \alpha_n) Q_n \\
+&= \alpha_n R_n + (1 - \alpha_n) (\alpha_{n-1} R_{n-1} + [1 - \alpha_{n-1}] Q_{n-1}) \\
+&= \alpha_n R_n + (1 - \alpha_n) \alpha_{n-1} R_{n-1} + (1 - \alpha_n) (1 - \alpha_{n-1}) Q_{n-1} \\
+\end{split}
+\end{equation}
+$$

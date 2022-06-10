@@ -67,3 +67,5 @@ $$
 ## Exercise 2.5 (programming)
 
 TODO: Insert plots from the program and maybe some notes?
+
+TODO: Add % Optimal action plots to notebook

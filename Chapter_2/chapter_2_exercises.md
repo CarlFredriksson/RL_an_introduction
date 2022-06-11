@@ -66,6 +66,14 @@ $$
 
 ## Exercise 2.5 (programming)
 
-TODO: Insert plots from the program and maybe some notes?
+I programmed the exercise in a way that makes it easy to run simulations for both stationary and nonstationary bandit problems. The stationary plots are almost identical to the ones in the book (Figure 2.2), which is a good indication that the code works.
 
-TODO: Add % Optimal action plots to notebook
+![Stationary rewards](exercise_2_5/plot_rewards_stationary.png)
+
+![Stationary optimal actions](exercise_2_5/plot_optimal_actions_stationary.png)
+
+In the plots for the nonstationary bandit problems we can see that the action-value method using a constant step-size outperforms the method using sample averages. This is due to it being better at adapting to the changing action-values since it weighs recent rewards more strongly.
+
+![Nonstationary rewards](exercise_2_5/plot_rewards_nonstationary.png)
+
+![Nonstationary rewards](exercise_2_5/plot_optimal_actions_nonstationary.png)

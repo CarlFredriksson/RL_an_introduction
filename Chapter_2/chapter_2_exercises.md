@@ -66,6 +66,10 @@ $$
 
 ## Exercise 2.5 (programming)
 
+Design and conduct an experiment to demonstrate the diculties that sample-average methods have for nonstationary problems. Use a modified version of the 10-armed testbed in which all the $q_*(a)$ start out equal and then take independent random walks (say by adding a normally distributed increment with mean 0 and standard deviation 0.01 to all the $q_*(a)$ on each step). Prepare plots like Figure 2.2 for an action-value method using sample averages, incrementally computed, and another action-value method using a constant step-size parameter, $\alpha = 0.1$. Use $\epsilon = 0.1$ and longer runs, say of 10,000 steps.
+
+**My answer:**
+
 I programmed the exercise in a way that makes it easy to run simulations for both stationary and nonstationary bandit problems. The stationary plots are almost identical to the ones in the book (Figure 2.2), which is a good indication that the code works.
 
 ![Stationary rewards](exercise_2_5/plot_rewards_stationary.png)
@@ -77,3 +81,11 @@ In the plots for the nonstationary bandit problems we can see that the action-va
 ![Nonstationary rewards](exercise_2_5/plot_rewards_nonstationary.png)
 
 ![Nonstationary rewards](exercise_2_5/plot_optimal_actions_nonstationary.png)
+
+## Exercise 2.6: Mysterious Spikes
+
+The results shown in Figure 2.3 should be quite reliable because they are averages over 2000 individual, randomly chosen 10-armed bandit tasks. Why, then, are there oscillations and spikes in the early part of the curve for the optimistic method? In other words, what might make this method perform particularly better or worse, on average, on particular early steps?
+
+**My answer:**
+
+I believe it performs better on average right after having tried all actions once, which is almost guaranteed to happen in the first 10 (number of bandit arms) steps. It's almost guaranteed since it's incredibly likely that the reward received from any action will be below our optimistic inital action-value estimate. Any reward below the initial estimate will reduce the estimate for the selected action and lead to that action not being selected again until all other actions have been selected at least once - due to the greedy action selection. The best action is the most likely to have reduced its optimistic initial action-value estimate the least after all actions have been tried once and is thus the action that is the most likely to be selected at the next step. Since there are 9 other actions and the rewards are non-deterministic, picking the optimal action is not a guarantee. In this example, picking a suboptimal action is more likely (with about 60% probability judging from the results).

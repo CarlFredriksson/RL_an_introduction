@@ -58,8 +58,8 @@ Q_{n+1} &= Q_n + \alpha_n (R_n - Q_n) \\
 &= \alpha_n R_n + (1 - \alpha_n) (\alpha_{n-1} R_{n-1} + [1 - \alpha_{n-1}] Q_{n-1}) \\
 &= \alpha_n R_n + (1 - \alpha_n) \alpha_{n-1} R_{n-1} + (1 - \alpha_n) (1 - \alpha_{n-1}) Q_{n-1} \\
 &= \alpha_n R_n + (1 - \alpha_n) \alpha_{n-1} R_{n-1} + (1 - \alpha_n) (1 - \alpha_{n-1}) \alpha_{n-2} R_{n-2} + \\
-&\qquad \dots + \prod_{i=2}^{n} (1 - \alpha_i) \alpha_1 R_1 + \prod_{i=1}^{n} (1 - \alpha_i) Q_1 \\
-&= \prod_{i=1}^{n} (1 - \alpha_i) Q_1 + \alpha_n R_n + \sum_{i=1}^{n-1} \bigg[\prod_{j=i+1}^{n} (1 - \alpha_j) \bigg] \alpha_i R_i
+&\qquad \dots + \alpha_1 R_1 \prod_{i=2}^{n} (1 - \alpha_i) + Q_1 \prod_{i=1}^{n} (1 - \alpha_i) \\
+&= Q_1 \prod_{i=1}^{n} (1 - \alpha_i) + \alpha_n R_n + \sum_{i=1}^{n-1} \big[ \alpha_i R_i \prod_{j=i+1}^{n} (1 - \alpha_j) \big]
 \end{split}
 \end{equation}
 $$
@@ -89,3 +89,49 @@ The results shown in Figure 2.3 should be quite reliable because they are averag
 **My answer:**
 
 I believe it performs better on average right after having tried all actions once, which is almost guaranteed to happen in the first 10 (number of bandit arms) steps. It's almost guaranteed since it's incredibly likely that the reward received from any action will be below our optimistic inital action-value estimate. Any reward below the initial estimate will reduce the estimate for the selected action and lead to that action not being selected again until all other actions have been selected at least once - due to the greedy action selection. The best action is the most likely to have reduced its optimistic initial action-value estimate the least after all actions have been tried once and is thus the action that is the most likely to be selected at the next step. Since there are 9 other actions and the rewards are non-deterministic, picking the optimal action is not a guarantee. In this example, picking a suboptimal action is more likely (with about 60% probability judging from the results).
+
+## Exercise 2.7: Unbiased Constant-Step-Size Trick
+
+In most of this chapter we have used sample averages to estimate action values because sample averages do not produce the initial bias that constant step sizes do (see the analysis leading to (2.6)). However, sample averages are not a completely satisfactory solution because they may perform poorly on nonstationary problems. Is it possible to avoid the bias of constant step sizes while retaining their advantages on nonstationary problems? One way is to use a step size of
+
+$$
+\beta_n \; \dot{=} \; \alpha / \={\omicron}_n ,
+$$
+
+to process the $n$th reward for a particular action, where $\alpha > 0$ is a conventional constant step size, and $\={\omicron}_n$ is a trace of one that starts at 0:
+
+$$
+\={\omicron}_n \; \dot{=} \; \={\omicron}_{n-1} + \alpha (1 - \={\omicron}_{n-1}), \quad \text{for} \; n > 0, \quad \text{with} \; \={\omicron}_0 \; \dot{=} \; 0
+$$
+
+Carry out an analysis like that in (2.6) to show that $Q_n$ is an exponential recency-weighted average *without initial bias*.
+
+**My answer:**
+
+$$
+\begin{equation}
+\begin{split}
+Q_{n+1} &= Q_n + \beta_n (R_n - Q_n) \\
+&= \beta_n R_n + (1 - \beta_n) Q_n \\
+&= \beta_n R_n + (1 - \beta_n) (\beta_{n-1} R_{n-1} + [1 - \beta_{n-1}] Q_{n-1}) \\
+&= \beta_n R_n + (1 - \beta_n) \beta_{n-1} R_{n-1} + (1 - \beta_n) (1 - \beta_{n-1}) Q_{n-1} \\
+&= \beta_n R_n + (1 - \beta_n) \beta_{n-1} R_{n-1} + (1 - \beta_n) (1 - \beta_{n-1}) \beta_{n-2} R_{n-2} + \\
+&\qquad \dots + \beta_1 R_1 \prod_{i=2}^{n} (1 - \beta_i) + Q_1 \prod_{i=1}^{n} (1 - \beta_i) \\
+&= Q_1 \prod_{i=1}^{n} (1 - \beta_i) + \beta_n R_n + \sum_{i=1}^{n-1} \big[ \beta_i R_i \prod_{j=i+1}^{n} (1 - \beta_j) \big]
+\end{split}
+\end{equation}
+$$
+
+TODO: start with showing why Q1 term dissapears (thus showing that it doesn't have initial bias), then show why the rest is an exponential recency-weighted average
+
+TODO: See book and prove this for the method above:
+We call this a weighted average because the sum of the weights is (1  ↵)n + Pn
+i=1 ↵(1
+↵)ni = 1, as you can check for yourself. Note that the weight, ↵(1  ↵)ni
+, given to the
+reward Ri depends on how many rewards ago, n  i, it was observed. The quantity 1  ↵
+is less than 1, and thus the weight given to Ri decreases as the number of intervening
+rewards increases. In fact, the weight decays exponentially according to the exponent
+on 1  ↵. (If 1  ↵ = 0, then all the weight goes on the very last reward, Rn, because
+of the convention that 00 = 1.) Accordingly, this is sometimes called an exponential
+recency-weighted average

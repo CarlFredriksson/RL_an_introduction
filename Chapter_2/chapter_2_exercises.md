@@ -122,7 +122,35 @@ Q_{n+1} &= Q_n + \beta_n (R_n - Q_n) \\
 \end{equation}
 $$
 
+To show that $Q_n$ is without initial bias, we need to show that $\prod_{i=1}^{n} (1 - \beta_i) = 0$.
+
+$$
+\begin{equation}
+\begin{split}
+\prod_{i=1}^{n} (1 - \beta_i) &= (1 - \beta_1) \prod_{i=2}^{n} (1 - \beta_i) \\
+&= (1 - \frac{\alpha}{\=\omicron_1}) \prod_{i=2}^{n} (1 - \beta_i) \\
+&= (1 - \frac{\alpha}{\=\omicron_0 + \alpha(1 - \=\omicron_0)}) \prod_{i=2}^{n} (1 - \beta_i) \\
+&= (1 - \frac{\alpha}{\alpha}) \prod_{i=2}^{n} (1 - \beta_i) \\
+&= 0
+\end{split}
+\end{equation}
+$$
+
+Thus $Q_n$ is without initial bias. To show that $Q_n$ is exponentially recency-weighted, we need to show that the weight for $R_i$, which is $\beta_i \prod_{j=i+1}^{n} (1 - \beta_j)$, exponentially decreases depending on how many rewards ago $R_i$ was observed. 
+
+$$
+\begin{equation}
+\begin{split}
+x &= asd
+\end{split}
+\end{equation}
+$$
+
 TODO: start with showing why Q1 term dissapears (thus showing that it doesn't have initial bias), then show why the rest is an exponential recency-weighted average
+
+TODO: show that the product term decreases exponentially (see notebook)
+
+TODO: If want to try to show that it's a weighted average (all weights sum to 1), try to write B_j in terms of other B_x such that the product only contains 1 type of B_x)
 
 TODO: See book and prove this for the method above:
 We call this a weighted average because the sum of the weights is (1  ↵)n + Pn

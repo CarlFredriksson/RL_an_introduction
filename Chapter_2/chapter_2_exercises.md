@@ -163,3 +163,17 @@ $$
 $$
 
 Thus $\alpha \in (0, 1] \implies B_n \in (0, 1] \implies 1 - B_n \in [0, 1)$, which means that $\beta_i \prod_{j=i+1}^{n} (1 - \beta_j)$ exponentially decreases the more rewards ago $R_i$ was observed, and thus $Q_n$ is exponentially recency-weighted.
+
+## Exercise 2.8: UCB Spikes
+
+In Figure 2.4 the UCB algorithm shows a distinct spike in performance on the 11th step. Why is this? Note that for your answer to be fully satisfactory it must explain both why the reward increases on the 11th step and why it decreases on the subsequent steps. Hint: If $c = 1$, then the spike is less prominent.
+
+**My answer:**
+
+This question and answer is similar to Exercise 2.6: Mysterious Spikes. All 10 actions will be tried in the first 10 time steps. On the 11th step, the action that resulted in the highest reward on its first try will be selected since every action will have the same uncertainty term $\sqrt{\frac{\ln 11}{1}}$, which leads to increased performance for that step. On the subsequent steps, the uncertainty term will play a big role and many exploratory actions will be taken, thus we see a decrease in performance. With $c = 1$, the uncertainty term plays a smaller role and greedy selection is more likely - which makes the spike less prominent. Over time, the impact of the uncertainty term decreases and the action-value estimates will be increasingly accurate - this leads to increased performance over time.
+
+## Exercise 2.9
+
+Show that in the case of two actions, the soft-max distribution is the same as that given by the logistic, or sigmoid, function often used in statistics and artificial neural networks.
+
+**My answer:**

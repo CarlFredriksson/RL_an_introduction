@@ -136,30 +136,30 @@ $$
 \end{equation}
 $$
 
-Thus $Q_n$ is without initial bias. To show that $Q_n$ is exponentially recency-weighted, we need to show that the weight for $R_i$, which is $\beta_i \prod_{j=i+1}^{n} (1 - \beta_j)$, exponentially decreases depending on how many rewards ago $R_i$ was observed. 
+Thus $Q_n$ is without initial bias. To show that $Q_n$ is exponentially recency-weighted, we need to show that the weight for $R_i$, which is $\beta_i \prod_{j=i+1}^{n} (1 - \beta_j)$, exponentially decreases the more rewards ago $R_i$ was observed.
 
 $$
 \begin{equation}
 \begin{split}
-x &= asd
+\={\omicron}_n  &= \={\omicron}_{n-1} + \alpha (1 - \={\omicron}_{n-1}) \\
+&= \alpha + (1 - \alpha) \={\omicron}_{n-1} \\
+&= \alpha + (1 - \alpha) (\alpha + [1 - \alpha] \={\omicron}_{n-2}) \\
+&= \alpha + \alpha (1 - \alpha) + (1 - \alpha)^2 (\alpha + [1 - \alpha] \={\omicron}_{n-3}) \\
+&= \alpha + \alpha (1 - \alpha) + (1 - \alpha)^2 + \dots + (1 - \alpha)^{n-1} + (1 - \alpha)^n \={\omicron}_0 \\
+&= \alpha + \alpha (1 - \alpha) + (1 - \alpha)^2 + \dots + (1 - \alpha)^{n-1} \\
+&= \alpha (1 + \sum_{i=1}^{n-1} [1 - \alpha]^i)
 \end{split}
 \end{equation}
 $$
 
-TODO: start with showing why Q1 term dissapears (thus showing that it doesn't have initial bias), then show why the rest is an exponential recency-weighted average
+$$
+\begin{equation}
+\begin{split}
+\beta_n &= \frac{\alpha}{\={\omicron}_n} \\
+&= \frac{\alpha}{\alpha (1 + \sum_{i=1}^{n-1} [1 - \alpha]^i)} \\
+&= \frac{1}{1 + \sum_{i=1}^{n-1} [1 - \alpha]^i} \\
+\end{split}
+\end{equation}
+$$
 
-TODO: show that the product term decreases exponentially (see notebook)
-
-TODO: If want to try to show that it's a weighted average (all weights sum to 1), try to write B_j in terms of other B_x such that the product only contains 1 type of B_x)
-
-TODO: See book and prove this for the method above:
-We call this a weighted average because the sum of the weights is (1  ↵)n + Pn
-i=1 ↵(1
-↵)ni = 1, as you can check for yourself. Note that the weight, ↵(1  ↵)ni
-, given to the
-reward Ri depends on how many rewards ago, n  i, it was observed. The quantity 1  ↵
-is less than 1, and thus the weight given to Ri decreases as the number of intervening
-rewards increases. In fact, the weight decays exponentially according to the exponent
-on 1  ↵. (If 1  ↵ = 0, then all the weight goes on the very last reward, Rn, because
-of the convention that 00 = 1.) Accordingly, this is sometimes called an exponential
-recency-weighted average
+Thus $\alpha \in (0, 1] \implies B_n \in (0, 1] \implies 1 - B_n \in [0, 1)$, which means that $\beta_i \prod_{j=i+1}^{n} (1 - \beta_j)$ exponentially decreases the more rewards ago $R_i$ was observed, and thus $Q_n$ is exponentially recency-weighted.

@@ -177,3 +177,45 @@ This question and answer is similar to Exercise 2.6: Mysterious Spikes. All 10 a
 Show that in the case of two actions, the soft-max distribution is the same as that given by the logistic, or sigmoid, function often used in statistics and artificial neural networks.
 
 **My answer:**
+
+The sigmoid function is defined as:
+
+$$
+\sigma(x) = \frac{1}{1 + e^{-x}}
+$$
+
+In the case of two actions $\{a, b\}$, the soft-max distribution becomes:
+
+$$
+\text{Pr}(A_t = a) = \frac{e^{H_t(a)}}{e^{H_t(a)} + e^{H_t(b)}}
+$$
+
+$$
+\text{Pr}(A_t = b) = \frac{e^{H_t(b)}}{e^{H_t(a)} + e^{H_t(b)}}
+$$
+
+However, since the probabilities of all possible outcomes must sum to 1, we have $\text{Pr}(A_t = a) = 1 - \text{Pr}(A_t = b)$. In other words, we only have 1 degree of freedom, since knowing the probability for one action gives the probability of the other. One way to see that this is the case, is to add a constant $C$ to both numerical preferences, as this does not change the equations:
+
+$$
+\begin{equation}
+\begin{split}
+\frac{e^{H_t(a)+C}}{e^{H_t(a)+C} + e^{H_t(b)+C}} = \frac{e^C e^{H_t(a)}}{e^C (e^{H_t(a)} + e^{H_t(b)})} = \frac{e^{H_t(a)}}{e^{H_t(a)} + e^{H_t(b)}}
+\end{split}
+\end{equation}
+$$
+
+We can choose $C = -H_t(b)$ and define new numerical preferences $H_t^\prime(a) = H_t(a) + C = H_t(a) - H_t(b)$, and $H_t^\prime(b) = H_t(b) + C = H_t(b) - H_t(b) = 0$. This gives us:
+
+$$
+\text{Pr}(A_t = a) = \frac{e^{H_t^\prime(a)}}{e^{H_t^\prime(a)} + e^{H_t^\prime(b)}} = \frac{e^{H_t^\prime(a)}}{e^{H_t^\prime(a)} + 1} = \frac{1}{1 + e^{-H_t^\prime(a)}} = \sigma(H_t^\prime(a))
+$$
+
+$$
+\text{Pr}(A_t = b) = \frac{e^{H_t^\prime(b)}}{e^{H_t^\prime(a)} + e^{H_t^\prime(b)}} = \frac{1}{e^{H_t^\prime(a)} + 1}
+$$
+
+$$
+1 - \text{Pr}(A_t = a) = 1 - \frac{1}{1 + e^{-H_t^\prime(a)}} = \frac{e^{-H_t^\prime(a)}}{1 + e^{-H_t^\prime(a)}} = \frac{1}{e^{H_t^\prime(a)} + 1} = \text{Pr}(A_t = b)
+$$
+
+Thus, in the case of two actions the soft-max distribution is the same as that given by the sigmoid function.

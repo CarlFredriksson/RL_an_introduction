@@ -218,4 +218,12 @@ $$
 1 - \text{Pr}(A_t = a) = 1 - \frac{1}{1 + e^{-H_t^\prime(a)}} = \frac{e^{-H_t^\prime(a)}}{1 + e^{-H_t^\prime(a)}} = \frac{1}{e^{H_t^\prime(a)} + 1} = \text{Pr}(A_t = b)
 $$
 
-Thus, in the case of two actions the soft-max distribution is the same as that given by the sigmoid function.
+Thus, in the case of two actions, the soft-max distribution is the same as that given by the sigmoid function.
+
+## Exercise 2.10
+
+Suppose you face a 2-armed bandit task whose true action values change randomly from time step to time step. Specifically, suppose that, for any time step, the true values of actions 1 and 2 are respectively 10 and 20 with probability 0.5 (case A), and 90 and 80 with probability 0.5 (case B). If you are not able to tell which case you face at any step, what is the best expected reward you can achieve and how should you behave to achieve it? Now suppose that on each step you are told whether you are facing case A or case B (although you still don’t know the true action values). This is an associative search task. What is the best expected reward you can achieve in this task, and how should you behave to achieve it?
+
+**My answer:**
+
+If you are not able to tell which case you face, the best and only expected reward is $0.5 * 10 + 0.5 * 90 = 0.5 * 20 + 0.5 * 80 = 50$, and it doesn't matter how actions are selected. If you are told which case you are facing each step but you don't know the true action values, then you can use one of the methods in this chapter applied separately per case (preferably one that reduces exploration to 0 over time). The best expected reward is $0.5 * 20 + 0.5 * 90 = 55$, which happens when the agent has learned to always select action 2 for case A and action 1 for case B.

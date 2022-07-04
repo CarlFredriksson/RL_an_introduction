@@ -227,3 +227,17 @@ Suppose you face a 2-armed bandit task whose true action values change randomly 
 **My answer:**
 
 If you are not able to tell which case you face, the best and only expected reward is $0.5 * 10 + 0.5 * 90 = 0.5 * 20 + 0.5 * 80 = 50$, and it doesn't matter how actions are selected. If you are told which case you are facing each step but you don't know the true action values, then you can use one of the methods in this chapter applied separately per case (preferably one that reduces exploration to 0 over time). The best expected reward is $0.5 * 20 + 0.5 * 90 = 55$, which happens when the agent has learned to always select action 2 for case A and action 1 for case B.
+
+## Exercise 2.11 (programming)
+
+Make a figure analogous to Figure 2.6 for the nonstationary case outlined in Exercise 2.5. Include the constant-step-size $\epsilon$-greedy algorithm with $\alpha = 0.1$. Use runs of 200,000 steps and, as a performance measure for each algorithm and parameter setting, use the average reward over the last 100,000 steps. 
+
+**My answer:**
+
+To validate my code, I started by recreating the parameter study in Figure 2.6 from the book:
+
+![Stationary parameter study](exercise_2_11/parameter_study_stationary.png)
+
+Here is the parameter study the exercise asks for:
+
+![Nonstationary parameter study](exercise_2_11/parameter_study_nonstationary.png)

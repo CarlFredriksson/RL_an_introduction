@@ -42,7 +42,7 @@ In the comparison shown in Figure 2.2, which method will perform best in the lon
 
 **My answer:**
 
-In the long run, both $\epsilon$-greedy methods will have found the optimal action and the only difference between the two will be the frequency of exploration. The method with $\epsilon = 0.01$ will outperform the method with $\epsilon = 0.1$ due to selecting the optimal action 99% of the time compared to 90% of the time. It will be 10% better since $0.99/0.9 = 1.1$.
+In the long run, both $\epsilon$-greedy methods will have found the optimal action and the only difference between the two will be the frequency of exploration. The method with $\epsilon = 0.01$ will outperform the method with $\epsilon = 0.1$ due to selecting the optimal action 99.1% of the time compared to 91% of the time (the .1% in 99.1% and 1% in 91% come from explorations that randomly result in the best action being selected). In the long run, the $\epsilon = 0.01$ method will perform better than the $\epsilon = 0.1$ by $99.1\% - 91\% = 8.1\%$ of the difference between the value of the best action and the value of the average action.
 
 ## Exercise 2.4
 
@@ -63,6 +63,8 @@ Q_{n+1} &= Q_n + \alpha_n (R_n - Q_n) \\
 \end{split}
 \end{equation}
 $$
+
+Thus, the weighting on prior reward $R_i$ is $\alpha_i \prod_{j=i+1}^{n} (1 - \alpha_j)$.
 
 ## Exercise 2.5 (programming)
 
@@ -88,7 +90,7 @@ The results shown in Figure 2.3 should be quite reliable because they are averag
 
 **My answer:**
 
-I believe it performs better on average right after having tried all actions once, which is almost guaranteed to happen in the first 10 (number of bandit arms) steps. It's almost guaranteed since it's incredibly likely that the reward received from any action will be below our optimistic inital action-value estimate. Any reward below the initial estimate will reduce the estimate for the selected action and lead to that action not being selected again until all other actions have been selected at least once - due to the greedy action selection. The best action is the most likely to have reduced its optimistic initial action-value estimate the least after all actions have been tried once and is thus the action that is the most likely to be selected at the next step. Since there are 9 other actions and the rewards are non-deterministic, picking the optimal action is not a guarantee. In this example, picking a suboptimal action is more likely (with about 60% probability judging from the results).
+It performs better on average right after having tried all actions once, which is almost guaranteed to happen in the first 10 (number of bandit arms) steps. It's almost guaranteed since it's incredibly likely that the reward received from any action will be below our optimistic inital action-value estimate. Any reward below the initial estimate will reduce the estimate for the selected action and lead to that action not being selected again until all other actions have been selected at least once - due to the greedy action selection. On the 11th step the action that resulted in the greatest reward from being selected once during the first 10 steps will be selected again and is more likely to be an above average action than a below average one. It has the highest probability of being the optimal action. Even if we selected an above average action on step 11, even the optimal one, it most likely will result in further reducing its action-value estimate and won't be selected again until the other actions have been (due to being gradually shifted by the constant step size from its optimistic inital estimate towards the observed rewards). On step 12 the action that resulted in the second largest reward during the first 10 steps will be selected, on step 13 the action that resulted in the third largest, and so on.
 
 ## Exercise 2.7: Unbiased Constant-Step-Size Trick
 

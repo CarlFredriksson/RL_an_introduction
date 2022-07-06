@@ -234,10 +234,10 @@ Make a figure analogous to Figure 2.6 for the nonstationary case outlined in Exe
 
 **My answer:**
 
-To validate my code, I started by recreating the parameter study in Figure 2.6 from the book:
+To validate my code, I started by recreating the parameter study in Figure 2.6 from the book. The results were averaged over 1000 runs (the total run time was about 6m 40s on my computer).
 
 ![Stationary parameter study](exercise_2_11/parameter_study_stationary.png)
 
-Here is the parameter study the exercise asks for:
+Below is the parameter study the exercise asks for. The results were averaged over 100 runs (the total run time was about 4h 40m on my computer).
 
 ![Nonstationary parameter study](exercise_2_11/parameter_study_nonstationary.png)

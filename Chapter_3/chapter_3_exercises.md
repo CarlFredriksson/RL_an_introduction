@@ -27,7 +27,7 @@ Is the MDP framework adequate to usefully represent *all* goal-directed learning
 
 **My answer:**
 
-The way the question is phrased makes me thing the answer is no, but I can't think of any clear exceptions.
+The way the question is phrased makes me think that the answer is no, and it could have something to do with tasks where we can't formulate the goal using only reward signals, but I can't think of any examples.
 
 ## Exercise 3.3
 
@@ -52,3 +52,15 @@ Give a table analogous to that in Example 3.3, but for $p(s^\prime, r|s, a)$. It
 |high|wait|high|$r_{wait}$|$1$|
 |low|wait|low|$r_{wait}$|$1$|
 |low|recharge|high|$0$|$1$|
+
+## Exercise 3.5
+
+The equations in Section 3.1 are for the continuing case and need to be modified (very slightly) to apply to episodic tasks. Show that you know the modifications needed by giving the modified version of (3.3).
+
+**My answer:**
+
+Since $s^\prime$ could be the terminal state, we need to specify $s^\prime \in \mathcal{S}^+$ rather than $s^\prime \in \mathcal{S}$:
+
+$$
+\sum_{s^\prime \in \mathcal{S}^+} \sum_{r \in \mathcal{R}} p(s^\prime, r|s, a) = 1, \; \text{for all} \; s \in \mathcal{S}, a \in \mathcal{A}(s). 
+$$

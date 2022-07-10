@@ -36,3 +36,19 @@ Consider the problem of driving. You could define the actions in terms of the ac
 **My answer:**
 
 On what level you want to draw the line between agent and environment depends on what you want the agent to learn. The lower the level, the more control of details the agent has, but the harder it is to achieve the end goal since the agent has to learn all the details. There are details that are worth learning to control as perfectly as possible and there are others that are not. For example, what would be the point of learning to control muscle twitches from scratch for driving when humans already know how to move their limbs. A driving instructor might teach a student how to move the steering wheel, but would never talk about how to send signals between the brain and limbs. If the agent already knows how to drive, but needs to learn where to drive, it might make sense to draw the line at a really high level. Even if you don't have a great autonomous driving system yet, it could make sense to utilize multiple agents. One agent could learn how to stay on the road and not hit anything, while another could learn where to go on a higher level and would send state information to the lower level agent. Letting agents focus on one level of abstraction rather than solving a complete end-to-end problem could be beneficial in multiple ways - such as specializing the training process for the different agents to be as efficient as possible.
+
+## Exercise 3.4
+
+Give a table analogous to that in Example 3.3, but for $p(s^\prime, r|s, a)$. It should have columns for $s$, $a$, $s^\prime$, $r$, and $p(s^\prime, r|s, a)$, and a row for every 4-tuple for which $p(s0, r|s, a) > 0$.
+
+**My answer:**
+
+|$s$|$a$|$s^\prime$|$r$|$p(s^\prime, r\|s, a)$|
+|:-|:-|:-|:-|:-|
+|high|search|high|$r_{search}$|$\alpha$|
+|high|search|low|$r_{search}$|$1 - \alpha$|
+|low|search|high|$-3$|$1 - \beta$|
+|low|search|low|$r_{search}$|$\beta$|
+|high|wait|high|$r_{wait}$|$1$|
+|low|wait|low|$r_{wait}$|$1$|
+|low|recharge|high|$0$|$1$|

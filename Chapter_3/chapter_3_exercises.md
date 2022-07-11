@@ -64,3 +64,100 @@ Since $s^\prime$ could be the terminal state, we need to specify $s^\prime \in \
 $$
 \sum_{s^\prime \in \mathcal{S}^+} \sum_{r \in \mathcal{R}} p(s^\prime, r|s, a) = 1, \; \text{for all} \; s \in \mathcal{S}, a \in \mathcal{A}(s). 
 $$
+
+## Exercise 3.6
+
+Suppose you treated pole-balancing as an episodic task but also used discounting, with all rewards zero except for -1 upon failure. What then would the return be at each time? How does this return differ from that in the discounted, continuing formulation of this task?
+
+**My answer:**
+
+Episodic with discounting:
+
+$$
+G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \dots + \gamma^{T-t-1} R_T = -(\gamma^{T-t-1})
+$$
+
+Continuous (with discounting):
+
+$$
+\begin{aligned}
+G_t &= R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \dots + \gamma^{K-1} R_{t+K} + \dots + \gamma^{2K-1} R_{t+2K} + \dots \\ &= (-1)\gamma^{K-1} + (-1)\gamma^{2K-1} + (-1)\gamma^{3K-1} + \dots \\
+&= (-\gamma^{-1}) (\gamma^K + [\gamma^{K}]^2 + [\gamma^{K}]^3 + \dots) \\
+&= (-\gamma^{-1}) \bigg[\sum_{i=1}^{\infin} (\gamma^K)^i \bigg] \\
+&= (-\gamma^{-1}) \bigg[-1 + \sum_{i=0}^{\infin} (\gamma^K)^i \bigg] \\
+&= (-\gamma^{-1}) \bigg[-1 + \frac{1}{1 - \gamma^K} \bigg] \\
+&= \frac{1}{\gamma} - \frac{1}{\gamma (1 - \gamma^K)} \\
+&= \frac{(1 - \gamma^K) - 1}{\gamma (1 - \gamma^K)} \\
+&= -\frac{\gamma^K}{\gamma (1 - \gamma^K)} \\
+&= -\frac{\gamma^{K-1}}{1 - \gamma^K}
+\end{aligned}
+$$
+
+## Exercise 3.7
+
+Imagine that you are designing a robot to run a maze. You decide to give it a reward of +1 for escaping from the maze and a reward of zero at all other times. The task seems to break down naturally into episodes — the successive runs through the maze — so you decide to treat it as an episodic task, where the goal is to maximize expected total reward (3.7). After running the learning agent for a while, you find that it is showing no improvement in escaping from the maze. What is going wrong? Have you effectively communicated to the agent what you want it to achieve?
+
+**My answer:**
+
+The agent gets the same reward from escaping, regardless of how long it takes. Thus it has no driver to learn how to escape quicker. We can make the agent learn to escape quicker by giving a negative reward to all time steps the agent is still in the maze.
+
+## Exercise 3.8
+
+Suppose $\gamma = 0.5$ and the following sequence of rewards is received $R_1 = 1$, $R_2 = 2$, $R_3 = 6$, $R_4 = 3$, and $R_5 = 2$, with $T = 5$. What are $G_0, G_1, \dots, G_5$? Hint: Work backwards.
+
+**My answer:**
+
+To work backwards we can use:
+
+$$
+G_t = R_{t+1} + \gamma G_{t+1}
+$$
+
+Which gives:
+
+$$
+G_5 = G_T = 0 \\
+G_4 = R_5 + 0.5 G_5 = 2 + 0 = 2 \\
+G_3 = R_4 + 0.5 G_4 = 3 + 1 = 4 \\
+G_2 = R_3 + 0.5 G_3 = 6 + 2 = 8 \\
+G_1 = R_2 + 0.5 G_2 = 2 + 4 = 6 \\
+G_0 = R_1 + 0.5 G_1 = 1 + 3 = 4 \\
+$$
+
+## Exercise 3.9
+
+Suppose $\gamma = 0.9$ and the reward sequence is $R_1 = 2$ followed by an infinite sequence of 7s. What are $G_1$ and $G_0$?
+
+**My answer:**
+
+We have:
+
+$$
+G_t = \sum_{k=0}^{\infin} \gamma^k R_{t+k+1}
+$$
+
+Thus:
+
+$$
+G_1 = 7\sum_{k=0}^{\infin} \gamma^k = \frac{7}{1 - \gamma} = 70 \\
+G_0 = R_1 + \gamma G_1 = 2 + 63 = 65
+$$
+
+## Exercise 3.10
+
+Prove the second equality in (3.10).
+
+**My answer:**
+
+$$
+\begin{aligned}
+\sum_{k=0}^{\infin} \gamma^k &= 1 + \gamma + \gamma^2 + \dots \\
+&= \lim_{n \to \infin} (1 + \gamma + \gamma^2 + \dots + \gamma^n) \\
+&= \lim_{n \to \infin} \frac{1 - \gamma}{1 - \gamma} (1 + \gamma + \gamma^2 + \dots + \gamma^n) \\
+&= \lim_{n \to \infin} \frac{1}{1 - \gamma} ([1 - \gamma] + \gamma[1 - \gamma] + \gamma^2[1 - \gamma] + \dots + \gamma^n[1 - \gamma]) \\
+&= \lim_{n \to \infin} \frac{1}{1 - \gamma} (1 - \gamma + \gamma - \gamma^2 + \gamma^2 - \gamma^3 + \dots + \gamma^n - \gamma^{n+1}) \\
+&= \lim_{n \to \infin} \frac{1}{1 - \gamma} (1 + [-\gamma + \gamma] + [-\gamma^2 + \gamma^2] + [-\gamma^3 + \gamma^3] + \dots + [-\gamma^n + \gamma^n] - \gamma^{n+1}) \\
+&= \lim_{n \to \infin} \frac{1}{1 - \gamma} (1 - \gamma^{n+1}) \\
+&= \frac{1}{1 - \gamma}
+\end{aligned}
+$$

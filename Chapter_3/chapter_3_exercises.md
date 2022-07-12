@@ -190,8 +190,9 @@ Give an equation for $q_\pi$ in terms of $v_\pi$ and the four-argument $p$.
 
 $$
 \begin{aligned}
-q_\pi(S_t = s, A_t = a) &= \mathbb{E}_{\pi}[R_{t+1} | S_t = s, A_t = a] + \mathbb{E}_{\pi}[G_{t+1} | S_t = s, A_t = a] \\
-&= r(s, a) + \sum_{s^{\prime} \in \mathcal{S}} p(s^\prime | s, a) v_\pi(s^\prime) \\
-&= \sum_{r \in \mathcal{R}} r \sum_{s^{\prime} \in \mathcal{S}} p(s^{\prime}, r | s, a) + \sum_{s^{\prime} \in \mathcal{S}} \sum_{r \in \mathcal{R}} p(s^{\prime}, r | s, a) v_\pi(s^\prime) \\
+q_\pi(S_t = s, A_t = a) &= \mathbb{E}_{\pi}[R_{t+1} | S_t = s, A_t = a] + \gamma \mathbb{E}_{\pi}[G_{t+1} | S_t = s, A_t = a] \\
+&= r(s, a) + \gamma \sum_{s^{\prime} \in \mathcal{S}} p(s^\prime | s, a) v_\pi(s^\prime) \\
+&= \sum_{r \in \mathcal{R}} r \sum_{s^{\prime} \in \mathcal{S}} p(s^{\prime}, r | s, a) + \gamma \sum_{s^{\prime} \in \mathcal{S}} \sum_{r \in \mathcal{R}} p(s^{\prime}, r | s, a) v_\pi(s^\prime) \\
+&= \sum_{s^{\prime} \in \mathcal{S}} \sum_{r \in \mathcal{R}} p(s^{\prime}, r | s, a) \big[r + \gamma v_\pi(s^\prime)\big] \\
 \end{aligned}
 $$

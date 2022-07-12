@@ -161,3 +161,37 @@ $$
 &= \frac{1}{1 - \gamma}
 \end{aligned}
 $$
+
+## Exercise 3.11
+
+If the current state is $S_t$, and actions are selected according to a stochastic policy $\pi$, then what is the expectation of $R_{t+1}$ in terms of $\pi$ and the four-argument function $p$ (3.2)?
+
+**My answer:**
+
+$$
+\mathbb{E}_{\pi}[R_{t+1} | S_t] = \sum_{a \in \mathcal{A}(S_t)} \pi(a|S_t) \sum_{r \in \mathcal{R}} r \sum_{s^{\prime} \in \mathcal{S}} p(s^{\prime}, r | S_t, a)
+$$
+
+## Exercise 3.12
+
+Give an equation for $v_\pi$ in terms of $q_\pi$ and $\pi$.
+
+**My answer:**
+
+$$
+v_\pi(s) = \sum_{a \in \mathcal{A(s)}} \pi(a | s) q_\pi(s, a)
+$$
+
+## Exercise 3.13
+
+Give an equation for $q_\pi$ in terms of $v_\pi$ and the four-argument $p$.
+
+**My answer:**
+
+$$
+\begin{aligned}
+q_\pi(S_t = s, A_t = a) &= \mathbb{E}_{\pi}[R_{t+1} | S_t = s, A_t = a] + \mathbb{E}_{\pi}[G_{t+1} | S_t = s, A_t = a] \\
+&= r(s, a) + \sum_{s^{\prime} \in \mathcal{S}} p(s^\prime | s, a) v_\pi(s^\prime) \\
+&= \sum_{r \in \mathcal{R}} r \sum_{s^{\prime} \in \mathcal{S}} p(s^{\prime}, r | s, a) + \sum_{s^{\prime} \in \mathcal{S}} \sum_{r \in \mathcal{R}} p(s^{\prime}, r | s, a) v_\pi(s^\prime) \\
+\end{aligned}
+$$

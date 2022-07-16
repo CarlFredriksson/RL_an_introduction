@@ -271,4 +271,4 @@ q_\pi(s, a) &= \mathbb{E}_{\pi}[G_t | S_t = s, A_t = a] \\
 \end{aligned}
 $$
 
-Note that $s^{\prime} \in \mathcal{S}$ should be changed to $s^{\prime} \in \mathcal{S}^+$ in the case of an episodic problem. In the last step the notation was simplified a bit.
+Note that $s^{\prime} \in \mathcal{S}$ should be changed to $s^{\prime} \in \mathcal{S}^+$ in the case of an episodic problem. In the last step the sum notation was simplified a bit.

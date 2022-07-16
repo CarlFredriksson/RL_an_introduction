@@ -266,7 +266,9 @@ $$
 \begin{aligned}
 q_\pi(s, a) &= \mathbb{E}_{\pi}[G_t | S_t = s, A_t = a] \\
 &= \mathbb{E}_{\pi}[R_{t+1} + \gamma G_{t+1}| S_t = s, A_t = a] \\
-&= \sum_{s^\prime, r} p(s^\prime, r | s, a) \big[r + \gamma \sum_{a^\prime} \pi(a^\prime | s^\prime) \mathbb{E}_{\pi}[G_{t+1} | S_{t+1} = s^\prime, A_{t+1} = a^\prime] \big] \\
+&= \sum_{s^\prime \in \mathcal{S}} \sum_{r \in \mathcal{R}} p(s^\prime, r | s, a) \big[r + \gamma \sum_{a^\prime \in \mathcal{A}(s^\prime)} \pi(a^\prime | s^\prime) \mathbb{E}_{\pi}[G_{t+1} | S_{t+1} = s^\prime, A_{t+1} = a^\prime] \big] \\
 &= \sum_{s^\prime, r} p(s^\prime, r | s, a) \big[r + \gamma \sum_{a^\prime} \pi(a^\prime | s^\prime) q_\pi(s^\prime, a^\prime) \big]
 \end{aligned}
 $$
+
+Note that $s^{\prime} \in \mathcal{S}$ should be changed to $s^{\prime} \in \mathcal{S}^+$ in the case of an episodic problem. In the last step the notation was simplified a bit.

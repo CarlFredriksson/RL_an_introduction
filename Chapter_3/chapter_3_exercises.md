@@ -255,3 +255,18 @@ Now consider adding a constant $c$ to all the rewards in an episodic task, such 
 **My answer:**
 
 In an episodic task it would have an effect. If the agent receives positive rewards for all actions which do not lead to a terminal state, we would encourage the agent to prolong the episodes for as long as possible, e.g. run around in the maze forever (since this would result in infinite return). On the other hand, if the agent receives negative rewards for all actions which do not lead to a terminal state, we would encourage the agent to end episodes quickly, e.g. try to  find its way out of the maze as quickly as possible.
+
+## Exercise 3.17
+
+What is the Bellman equation for action values, that is, for $q_\pi$? It must give the action value $q_\pi(s, a)$ in terms of the action values, $q_\pi(s^\prime, a^\prime)$, of possible successors to the state–action pair $(s, a)$. Hint: The backup diagram to the right corresponds to this equation. Show the sequence of equations analogous to (3.14), but for action values.
+
+**My answer:**
+
+$$
+\begin{aligned}
+q_\pi(s, a) &= \mathbb{E}_{\pi}[G_t | S_t = s, A_t = a] \\
+&= \mathbb{E}_{\pi}[R_{t+1} + \gamma G_{t+1}| S_t = s, A_t = a] \\
+&= \sum_{s^\prime, r} p(s^\prime, r | s, a) \big[r + \gamma \sum_{a^\prime} \pi(a^\prime | s^\prime) \mathbb{E}_{\pi}[G_{t+1} | S_{t+1} = s^\prime, A_{t+1} = a^\prime] \big] \\
+&= \sum_{s^\prime, r} p(s^\prime, r | s, a) \big[r + \gamma \sum_{a^\prime} \pi(a^\prime | s^\prime) q_\pi(s^\prime, a^\prime) \big]
+\end{aligned}
+$$

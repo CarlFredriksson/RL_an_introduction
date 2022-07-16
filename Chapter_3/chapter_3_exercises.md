@@ -190,9 +190,68 @@ Give an equation for $q_\pi$ in terms of $v_\pi$ and the four-argument $p$.
 
 $$
 \begin{aligned}
-q_\pi(S_t = s, A_t = a) &= \mathbb{E}_{\pi}[R_{t+1} | S_t = s, A_t = a] + \gamma \mathbb{E}_{\pi}[G_{t+1} | S_t = s, A_t = a] \\
+q_\pi(S_t = s, A_t = a) &= \mathbb{E}_{\pi}[R_{t+1} + \gamma G_{t+1}  | S_t = s, A_t = a] \\
 &= r(s, a) + \gamma \sum_{s^{\prime} \in \mathcal{S}} p(s^\prime | s, a) v_\pi(s^\prime) \\
 &= \sum_{r \in \mathcal{R}} r \sum_{s^{\prime} \in \mathcal{S}} p(s^{\prime}, r | s, a) + \gamma \sum_{s^{\prime} \in \mathcal{S}} \sum_{r \in \mathcal{R}} p(s^{\prime}, r | s, a) v_\pi(s^\prime) \\
 &= \sum_{s^{\prime} \in \mathcal{S}} \sum_{r \in \mathcal{R}} p(s^{\prime}, r | s, a) \big[r + \gamma v_\pi(s^\prime)\big] \\
 \end{aligned}
 $$
+
+Note that $s^{\prime} \in \mathcal{S}$ should be changed to $s^{\prime} \in \mathcal{S}^+$ in the case of an episodic problem.
+
+## Exercise 3.14
+
+The Bellman equation (3.14) must hold for each state for the value function $v_\pi$ shown in Figure 3.2 (right) of Example 3.5. Show numerically that this equation holds for the center state, valued at +0.7, with respect to its four neighboring states, valued at +2.3, +0.4, 0.4, and +0.7. (These numbers are accurate only to one decimal place.)
+
+**My answer:**
+
+Since all actions are equally likely, the state transitions are deterministic, and no action from the center state will result in a reward, we have:
+
+$$
+\begin{aligned}
+v_\pi(s) &= \sum_a \pi(a | s) \sum_{s^\prime, r} p(s^\prime, r | s, a) [r + \gamma v_\pi(s^\prime)] \\
+&= \frac{0.9}{4} (2.3 + 0.4 - 0.4 + 0.7) \\
+&= 0.675 \\
+&≈ 0.7
+\end{aligned}
+$$
+
+## Exercise 3.15
+
+In the gridworld example, rewards are positive for goals, negative for running into the edge of the world, and zero the rest of the time. Are the signs of these rewards important, or only the intervals between them? Prove, using (3.8), that adding a constant $c$ to all the rewards adds a constant, $v_c$, to the values of all states, and thus does not affect the relative values of any states under any policies. What is $v_c$ in terms of $c$ and $\gamma$?
+
+**My answer:**
+
+The signs are not important in this example, only the intervals between them.
+
+Let's denote the discounted return with an added constant $G_t^c$ and the state-value function with an added constant $v_t^c$. Then we have:
+
+$$
+\begin{aligned}
+G_t^c &= (R_{t+1} + c) + \gamma (R_{t+2} + c) + \gamma^2 (R_{t+3} + c) + \dots \\
+&= \sum_{k=0}^\infin \gamma^k R_{t+k+1} + c \sum_{k=0}^\infin \gamma^k \\
+&= G_t + \frac{c}{1 - \gamma}
+\end{aligned}
+$$
+
+$$
+\begin{aligned}
+v_\pi^c &= \mathbb{E}_{\pi}[G_t^c | S_t = s] \\
+&= \mathbb{E}_{\pi}[G_t + \frac{c}{1 - \gamma} | S_t = s] \\
+&= v_\pi(s) + v_c
+\end{aligned}
+$$
+
+with
+
+$$
+v_c = \frac{c}{1 - \gamma}
+$$
+
+## Exercise 3.16
+
+Now consider adding a constant $c$ to all the rewards in an episodic task, such as maze running. Would this have any effect, or would it leave the task unchanged as in the continuing task above? Why or why not? Give an example.
+
+**My answer:**
+
+In an episodic task it would have an effect. If the agent receives positive rewards for all actions which do not lead to a terminal state, we would encourage the agent to prolong the episodes for as long as possible, e.g. run around in the maze forever (since this would result in infinite return). On the other hand, if the agent receives negative rewards for all actions which do not lead to a terminal state, we would encourage the agent to end episodes quickly, e.g. try to  find its way out of the maze as quickly as possible.

@@ -272,3 +272,92 @@ q_\pi(s, a) &= \mathbb{E}_{\pi}[G_t | S_t = s, A_t = a] \\
 $$
 
 Note that $s^{\prime} \in \mathcal{S}$ should be changed to $s^{\prime} \in \mathcal{S}^+$ in the case of an episodic problem. In the last step the sum notation was simplified.
+
+## Exercise 3.18
+
+The value of a state depends on the values of the actions possible in that state and on how likely each action is to be taken under the current policy. We can think of this in terms of a small backup diagram rooted at the state and considering each possible action:
+
+[See the book for the diagram]
+
+Give the equation corresponding to this intuition and diagram for the value at the root node, $v_\pi(s)$, in terms of the value at the expected leaf node, $q_\pi(s, a)$, given $S_t = s$. This equation should include an expectation conditioned on following the policy, $\pi$. Then give a second equation in which the expected value is written out explicitly in terms of $\pi(a|s)$ such that no expected value notation appears in the equation.
+
+**My answer:**
+
+$$
+\begin{aligned}
+v_\pi(S_t = s) &=  \mathbb{E}_{\pi}[G_t | S_t = s] \\
+&=  \mathbb{E}_{\pi}[q_\pi(s, a) | S_t = s] \\
+&= \sum_{a \in \mathcal{A(s)}} \pi(a | s) q_\pi(s, a)
+\end{aligned}
+$$
+
+## Exercise 3.19
+
+The value of an action, $q_\pi(s, a)$, depends on the expected next reward and the expected sum of the remaining rewards. Again we can think of this in terms of a small backup diagram, this one rooted at an action (state–action pair) and branching to the possible next states:
+
+[See the book for the diagram]
+
+Give the equation corresponding to this intuition and diagram for the action value, $q_\pi(s, a)$, in terms of the expected next reward, $R_{t+1}$, and the expected next state value, $v_\pi(S_{t+1})$, given that $S_t = s$ and $A_t = a$. This equation should include an expectation but not one conditioned on following the policy. Then give a second equation, writing out the expected value explicitly in terms of $p(s^\prime, r | s, a)$ defined by (3.2), such that no expected value notation appears in the equation.
+
+**My answer:**
+
+$$
+\begin{aligned}
+q_\pi(S_t = s, A_t = a) &= \mathbb{E}_{\pi}[R_{t+1} + \gamma G_{t+1}  | S_t = s, A_t = a] \\
+&= \mathbb{E}[R_{t+1} + \gamma v_\pi(S_{t+1}) | S_t = s, A_t = a] \\
+&= \sum_{s^{\prime}, r} p(s^{\prime}, r | s, a) \big[r + \gamma v_\pi(s^\prime)\big] \\
+\end{aligned}
+$$
+
+## Exercise 3.20
+
+Draw or describe the optimal state-value function for the golf example.
+
+**My answer:**
+
+The optimal policy $\pi_*$ is to use the driver for all states that are not on the green and use the putter on the green. The optimal state-values $v_*(s)$ are minus how many shots it takes to go into the hole from state $s$ following $\pi_*$ . On the green $v_*(s) = -1$, one shot from the green with the driver $v_*(s) = -2$, two shots from the green with the driver $v_*(s) = -3$, and so on. In the terminal state the optimal value is 0.
+
+## Exercise 3.21
+
+Draw or describe the contours of the optimal action-value function for putting, $q_*(s, putter)$, for the golf example.
+
+**My answer:**
+
+The optimal action-value function for putting in state $s$ and then following the optimal policy, $q_*(s, putter)$, is -1 plus looking ahead to the next state $s^\prime$ and adding its optimal state-value $v_*(s^\prime)$. $q_*(s, putter) = -1$ if $s$ is on the green, $q_*(s, putter) = -2$ if the green is reachable by putting from $s$, $q_*(s, putter) = -3$ if the green is reachable by putting and then driving, $q_*(s, putter) = -4$ if the green is reachable by putting and then driving two times, and so on. 
+
+## Exercise 3.22
+
+Consider the continuing MDP shown to the right. The only decision to be made is that in the top state, where two actions are available, left and right. The numbers show the rewards that are received deterministically after each action. There are exactly two deterministic policies, $\pi_{left}$ and $\pi_{right}$. What policy is optimal if $\gamma = 0$? If $\gamma = 0.9$? If $\gamma = 0.5$?
+
+**My answer:**
+
+$\pi_{left} \geq \pi_{right}$ if and only if $v_{\pi_{left}}(s) \geq v_{\pi_{right}}(s)$ for all states $s$. Since there is only one state where a decision is made, let's call it $s_{top}$, we need to compute for which policy $\pi$ the state-value $v_\pi(s_{top})$ is greatest. We have:
+
+$$
+\begin{aligned}
+v_{\pi_{left}}(s_{top}) &= \mathbb{E}_{\pi_{left}}[G_t | S_t = s_{top}] \\
+&= R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \dots \\
+&= 1 + 0 + \gamma^2 + 0 + \gamma^4 + \dots \\
+&= (\gamma^2)^0 + (\gamma^2)^1 + (\gamma^2)^2 + \dots \\
+&= \sum_{k=0}^\infin \gamma^2 \\
+&= \frac{1}{1 - \gamma^2} \\
+\end{aligned}
+$$
+
+$$
+\begin{aligned}
+v_{\pi_{right}}(s_{top}) &= \mathbb{E}_{\pi_{right}}[G_t | S_t = s_{top}] \\
+&= R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \dots \\
+&= 0 + 2\gamma + 0 + 2\gamma^3 + \dots \\
+&= 2\gamma (1 + \gamma^2 + \gamma^4 + \dots) \\
+&= 2\gamma \big[(\gamma^2)^0 + (\gamma^2)^1 + (\gamma^2)^2 + \dots \big] \\
+&= 2\gamma \sum_{k=0}^\infin \gamma^2 \\
+&= \frac{2\gamma}{1 - \gamma^2} \\
+\end{aligned}
+$$
+
+Thus:
+
+* If $\gamma = 0$, we have $v_{\pi_{left}}(s_{top}) = 1$ and $v_{\pi_{right}}(s_{top}) = 0$, and thus $\pi_{left}$ is optimal.
+* If $\gamma = 0.9$, we have $v_{\pi_{left}}(s_{top}) ≈ 5.3$ and $v_{\pi_{right}}(s_{top}) ≈ 9.5$, and thus $\pi_{right}$ is optimal.
+* If $\gamma = 0.5$, we have $v_{\pi_{left}}(s_{top}) = v_{\pi_{right}}(s_{top}) = \frac{4}{3}$, and thus both policies are optimal.

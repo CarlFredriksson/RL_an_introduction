@@ -315,7 +315,7 @@ Draw or describe the optimal state-value function for the golf example.
 
 **My answer:**
 
-The optimal policy $\pi_*$ is to use the driver for all states that are not on the green and use the putter on the green. The optimal state-values $v_*(s)$ are minus how many shots it takes to go into the hole from state $s$ following $\pi_*$ . On the green $v_*(s) = -1$, one shot from the green with the driver $v_*(s) = -2$, two shots from the green with the driver $v_*(s) = -3$, and so on. In the terminal state the optimal value is 0.
+The optimal policy $\pi_*$ is to use the driver for all states that are not on the green and use the putter on the green. The optimal state-values $v_*(s)$ are minus how many shots it takes to go into the hole from state $s$ following $\pi_*$ . In the hole (the terminal state) $v_*(s) = 0$, on the green $v_*(s) = -1$, one shot from the green with the driver $v_*(s) = -2$, two shots from the green with the driver $v_*(s) = -3$, and so on.
 
 ## Exercise 3.21
 
@@ -323,11 +323,11 @@ Draw or describe the contours of the optimal action-value function for putting, 
 
 **My answer:**
 
-The optimal action-value function for putting in state $s$ and then following the optimal policy, $q_*(s, putter)$, is -1 plus looking ahead to the next state $s^\prime$ and adding its optimal state-value $v_*(s^\prime)$. $q_*(s, putter) = -1$ if $s$ is on the green, $q_*(s, putter) = -2$ if the green is reachable by putting from $s$, $q_*(s, putter) = -3$ if the green is reachable by putting and then driving, $q_*(s, putter) = -4$ if the green is reachable by putting and then driving two times, and so on. 
+The optimal action-value function for putting in state $s$ and then following the optimal policy, $q_*(s, putter)$, is 0 if $s$ is in the hole. Otherwise it is -1 plus looking ahead to the next state $s^\prime$ and adding its optimal state-value $v_*(s^\prime)$. $q_*(s, putter) = -1$ if $s$ is on the green, $q_*(s, putter) = -2$ if the green is reachable by putting from $s$, $q_*(s, putter) = -3$ if the green is reachable by putting and then driving, $q_*(s, putter) = -4$ if the green is reachable by putting and then driving two times, and so on. 
 
 ## Exercise 3.22
 
-Consider the continuing MDP shown to the right. The only decision to be made is that in the top state, where two actions are available, left and right. The numbers show the rewards that are received deterministically after each action. There are exactly two deterministic policies, $\pi_{left}$ and $\pi_{right}$. What policy is optimal if $\gamma = 0$? If $\gamma = 0.9$? If $\gamma = 0.5$?
+Consider the continuing MDP shown to the right (see the book). The only decision to be made is that in the top state, where two actions are available, left and right. The numbers show the rewards that are received deterministically after each action. There are exactly two deterministic policies, $\pi_{left}$ and $\pi_{right}$. What policy is optimal if $\gamma = 0$? If $\gamma = 0.9$? If $\gamma = 0.5$?
 
 **My answer:**
 
@@ -361,3 +361,90 @@ Thus:
 * If $\gamma = 0$, we have $v_{\pi_{left}}(s_{top}) = 1$ and $v_{\pi_{right}}(s_{top}) = 0$, and thus $\pi_{left}$ is optimal.
 * If $\gamma = 0.9$, we have $v_{\pi_{left}}(s_{top}) ≈ 5.3$ and $v_{\pi_{right}}(s_{top}) ≈ 9.5$, and thus $\pi_{right}$ is optimal.
 * If $\gamma = 0.5$, we have $v_{\pi_{left}}(s_{top}) = v_{\pi_{right}}(s_{top}) = \frac{4}{3}$, and thus both policies are optimal.
+
+## Exercise 3.23
+
+Give the Bellman equation for $q_*$ for the recycling robot.
+
+**My answer:**
+
+$$
+\begin{aligned}
+q_*(s, a) &= \mathbb{E} \big[R_{t+1} + \gamma \max_{a^\prime} q_*(S_{t+1}, a^\prime) | S_t = s, A_t = a \big] \\
+&= \sum_{s^\prime, r} p(s^\prime, r | s, a) \big[r + \gamma \max_{a^\prime} q_*(s^\prime, a^\prime) \big] \\
+&= \sum_{s^\prime} p(s^\prime | s, a) \big[r(s, a, s^\prime) + \gamma \max_{a^\prime} q_*(s^\prime, a^\prime) \big]
+\end{aligned}
+$$
+
+Multiple steps are included for the state-action pair $(high, search) = (h, s)$. The procedure is very similar for the other state-action pairs and steps have been omitted for brevity.
+
+$$
+\begin{aligned}
+q_*(h, s) &= \max
+\begin{cases}
+p(h | h, s) \big[r(h, s, h) + \gamma q_*(h, s) \big] + p(l | h, s) \big[r(h, s, l) + \gamma q_*(l, s) \big], \\
+p(h | h, s) \big[r(h, s, h) + \gamma q_*(h, s) \big] + p(l | h, s) \big[r(h, s, l) + \gamma q_*(l, w) \big], \\
+p(h | h, s) \big[r(h, s, h) + \gamma q_*(h, w) \big] + p(l | h, s) \big[r(h, s, l) + \gamma q_*(l, s) \big], \\
+p(h | h, s) \big[r(h, s, h) + \gamma q_*(h, w) \big] + p(l | h, s) \big[r(h, s, l) + \gamma q_*(l, w) \big]
+\end{cases} \\
+&= \max
+\begin{cases}
+\alpha \big[r_s + \gamma q_*(h, s) \big] + (1 - \alpha) \big[r_s + \gamma q_*(l, s) \big], \\
+\alpha \big[r_s + \gamma q_*(h, s) \big] + (1 - \alpha) \big[r_s + \gamma q_*(l, w) \big], \\
+\alpha \big[r_s + \gamma q_*(h, w) \big] + (1 - \alpha) \big[r_s + \gamma q_*(l, s) \big], \\
+\alpha \big[r_s + \gamma q_*(h, w) \big] + (1 - \alpha) \big[r_s + \gamma q_*(l, w) \big]
+\end{cases} \\
+&= \max
+\begin{cases}
+r_s + \gamma \big[\alpha q_*(h, s) + (1 - \alpha) q_*(l, s) \big], \\
+r_s + \gamma \big[\alpha q_*(h, s) + (1 - \alpha) q_*(l, w) \big], \\
+r_s + \gamma \big[\alpha q_*(h, w) + (1 - \alpha) q_*(l, s) \big], \\
+r_s + \gamma \big[\alpha q_*(h, w) + (1 - \alpha) q_*(l, w) \big]
+\end{cases}
+\end{aligned}
+$$
+
+$$
+\begin{aligned}
+q_*(h, w) &= \max
+\begin{cases}
+r_w + \gamma q_*(h, s), \\
+r_w + \gamma q_*(h, w)
+\end{cases}
+\end{aligned}
+$$
+
+$$
+\begin{aligned}
+q_*(l, s) &= \max
+\begin{cases}
+(1 - \beta) \big[-3 + \gamma q_*(h, s) \big] + \beta \big[r_s + \gamma q_*(l, s) \big], \\
+(1 - \beta) \big[-3 + \gamma q_*(h, s) \big] + \beta \big[r_s + \gamma q_*(l, w) \big], \\
+(1 - \beta) \big[-3 + \gamma q_*(h, s) \big] + \beta \big[r_s + \gamma q_*(l, r) \big], \\
+(1 - \beta) \big[-3 + \gamma q_*(h, w) \big] + \beta \big[r_s + \gamma q_*(l, s) \big], \\
+(1 - \beta) \big[-3 + \gamma q_*(h, w) \big] + \beta \big[r_s + \gamma q_*(l, w) \big], \\
+(1 - \beta) \big[-3 + \gamma q_*(h, w) \big] + \beta \big[r_s + \gamma q_*(l, r) \big]
+\end{cases}
+\end{aligned}
+$$
+
+$$
+\begin{aligned}
+q_*(l, w) &= \max
+\begin{cases}
+r_w + \gamma q_*(l, s), \\
+r_w + \gamma q_*(l, w), \\
+r_w + \gamma q_*(l, r)
+\end{cases}
+\end{aligned}
+$$
+
+$$
+\begin{aligned}
+q_*(l, r) &= \max
+\begin{cases}
+\gamma q_*(h, s), \\
+\gamma q_*(h, w)
+\end{cases}
+\end{aligned}
+$$

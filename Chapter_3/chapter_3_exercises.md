@@ -448,3 +448,23 @@ q_*(l, r) &= \max
 \end{cases}
 \end{aligned}
 $$
+
+## Exercise 3.24
+
+Figure 3.5 gives the optimal value of the best state of the gridworld as 24.4, to one decimal place. Use your knowledge of the optimal policy and (3.8) to express this value symbolically, and then to compute it to three decimal places.
+
+**My answer:**
+
+$$
+\begin{aligned}
+G_t &= R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \dots \\
+&= 10 + 0 + 0 + 0 + 0 + 10 \gamma^5 + 0 + 0 + 0 + 0 + 10 \gamma^{10} + \dots \\
+&= 10 \big[(\gamma^5)^0 + (\gamma^{5})^1 + (\gamma^{5})^2 + \dots \big] \\
+&= \frac{10}{1 - \gamma^5} \\
+&= \frac{10}{1 - 0.9^5} \\
+&≈ 24.419
+\end{aligned}
+$$
+
+## Exercise 3.25
+

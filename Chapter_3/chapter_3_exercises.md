@@ -468,3 +468,54 @@ $$
 
 ## Exercise 3.25
 
+Give an equation for $v_*$ in terms of $q_*$.
+
+**My answer:**
+
+$$
+v_*(s) = \max_{a \in \mathcal{A}(s)} q_*(s, a)
+$$
+
+## Exercise 3.26
+
+Give an equation for $q_*$ in terms of $v_*$ and the four-argument $p$.
+
+**My answer:**
+
+$$
+\begin{aligned}
+q_*(s, a) &= \mathbb{E}_{\pi_*}\big[R_{t+1} + \gamma G_{t+1} | S_t = s, A_t = a \big] \\
+&= \mathbb{E}\big[R_{t+1} + \gamma v_*(S_{t+1}) | S_t = s, A_t = a \big] \\
+&= \sum_{s^\prime, r} p(s^\prime, r | s, a) \big[r + \gamma v_*(s^\prime) \big]
+\end{aligned}
+$$
+
+## Exercise 3.27
+
+Give an equation for $\pi_*$ in terms of $q_*$.
+
+**My answer:**
+
+$$
+\pi_*(s) = \argmax_a q_*(s, a)
+$$
+
+## Exercise 3.28
+
+Give an equation for $\pi_*$ in terms of $v_*$ and the four-argument $p$.
+
+**My answer:**
+
+$$
+\begin{aligned}
+\pi_*(s) &= \argmax_a q_*(s, a) \\
+&= \argmax_a \sum_{s^\prime, r} p(s^\prime, r | s, a) \big[r + \gamma v_*(s^\prime) \big]
+\end{aligned}
+$$
+
+## Exercise 3.29
+
+Rewrite the four Bellman equations for the four value functions ($v_\pi$, $v_*$, $q_\pi$, and $q_*$) in terms of the three argument function $p$ (3.4) and the two-argument function r (3.5).
+
+**My answer:**
+

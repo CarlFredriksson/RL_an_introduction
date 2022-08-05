@@ -497,7 +497,7 @@ Give an equation for $\pi_*$ in terms of $q_*$.
 **My answer:**
 
 $$
-\pi_*(s) = \argmax_a q_*(s, a)
+\pi_*(s) = \argmax_{a \in \mathcal{A}(s)} q_*(s, a)
 $$
 
 ## Exercise 3.28
@@ -508,14 +508,47 @@ Give an equation for $\pi_*$ in terms of $v_*$ and the four-argument $p$.
 
 $$
 \begin{aligned}
-\pi_*(s) &= \argmax_a q_*(s, a) \\
-&= \argmax_a \sum_{s^\prime, r} p(s^\prime, r | s, a) \big[r + \gamma v_*(s^\prime) \big]
+\pi_*(s) &= \argmax_{a \in \mathcal{A}(s)} q_*(s, a) \\
+&= \argmax_{a \in \mathcal{A}(s)} \sum_{s^\prime, r} p(s^\prime, r | s, a) \big[r + \gamma v_*(s^\prime) \big]
 \end{aligned}
 $$
 
 ## Exercise 3.29
 
-Rewrite the four Bellman equations for the four value functions ($v_\pi$, $v_*$, $q_\pi$, and $q_*$) in terms of the three argument function $p$ (3.4) and the two-argument function r (3.5).
+Rewrite the four Bellman equations for the four value functions ($v_\pi$, $v_*$, $q_\pi$, and $q_*$) in terms of the three argument function $p$ (3.4) and the two-argument function $r$ (3.5).
 
 **My answer:**
 
+The original Bellman equation is the first step in rewriting each function below.
+
+$$
+\begin{aligned}
+v_\pi(s) &= \sum_a \pi(a | s) \sum_{s^\prime, r} p(s^\prime, r | s, a) \big[r + \gamma v_\pi(s^\prime) \big] \\
+&= \sum_a \pi(a | s) \bigg[\sum_r r \sum_{s^\prime} p(s^\prime, r | s, a) + \gamma \sum_{s^\prime} \sum_r p(s^\prime, r | s, a) v_\pi(s^\prime) \bigg] \\
+&= \sum_a \pi(a | s) \bigg[r(s, a) + \gamma \sum_{s^\prime} p(s^\prime | s, a) v_\pi(s^\prime) \bigg]
+\end{aligned}
+$$
+
+$$
+\begin{aligned}
+v_*(s) &= \max_a \sum_{s^\prime, r} p(s^\prime, r | s, a) \big[r + \gamma v_*(s^\prime) \big] \\
+&= \max_a \bigg[\sum_r r \sum_{s^\prime} p(s^\prime, r | s, a) + \gamma \sum_{s^\prime} \sum_r p(s^\prime, r | s, a) v_*(s^\prime) \bigg] \\
+&= \max_a \bigg[r(s, a) + \gamma \sum_{s^\prime} p(s^\prime | s, a) v_*(s^\prime) \bigg]
+\end{aligned}
+$$
+
+$$
+\begin{aligned}
+q_\pi(s, a) &= \sum_{s^\prime, r} p(s^\prime, r | s, a) \bigg[r + \gamma \sum_{a^\prime} \pi(a^\prime | s^\prime) q_\pi(s^\prime, a^\prime) \bigg] \\
+&= \sum_r r \sum_{s^\prime} p(s^\prime, r | s, a) + \gamma \sum_{s^\prime} \sum_r p(s^\prime, r | s, a) \sum_{a^\prime} \pi(a^\prime | s^\prime) q_\pi(s^\prime, a^\prime) \\
+&= r(s, a) + \gamma \sum_{s^\prime} p(s^\prime | s, a) \sum_{a^\prime} \pi(a^\prime | s^\prime) q_\pi(s^\prime, a^\prime)
+\end{aligned}
+$$
+
+$$
+\begin{aligned}
+q_*(s, a) &= \sum_{s^\prime, r} p(s^\prime, r | s, a) \bigg[r + \gamma \max_{a^\prime} q_*(s^\prime, a^\prime) \bigg] \\
+&= \sum_r r \sum_{s^\prime} p(s^\prime, r | s, a) + \gamma \sum_{s^\prime} \sum_r p(s^\prime, r | s, a) \max_{a^\prime} q_*(s^\prime, a^\prime) \\
+&= r(s, a) + \gamma \sum_{s^\prime} p(s^\prime | s, a) \max_{a^\prime} q_*(s^\prime, a^\prime)
+\end{aligned}
+$$

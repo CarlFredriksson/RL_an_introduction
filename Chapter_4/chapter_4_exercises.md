@@ -45,6 +45,33 @@ v_\pi(15) &= \sum_a \pi(a | 15) \sum_{s^\prime, r} p(s^\prime, r | 15, a) \big[r
 \end{aligned}
 $$
 
-For the case that the transitions from the original states are changed:
+For the case where the transitions from state 13 are changed:
 
-TODO: Write program for iterative policy evaluation - start with replicating the $v_\pi$ table in the book
+I wrote a program implementing iterative policy evaluation for this example. It got the same results as in the book for the original example and validated $v_\pi(15) = -20$ for the case that transitions from the original states are unchanged. When running the program for the case where transitions for state 13 are changed I found that the state values didn't change. This makes sense, since the state values for the next state after selecting an action is identical for state 13 and state 15. Thus we still have:
+
+$$
+v_\pi(15) = -20
+$$
+
+## Exercise 4.3
+
+What are the equations analogous to (4.3), (4.4), and (4.5), but for action-value functions instead of state-value functions?
+
+**My answer:**
+
+$$
+\begin{aligned}
+q_\pi(s, a) &= \mathbb{E}_\pi[G_t | S_t = s, A_t = a] \\
+&= \mathbb{E}_\pi[R_t + \gamma G_{t+1} | S_t = s, A_t = a] \\
+&= \mathbb{E}[R_t + \gamma v_\pi(S_{t+1}) | S_t = s, A_t = a] \\
+&= \mathbb{E}[R_t + \gamma \sum_{a^\prime \in \mathcal{A}(S_{t+1})} \pi(a^\prime | S_{t+1})q_\pi(S_{t+1}, a^\prime) | S_t = s, A_t = a] \\
+&= \sum_{s^\prime, r} p(s^\prime, r | s, a) \big[r + \gamma \sum_{a^\prime} \pi(a^\prime | s^\prime) q_\pi(s^\prime, a^\prime) \big]
+\end{aligned}
+$$
+
+$$
+\begin{aligned}
+q_{k+1}(s, a) &= \mathbb{E}[R_t + \gamma \sum_{a^\prime \in \mathcal{A}(S_{t+1})} \pi(a^\prime | S_{t+1})q_k(S_{t+1}, a^\prime) | S_t = s, A_t = a] \\
+&= \sum_{s^\prime, r} p(s^\prime, r | s, a) \big[r + \gamma \sum_{a^\prime} \pi(a^\prime | s^\prime) q_k(s^\prime, a^\prime) \big]
+\end{aligned}
+$$

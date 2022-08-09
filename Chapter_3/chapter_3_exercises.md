@@ -27,7 +27,7 @@ Is the MDP framework adequate to usefully represent *all* goal-directed learning
 
 **My answer:**
 
-The way the question is phrased makes me think that the answer is no, and it could have something to do with tasks where we can't formulate the goal using only reward signals, but I can't think of any examples.
+The MDP framework seems general enough to usefully represent the vast majority of interesting goal-directed learning tasks. I can't think of any clear exceptions.
 
 ## Exercise 3.3
 
@@ -71,10 +71,12 @@ Suppose you treated pole-balancing as an episodic task but also used discounting
 
 **My answer:**
 
+I was a bit uncertain about how to interpret this part of the task definition: "where $K$ is the number of time steps before failure (as well as to the times of later failures)". I chose to interpret it as there being $K$ number of steps until the next failure, and then K steps until the next failure after each failure.
+
 Episodic with discounting:
 
 $$
-G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \dots + \gamma^{T-t-1} R_T = -(\gamma^{T-t-1})
+G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \dots + \gamma^{T-t-1} R_T = -\gamma^{T-t-1} = -\gamma^{K-1}
 $$
 
 Continuous (with discounting):
@@ -82,10 +84,10 @@ Continuous (with discounting):
 $$
 \begin{aligned}
 G_t &= R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \dots + \gamma^{K-1} R_{t+K} + \dots + \gamma^{2K-1} R_{t+2K} + \dots \\ &= (-1)\gamma^{K-1} + (-1)\gamma^{2K-1} + (-1)\gamma^{3K-1} + \dots \\
-&= (-\gamma^{-1}) (\gamma^K + [\gamma^{K}]^2 + [\gamma^{K}]^3 + \dots) \\
-&= (-\gamma^{-1}) \bigg[\sum_{i=1}^{\infin} (\gamma^K)^i \bigg] \\
-&= (-\gamma^{-1}) \bigg[-1 + \sum_{i=0}^{\infin} (\gamma^K)^i \bigg] \\
-&= (-\gamma^{-1}) \bigg[-1 + \frac{1}{1 - \gamma^K} \bigg] \\
+&= -\gamma^{-1} (\gamma^K + [\gamma^{K}]^2 + [\gamma^{K}]^3 + \dots) \\
+&= -\gamma^{-1} \bigg[\sum_{i=1}^{\infin} (\gamma^K)^i \bigg] \\
+&= -\gamma^{-1} \bigg[-1 + \sum_{i=0}^{\infin} (\gamma^K)^i \bigg] \\
+&= -\gamma^{-1} \bigg[-1 + \frac{1}{1 - \gamma^K} \bigg] \\
 &= \frac{1}{\gamma} - \frac{1}{\gamma (1 - \gamma^K)} \\
 &= \frac{(1 - \gamma^K) - 1}{\gamma (1 - \gamma^K)} \\
 &= -\frac{\gamma^K}{\gamma (1 - \gamma^K)} \\

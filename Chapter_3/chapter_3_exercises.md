@@ -164,6 +164,8 @@ $$
 \end{aligned}
 $$
 
+QED.
+
 ## Exercise 3.11
 
 If the current state is $S_t$, and actions are selected according to a stochastic policy $\pi$, then what is the expectation of $R_{t+1}$ in terms of $\pi$ and the four-argument function $p$ (3.2)?
@@ -171,7 +173,10 @@ If the current state is $S_t$, and actions are selected according to a stochasti
 **My answer:**
 
 $$
-\mathbb{E}_{\pi}[R_{t+1} | S_t] = \sum_{a \in \mathcal{A}(S_t)} \pi(a|S_t) \sum_{r \in \mathcal{R}} r \sum_{s^{\prime} \in \mathcal{S}} p(s^{\prime}, r | S_t, a)
+\begin{aligned}
+\mathbb{E}_{\pi}[R_{t+1} | S_t] &= \sum_{a \in \mathcal{A}(S_t)} \pi(a|S_t) \mathbb{E}[R_{t+1} | S_t, A_t = a] \\
+&= \sum_{a \in \mathcal{A}(S_t)} \pi(a|S_t) \sum_{r \in \mathcal{R}} r \sum_{s^{\prime} \in \mathcal{S}} p(s^{\prime}, r | S_t, a)
+\end{aligned}
 $$
 
 ## Exercise 3.12

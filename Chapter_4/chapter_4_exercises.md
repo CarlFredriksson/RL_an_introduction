@@ -87,7 +87,7 @@ The policy iteration algorithm on page 80 has a subtle bug in that it may never 
 2. Policy Evaluation
     * Loop:
         * $\Delta \leftarrow 0$
-        * Loop for each $s \in \mathcal{S}$:
+        * For each $s \in \mathcal{S}$:
             * $v \leftarrow V(s)$
             * $V(s) \leftarrow \sum_{s^\prime, r} p(s^\prime, r | s, \pi(s)) \big[r + \gamma V(s^\prime) \big]$
             * $\Delta \leftarrow \max(\Delta, |v - V(s)|)$
@@ -102,3 +102,29 @@ The policy iteration algorithm on page 80 has a subtle bug in that it may never 
     * If $\textit{policy-stable}$, then stop and return $V \approx v_*$ and $\pi \approx \pi_*$; else go to 2
 
 ## Exercise 4.5
+
+How would policy iteration be defined for action values? Give a complete algorithm for computing $q_*$, analogous to that on page 80 for computing $v_*$. Please pay special attention to this exercise, because the ideas involved will be used throughout the rest of the book.
+
+**My answer:**
+
+1. Initialization
+    * $Q(s, a) \in \mathbb{R}$ arbitrarily for all $s \in \mathcal{S}, a \in \mathcal{A}(s)$
+    * $\pi(s) \in \mathcal{A}(s)$ arbitrarily for all $s \in \mathcal{S}$
+    * $Q(terminal, \_) = 0$
+2. Policy Evaluation
+    * Loop:
+        * $\Delta \leftarrow 0$
+        * For each $s \in \mathcal{S}, a \in \mathcal{A}(s)$:
+            * $q \leftarrow Q(s, a)$
+            * $Q(s, a) \leftarrow \sum_{s^\prime, r} p(s^\prime, r | s, a) \big[r + \gamma Q(s^\prime, \pi(s^\prime)) \big]$
+            * $\Delta \leftarrow \max(\Delta, |q - Q(s, a)|)$
+    * until $\Delta < \theta$ (a small positive number determining the accuracy of estimation)
+3. Policy Improvement
+    * $\textit{policy-stable} \leftarrow true$
+    * For each $s \in \mathcal{S}$:
+        *  $\textit{old-action} \leftarrow \pi(s)$
+        *  $\pi(s) \leftarrow \argmax_a Q(s, a)$
+        *  If $Q(s, \pi(s)) > Q(s, \textit{old-action})$, then $\textit{policy-stable} \leftarrow false$
+    * If $\textit{policy-stable}$, then stop and return $Q \approx q_*$ and $\pi \approx \pi_*$; else go to 2
+
+## Exercise 4.6

@@ -75,3 +75,30 @@ q_{k+1}(s, a) &= \mathbb{E}[R_t + \gamma \sum_{a^\prime \in \mathcal{A}(S_{t+1})
 &= \sum_{s^\prime, r} p(s^\prime, r | s, a) \big[r + \gamma \sum_{a^\prime} \pi(a^\prime | s^\prime) q_k(s^\prime, a^\prime) \big]
 \end{aligned}
 $$
+
+## Exercise 4.4
+
+The policy iteration algorithm on page 80 has a subtle bug in that it may never terminate if the policy continually switches between two or more policies that are equally good. This is okay for pedagogy, but not for actual use. Modify the pseudocode so that convergence is guaranteed.
+
+**My answer:**
+
+1. Initialization
+    * $V(s) \in \mathbb{R}$ and $\pi(s) \in \mathcal{A}(s)$ arbitrarily for all $s \in \mathcal{S}; V(terminal) = 0$
+2. Policy Evaluation
+    * Loop:
+        * $\Delta \leftarrow 0$
+        * Loop for each $s \in \mathcal{S}$:
+            * $v \leftarrow V(s)$
+            * $V(s) \leftarrow \sum_{s^\prime, r} p(s^\prime, r | s, \pi(s)) \big[r + \gamma V(s^\prime) \big]$
+            * $\Delta \leftarrow \max(\Delta, |v - V(s)|)$
+    * until $\Delta < \theta$ (a small positive number determining the accuracy of estimation)
+3. Policy Improvement
+    * $\textit{policy-stable} \leftarrow true$
+    * For each $s \in \mathcal{S}$:
+        *  $\textit{old-action} \leftarrow \pi(s)$
+        *  $\pi(s) \leftarrow \argmax_a \sum_{s^\prime, r} p(s^\prime, r | s, a)\big[r + \gamma V(s^\prime) \big]$
+        *  $Q(s, \pi(s)) \leftarrow \sum_{s^\prime, r} p(s^\prime, r | s, \pi(s))\big[r + \gamma V(s^\prime) \big]$
+        *  If $Q(s, \pi(s)) > V(s)$, then $\textit{policy-stable} \leftarrow false$
+    * If $\textit{policy-stable}$, then stop and return $V \approx v_*$ and $\pi \approx \pi_*$; else go to 2
+
+## Exercise 4.5

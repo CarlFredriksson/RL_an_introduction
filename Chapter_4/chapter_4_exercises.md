@@ -128,3 +128,25 @@ How would policy iteration be defined for action values? Give a complete algorit
     * If $\textit{policy-stable}$, then stop and return $Q \approx q_*$ and $\pi \approx \pi_*$; else go to 2
 
 ## Exercise 4.6
+
+Suppose you are restricted to considering only policies that are $\epsilon-soft$, meaning that the probability of selecting each action in each state, s, is at least $\epsilon/|A(s)|$. Describe qualitatively the changes that would be required in each of the steps 3, 2, and 1, in that order, of the policy iteration algorithm for $v_*$ on page 80.
+
+**My answer:**
+
+In step 3: rather than setting a deterministic policy selecting the action $a$ that maximizes $\sum_{s^\prime, r} p(s^\prime, r | s, a)\big[r + \gamma V(s^\prime) \big]$ in each state, we would would give the maximum possible probability to the maximizing action, and the other actions would get the least possible probability $\epsilon/|A(s)|$.
+
+In step 2: we would have to take into account that the policy is not deterministic and change:
+
+$$
+V(s) \leftarrow \sum_{s^\prime, r} p(s^\prime, r | s, \pi(s)) \big[r + \gamma V(s^\prime) \big]
+$$
+
+to:
+
+$$
+V(s) \leftarrow \sum_{a \in \mathcal{A}(s)} \pi(a | s) \sum_{s^\prime, r} p(s^\prime, r | s, a) \big[r + \gamma V(s^\prime) \big]
+$$
+
+In step 1: rather than initializing an arbitrary deterministic policy, we would have to initialize $\pi(a | s)$ so that all actions in every state has at least the minimum probability $\epsilon/|A(s)|$ of being selected.
+
+## Exercise 4.7

@@ -9,16 +9,22 @@ def poisson_pmf(lam, x):
 def poisson_cdf(lam, x):
     return np.sum([poisson_pmf(lam, n) for n in range(x + 1)])
 
-def expected_immediate_reward(state, action):
-    # TODO:
-    # Let's say state is [3, 2], then for loc 1 we have
-    # [0, 1, 2, 3, 3, 3, ..., 3] (use 21 elements)
-    # dot product with poisson_pmf(lam, [0, 1, 2, 3, ..., 20])
-    # for loc 2 we have
-    # [0, 1, 2, 2, 2, 2, ..., 2] (use 21 elements)
-    # dot product with poisson_pmf(lam, [0, 1, 2, 3, ..., 20])
-    # add above expected values with -|action|*2
-    return 0
+# r(s, a)
+def expected_immediate_reward(state, action, expected_num_req_loc1, expected_num_req_loc2,
+                              reward_per_rented_car=10, cost_per_moved_car=2):
+    expected_reward_loc1 = 0
+    for i in range(state[0]):
+        expected_reward_loc1 += reward_per_rented_car * i * poisson_pmf(expected_num_req_loc1, i)
+    expected_reward_loc1 += reward_per_rented_car * state[0] * (1 - poisson_cdf(expected_num_req_loc1, state[0] - 1))
+
+    expected_reward_loc2 = 0
+    for i in range(state[1]):
+        expected_reward_loc2 += reward_per_rented_car * i * poisson_pmf(expected_num_req_loc2, i)
+    expected_reward_loc2 += reward_per_rented_car * state[1] * (1 - poisson_cdf(expected_num_req_loc2, state[1] - 1))
+
+    movement_cost = np.abs(action) * cost_per_moved_car
+
+    return expected_reward_loc1 + expected_reward_loc2 - movement_cost
 
 # p(s', r | s, a)
 def dynamics_function(new_state, reward, old_state, action):

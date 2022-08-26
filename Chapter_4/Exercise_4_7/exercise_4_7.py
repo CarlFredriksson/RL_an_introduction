@@ -26,6 +26,7 @@ def expected_immediate_reward(state, action, expected_num_req, reward_per_rented
 
     return expected_reward_loc1 + expected_reward_loc2 - movement_cost
 
+"""
 # p(s' | s, a)
 def transition_probability(next_state, state, action, expected_num_req, expected_num_ret, precision=10):
     # Trying to move cars that aren't there
@@ -57,6 +58,22 @@ def transition_probability(next_state, state, action, expected_num_req, expected
             probability_loc2 += poisson_pmf(expected_num_ret[1], num_ret) * poisson_pmf(expected_num_req[1], num_req)
 
     return probability_loc1 * probability_loc2
+"""
+
+# p(s' | s, a)
+def transition_probability(next_state, state, action, expected_num_req, expected_num_ret, precision=10):
+    # Trying to move cars that aren't there
+    if action > state[0] or -action > state[1]:
+        return 0
+    
+    # Move cars
+    num_cars = (state[0] - action, state[1] + action)
+
+    # Probability for num_cars[0] to get to next_state[0] after requests and returns
+    diff = next_state[0] - num_cars[0]
+    
+
+    return num_cars, diff
 
 def update_state_value(state_values, state, action, expected_num_req, expected_num_ret, discount_rate):
     new_state_value = expected_immediate_reward(state, action, expected_num_req)

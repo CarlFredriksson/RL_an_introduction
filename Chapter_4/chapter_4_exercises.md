@@ -95,10 +95,9 @@ The policy iteration algorithm on page 80 has a subtle bug in that it may never 
 3. Policy Improvement
     * $\textit{policy-stable} \leftarrow true$
     * For each $s \in \mathcal{S}$:
-        *  $\textit{old-action} \leftarrow \pi(s)$
         *  $\pi(s) \leftarrow \argmax_a \sum_{s^\prime, r} p(s^\prime, r | s, a)\big[r + \gamma V(s^\prime) \big]$
         *  $Q(s, \pi(s)) \leftarrow \sum_{s^\prime, r} p(s^\prime, r | s, \pi(s))\big[r + \gamma V(s^\prime) \big]$
-        *  If $Q(s, \pi(s)) > V(s)$, then $\textit{policy-stable} \leftarrow false$
+        *  If $Q(s, \pi(s)) > V(s) + \theta$, then $\textit{policy-stable} \leftarrow false$
     * If $\textit{policy-stable}$, then stop and return $V \approx v_*$ and $\pi \approx \pi_*$; else go to 2
 
 ## Exercise 4.5
@@ -124,7 +123,7 @@ How would policy iteration be defined for action values? Give a complete algorit
     * For each $s \in \mathcal{S}$:
         *  $\textit{old-action} \leftarrow \pi(s)$
         *  $\pi(s) \leftarrow \argmax_a Q(s, a)$
-        *  If $Q(s, \pi(s)) > Q(s, \textit{old-action})$, then $\textit{policy-stable} \leftarrow false$
+        *  If $Q(s, \pi(s)) > Q(s, \textit{old-action}) + \theta$, then $\textit{policy-stable} \leftarrow false$
     * If $\textit{policy-stable}$, then stop and return $Q \approx q_*$ and $\pi \approx \pi_*$; else go to 2
 
 ## Exercise 4.6

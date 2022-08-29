@@ -17,54 +17,32 @@ def skellam_pmf(mu_1, mu_2, k):
 
 # r(s, a)
 def expected_immediate_reward(state, action, expected_num_req, reward_per_rented_car=10, cost_per_moved_car=2):
+    # Move cars
+    if action > state[0] or -action > state[1]:
+        raise Exception("Trying to move cars that aren't there")
+    num_cars = (state[0] - action, state[1] + action)
+
     # Expected reward for location 1
     expected_reward_loc1 = 0
-    for i in range(state[0]):
+    for i in range(num_cars[0]):
         expected_reward_loc1 += reward_per_rented_car * i * poisson_pmf(expected_num_req[0], i)
-    expected_reward_loc1 += reward_per_rented_car * state[0] * (1 - poisson_cdf(expected_num_req[0], state[0] - 1))
+    expected_reward_loc1 += reward_per_rented_car * num_cars[0] * (1 - poisson_cdf(expected_num_req[0], num_cars[0] - 1))
 
     # Expected reward for location 2
     expected_reward_loc2 = 0
-    for i in range(state[1]):
+    for i in range(num_cars[1]):
         expected_reward_loc2 += reward_per_rented_car * i * poisson_pmf(expected_num_req[1], i)
-    expected_reward_loc2 += reward_per_rented_car * state[1] * (1 - poisson_cdf(expected_num_req[1], state[1] - 1))
+    expected_reward_loc2 += reward_per_rented_car * num_cars[1] * (1 - poisson_cdf(expected_num_req[1], num_cars[1] - 1))
 
     movement_cost = np.abs(action) * cost_per_moved_car
 
     return expected_reward_loc1 + expected_reward_loc2 - movement_cost
 
-"""
 # p(s' | s, a)
-# NOTE: Edge cases for next state values 0 and 20 are not handled perfectly according to
-# the problem statement, since returns that lead to >20 and requests that lead to <0 aren't counted.
 def transition_probability(next_state, state, action, expected_num_req, expected_num_ret):
-    # Trying to move cars that aren't there
-    if action > state[0] or -action > state[1]:
-        return 0
-    
     # Move cars
-    num_cars = (state[0] - action, state[1] + action)
-
-    # Probability for num_cars[0] to get to next_state[0] after requests and returns
-    diff = next_state[0] - num_cars[0]
-    prob_1 = skellam_pmf(expected_num_ret[0], expected_num_req[0], diff)
-
-    # Probability for num_cars[1] to get to next_state[1] after requests and returns
-    diff = next_state[1] - num_cars[1]
-    prob_2 = skellam_pmf(expected_num_ret[1], expected_num_req[1], diff)
-
-    return prob_1 * prob_2
-"""
-
-# p(s' | s, a)
-# NOTE: Edge cases for next state values 0 and 20 are not handled perfectly according to
-# the problem statement, since returns that lead to >20 and requests that lead to <0 aren't counted.
-def transition_probability(next_state, state, action, expected_num_req, expected_num_ret):
-    # Trying to move cars that aren't there
     if action > state[0] or -action > state[1]:
-        return 0
-    
-    # Move cars
+        raise Exception("Trying to move cars that aren't there")
     num_cars = (state[0] - action, state[1] + action)
 
     # Probability for num_cars[0] to get to next_state[0] after requests and returns
@@ -72,13 +50,22 @@ def transition_probability(next_state, state, action, expected_num_req, expected
     prob_1 = skellam_pmf(expected_num_ret[0], expected_num_req[0], diff)
 
     if next_state[0] == 0:
-        prob_1 = 0
-        for i in range()
-    #elif next_state[0] == 20:
+        for i in range(1, 11):
+            prob_1 += skellam_pmf(expected_num_ret[0], expected_num_req[0], diff - i)
+    elif next_state[0] == 20:
+        for i in range(1, 11):
+            prob_1 += skellam_pmf(expected_num_ret[0], expected_num_req[0], diff + i)
 
     # Probability for num_cars[1] to get to next_state[1] after requests and returns
     diff = next_state[1] - num_cars[1]
     prob_2 = skellam_pmf(expected_num_ret[1], expected_num_req[1], diff)
+
+    if next_state[1] == 0:
+        for i in range(1, 11):
+            prob_2 += skellam_pmf(expected_num_ret[1], expected_num_req[1], diff - i)
+    elif next_state[1] == 20:
+        for i in range(1, 11):
+            prob_2 += skellam_pmf(expected_num_ret[1], expected_num_req[1], diff + i)
 
     return prob_1 * prob_2
 
@@ -90,7 +77,7 @@ def update_state_value(state_values, state, action, expected_num_req, expected_n
             new_state_value += (
                 discount_rate
                 * transition_probability(next_state, state, action, expected_num_req, expected_num_ret)
-                * state_values[i ,j]
+                * state_values[i, j]
             )
     return new_state_value
 
@@ -125,7 +112,7 @@ def find_maximizing_action(state_values, state, expected_num_req, expected_num_r
                 state_action_value += (
                     discount_rate
                     * transition_probability(next_state, state, action, expected_num_req, expected_num_ret)
-                    * state_values[i ,j]
+                    * state_values[i, j]
                 )
         if state_action_value > max_state_action_value:
             maximizing_action = action

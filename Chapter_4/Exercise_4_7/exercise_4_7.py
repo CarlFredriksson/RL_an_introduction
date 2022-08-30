@@ -16,7 +16,8 @@ def skellam_pmf(mu_1, mu_2, k):
     return np.exp(-(mu_1 + mu_2)) * np.power(mu_1 / mu_2, k/2) * iv(np.abs(k), 2 * np.sqrt(mu_1 * mu_2))
 
 # r(s, a)
-def expected_immediate_reward(state, action, expected_num_req, reward_per_rented_car=10, cost_per_moved_car=2):
+def expected_immediate_reward(state, action, expected_num_req, is_updated_problem,
+                              reward_per_rented_car=10, cost_per_moved_car=2):
     # Move cars
     if action > state[0] or -action > state[1]:
         raise Exception("Trying to move cars that aren't there")
@@ -34,9 +35,20 @@ def expected_immediate_reward(state, action, expected_num_req, reward_per_rented
         expected_reward_loc2 += reward_per_rented_car * i * poisson_pmf(expected_num_req[1], i)
     expected_reward_loc2 += reward_per_rented_car * num_cars[1] * (1 - poisson_cdf(expected_num_req[1], num_cars[1] - 1))
 
+    # Movement cost
     movement_cost = np.abs(action) * cost_per_moved_car
+    if is_updated_problem and action > 0:
+        movement_cost = (action - 1) * cost_per_moved_car
 
-    return expected_reward_loc1 + expected_reward_loc2 - movement_cost
+    # Second parking lot cost
+    second_parking_lot_cost = 0
+    if is_updated_problem:
+        if num_cars[0] > 10:
+            second_parking_lot_cost += 10
+        if num_cars[1] > 10:
+            second_parking_lot_cost += 10
+
+    return expected_reward_loc1 + expected_reward_loc2 - movement_cost - second_parking_lot_cost
 
 # p(s' | s, a)
 def transition_probability(next_state, state, action, expected_num_req, expected_num_ret):
@@ -69,8 +81,9 @@ def transition_probability(next_state, state, action, expected_num_req, expected
 
     return prob_1 * prob_2
 
-def update_state_value(state_values, state, action, expected_num_req, expected_num_ret, discount_rate):
-    new_state_value = expected_immediate_reward(state, action, expected_num_req)
+def update_state_value(state_values, state, action, expected_num_req, expected_num_ret, discount_rate,
+                       is_updated_problem):
+    new_state_value = expected_immediate_reward(state, action, expected_num_req, is_updated_problem)
     for i in range(state_values.shape[0]):
         for j in range(state_values.shape[1]):
             next_state = (i, j)
@@ -82,7 +95,7 @@ def update_state_value(state_values, state, action, expected_num_req, expected_n
     return new_state_value
 
 def policy_evaluation(init_state_values, deterministic_policy, expected_num_req, expected_num_ret,
-                      discount_rate, max_num_iterations, policy_eval_threshold):
+                      discount_rate, max_num_iterations, policy_eval_threshold, is_updated_problem):
     state_values = init_state_values.copy()
     for i in range(max_num_iterations):
         delta = 0
@@ -92,7 +105,7 @@ def policy_evaluation(init_state_values, deterministic_policy, expected_num_req,
                 action = deterministic_policy[j, k]
                 old_state_value = state_values[j, k]
                 state_values[j, k] = update_state_value(
-                    state_values, state, action, expected_num_req, expected_num_ret, discount_rate
+                    state_values, state, action, expected_num_req, expected_num_ret, discount_rate, is_updated_problem
                 )
             delta = np.max((delta, np.abs(old_state_value - state_values[j, k])))
         if delta < policy_eval_threshold:
@@ -100,12 +113,13 @@ def policy_evaluation(init_state_values, deterministic_policy, expected_num_req,
     print("num eval iterations:", i)
     return state_values
 
-def find_maximizing_action(state_values, state, expected_num_req, expected_num_ret, discount_rate, max_num_moves):
+def find_maximizing_action(state_values, state, expected_num_req, expected_num_ret, discount_rate,
+                           max_num_moves, is_updated_problem):
     maximizing_action = 0
     max_state_action_value = -np.inf
     possible_actions = range(-np.min((state[1], max_num_moves)), np.min((state[0], max_num_moves)) + 1)
     for action in possible_actions:
-        state_action_value = expected_immediate_reward(state, action, expected_num_req)
+        state_action_value = expected_immediate_reward(state, action, expected_num_req, is_updated_problem)
         for i in range(state_values.shape[0]):
             for j in range(state_values.shape[1]):
                 next_state = (i, j)
@@ -120,21 +134,24 @@ def find_maximizing_action(state_values, state, expected_num_req, expected_num_r
     return maximizing_action, max_state_action_value
 
 def policy_improvement(state_values, init_deterministic_policy, expected_num_req, expected_num_ret,
-                       discount_rate, max_num_moves, policy_eval_threshold):
+                       discount_rate, max_num_moves, policy_eval_threshold, is_updated_problem):
     deterministic_policy = init_deterministic_policy.copy()
     policy_stable = True
     for i in range(state_values.shape[0]):
         for j in range(state_values.shape[1]):
             state = (i, j)
             maximizing_action, max_state_action_value = find_maximizing_action(state_values, state,
-                expected_num_req, expected_num_ret, discount_rate, max_num_moves)
+                expected_num_req, expected_num_ret, discount_rate, max_num_moves, is_updated_problem)
             deterministic_policy[i, j] = maximizing_action
             if max_state_action_value > state_values[i, j] + policy_eval_threshold:
                 policy_stable = False
     return deterministic_policy, policy_stable
 
-def plot_deterministic_policy(deterministic_policy):
+def plot_deterministic_policy(deterministic_policy, title, file_name=""):
     plt.figure(figsize = (8, 6))
     ax = sns.heatmap(deterministic_policy, linewidth=0.5, vmin=-5, vmax=5, annot=True)
     ax.invert_yaxis()
+    plt.title(title, fontsize=20)
+    if file_name != "":
+        plt.savefig(file_name, facecolor="white", transparent=False)
     plt.show()

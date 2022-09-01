@@ -148,7 +148,7 @@ $$
 
 In step 1: rather than initializing an arbitrary deterministic policy, we would have to initialize $\pi(a | s)$ so that all actions in every state has at least the minimum probability $\epsilon/|A(s)|$ of being selected.
 
-## Exercise 4.7
+## Exercise 4.7 (programming)
 
 Write a program for policy iteration and re-solve Jack’s car rental problem with the following changes. One of Jack’s employees at the first location rides a bus home each night and lives near the second location. She is happy to shuttle one car to the second location for free. Each additional car still costs $2, as do all cars moved in the other direction. In addition, Jack has limited parking space at each location. If more than 10 cars are kept overnight at a location (after any moving of cars), then an additional cost of $4 must be incurred to use a second parking lot (independent of how many cars are kept there). These sorts of nonlinearities and arbitrary dynamics often occur in real problems and cannot easily be handled by optimization methods other than dynamic programming. To check your program, first replicate the results given for the original problem.
 
@@ -176,3 +176,15 @@ $\pi_5$ is stable.
 ![Updated problem pi_5](Exercise_4_7/updated_problem_results/pi_5.png)
 
 ## Exercise 4.8
+
+Why does the optimal policy for the gambler’s problem have such a curious form? In particular, for capital of 50 it bets it all on one flip, but for capital of 51 it does not. Why is this a good policy?
+
+**My answer:**
+
+With 50 capital you have exactly enough to make a bet such that if the coin comes up heads you win. There is no way to split it up and bet multiple times to increase the probability of winning ($p_h$). With 51 you have enough to make a bet that could immediately win. However, you also have to opportunity of using the 1 extra capital to try to build up towards 75, where you could make two flips in a row that both could make you win. 25 first and then 50 if the first one fails. On the other hand, if you immediately bet 50 and lose, you can try to build up the 1 left over to 25. Building up from 1 to 25 is equally unlikely as from 51 to 75, but the former lets you make a 25 bet to get to 50 while the latter lets you make a 25 bet to win, the latter is clearly preferable.
+
+## Exercise 4.9 (programming)
+
+Implement value iteration for the gambler’s problem and solve it for $p_h = 0.25$ and $p_h = 0.55$. In programming, you may find it convenient to introduce two dummy states corresponding to termination with capital of 0 and 100, giving them values of 0 and 1 respectively. Show your results graphically, as in Figure 4.3. Are your results stable as $\theta \to 0$?
+
+**My answer:**

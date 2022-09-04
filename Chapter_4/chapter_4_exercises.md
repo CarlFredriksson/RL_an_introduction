@@ -188,3 +188,16 @@ With 50 capital you have exactly enough to make a bet such that if the coin come
 Implement value iteration for the gambler’s problem and solve it for $p_h = 0.25$ and $p_h = 0.55$. In programming, you may find it convenient to introduce two dummy states corresponding to termination with capital of 0 and 100, giving them values of 0 and 1 respectively. Show your results graphically, as in Figure 4.3. Are your results stable as $\theta \to 0$?
 
 **My answer:**
+
+Final policies for $p_h = 0.4$ and $p_h = 0.25$ have similar shapes with $\pi(25) = 25$, $\pi(50) = 50$, $\pi(75) = 25$. However, when looking at the final $V(s)$ it seems like estimates has prematurely converged due to precision limits in the data type (np.float64). The final policy for $p_h = 0.55$ is completely different, with $\pi(s) = 1$ for all $s$. The key difference is whether $p_h > 0.5$.
+
+![Value estimates p_h_04](Exercise_4_9/value_estimates_p_h_04.png)
+![Final policy p_h_04](Exercise_4_9/final_policy_p_h_04.png)
+
+![Value estimates p_h_025](Exercise_4_9/value_estimates_p_h_025.png)
+![Final policy p_h_025](Exercise_4_9/final_policy_p_h_025.png)
+
+![Value estimates p_h_055](Exercise_4_9/value_estimates_p_h_055.png)
+![Final policy p_h_055](Exercise_4_9/final_policy_p_h_055.png)
+
+## Exercise 4.10

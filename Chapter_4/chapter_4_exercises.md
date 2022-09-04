@@ -201,3 +201,14 @@ Final policies for $p_h = 0.4$ and $p_h = 0.25$ have similar shapes with $\pi(25
 ![Final policy p_h_055](Exercise_4_9/final_policy_p_h_055.png)
 
 ## Exercise 4.10
+
+What is the analog of the value iteration update (4.10) for action values, $q_{k+1}(s, a)$?
+
+**My answer:**
+
+$$
+\begin{aligned}
+q_{k+1}(s, a) &= \mathbb{E}\big[R_{t+1} + \gamma \max_{a^\prime} q_k(S_{t+1}, a^\prime) | S_t = s, A_t = a \big] \\
+&= \sum_{s^\prime, r} p(s^\prime, r | s, a) \big[r + \gamma \max_{a^\prime} q_k(s^\prime, a^\prime) \big]
+\end{aligned}
+$$

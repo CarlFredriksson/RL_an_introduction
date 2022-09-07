@@ -181,7 +181,7 @@ Why does the optimal policy for the gambler’s problem have such a curious form
 
 **My answer:**
 
-With 50 capital you have exactly enough to make a bet such that if the coin comes up heads you win. There is no way to split it up and bet multiple times to increase the probability of winning ($p_h$). With 51 you have enough to make a bet that could immediately win. However, you also have to opportunity of using the 1 extra capital to try to build up towards 75, where you could make two flips in a row that both could make you win. 25 first and then 50 if the first one fails. On the other hand, if you immediately bet 50 and lose, you can try to build up the 1 left over to 25. Building up from 1 to 25 is equally unlikely as from 51 to 75, but the former lets you make a 25 bet to get to 50 while the latter lets you make a 25 bet to win, the latter is clearly preferable.
+With $p_h = 0.4$ the coin is biased against the gambler. Thus you should minimize the number of flips. With 50 capital you have exactly enough to make a bet such that if the coin comes up heads you win. With 51 you have enough to make a bet that could immediately win. However, there is also the opportunity of using the 1 extra capital to try to build up towards 75, where you could make two flips in a row that both could make you win. 25 first and then 50 if the first one fails. On the other hand, if you immediately bet 50 and lose, you can try to build up the 1 left over to 25. Building up from 1 to 25 is equally unlikely as from 51 to 75, but the former lets you make a 25 bet to get to 50 while the latter lets you make a 25 bet to win, the latter is clearly preferable.
 
 ## Exercise 4.9 (programming)
 

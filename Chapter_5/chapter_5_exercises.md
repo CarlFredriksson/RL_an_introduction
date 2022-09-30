@@ -32,3 +32,17 @@ It's the same as for $v_\pi$, except that the root is an action node (a state-ac
 
 ## Exercise 5.4
 
+The pseudocode for Monte Carlo ES is inefficient because, for each state–action pair, it maintains a list of all returns and repeatedly calculates their mean. It would be more efficient to use techniques similar to those explained in Section 2.4 to maintain just the mean and a count (for each state–action pair) and update them incrementally. Describe how the pseudocode would be altered to achieve this.
+
+**My answer:**
+
+* Remove the returns storage.
+* Initialize $N(s, a) \leftarrow 0$, for all $s \in \mathcal{S}$, $a \in \mathcal{A}(s)$.
+* Increment $N(s, a)$ every time the the state-action pair $(s, a)$ is visited.
+* Change the $Q$-update to:
+
+$$
+Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \frac{1}{N(S_t, A_t)} (G - Q(S_t, A_t))
+$$
+
+## Exercise 5.5

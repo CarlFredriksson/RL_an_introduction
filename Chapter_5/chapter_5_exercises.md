@@ -12,7 +12,7 @@ It jumps up for the last two rows in the rear since for any other player sum the
 
 It drops off for the whole last row on the left since the dealer is showing an ace, which is the best first card and thus reduces the likelihood that the player wins. An ace combines with one or two 10-valued cards, which is the most common card value, to make 21, and it's flexible.
 
-The frontmost values are higher in the upper diagrams because the player is holding a usable ace and is thus more likely to get to 20 or 21 (less likely to bust).
+The frontmost values are higher in the upper diagrams because the player is holding a usable ace and is thus less likely to bust and more likely to get to 20 or 21.
 
 ## Exercise 5.2
 

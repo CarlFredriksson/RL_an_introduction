@@ -46,3 +46,23 @@ Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \frac{1}{N(S_t, A_t)} (G - Q(S_t, A_t))
 $$
 
 ## Exercise 5.5
+
+Consider an MDP with a single nonterminal state and a single action that transitions back to the nonterminal state with probability $p$ and transitions to the terminal state with probability $1 - p$. Let the reward be $+1$ on all transitions, and let $\gamma = 1$. Suppose you observe one episode that lasts 10 steps, with a return of 10. What are the first-visit and every-visit estimators of the value of the nonterminal state?
+
+**My answer:**
+
+Since there is only one action, there is only one possible policy and thus $\rho_{t:T(t)-1} = 1$ for all $t$. This means that there is no difference between the ordinary and weighted importance sampling, since $\sum_{t \in \mathcal{T}(s)} \rho_{t:T(t)-1} = |\mathcal{T}(s)|$.
+
+First-visit:
+
+$$
+V(s) = G_1 = 10
+$$
+
+Every-visit:
+
+$$
+V(s) = \frac{G_1 + G_2 + \dots + G_{10}}{|\mathcal{T}(s)|} = \frac{10 + 9 + \dots + 1}{10} = 10 (\frac{10 + 1}{2}) = 55
+$$
+
+## Exercise 5.6

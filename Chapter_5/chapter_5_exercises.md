@@ -66,3 +66,35 @@ V(s) = \frac{G_0 + G_0 + \dots + G_{9}}{|\mathcal{T}(s)|} = \frac{10 + 9 + \dots
 $$
 
 ## Exercise 5.6
+
+What is the equation analogous to (5.6) for action values $Q(s, a)$ instead of state values $V(s)$, again given returns generated using $b$?
+
+**My answer:**
+
+Let $\mathcal{T}(s, a)$ denote all time steps in which state $s$ is visited and action $a$ selected.
+
+$$
+Q(s, a) = \frac{\sum_{t \in \mathcal{T}(s, a)} \rho_{t+1:T(t)-1} G_t}{\sum_{t \in \mathcal{T}(s, a)} \rho_{t+1:T(t)-1}}
+$$
+
+## Exercise 5.7
+
+In learning curves such as those shown in Figure 5.3 error generally decreases with training, as indeed happened for the ordinary importance-sampling method. But for the weighted importance-sampling method error first increased and then decreased. Why do you think this happened?
+
+**My answer:**
+
+We only have to consider trajectories consistent with the target policy, in other words trajectories where the player hits on all player sums that are not 20 or 21. This is because other trajectories have $\rho_{t+1:T(t)-1} = 0$.
+
+I had trouble with this exercise, but I'm thinking it's due to something like this:
+For the first episode, the $\rho_{t+1:T(t)-1}$ will cancel out in the numerator and denominator and thus we will simply be averaging (over runs) mean square errors for $G_t \in \{-1,0,1\}$, which will most commonly be $-1$ for all trajectories consistent with the target policy (most likely to go bust I believe). This average should be quite close to the real value. After the first episode, the bias of weighted importance-sampling is starting to show more and more until the effect of the denominator approximating $|\mathcal{T}(s)|$ takes over and eventually the methods align.
+
+## Exercise 5.8
+
+The results with Example 5.5 and shown in Figure 5.4 used a first-visit MC method. Suppose that instead an every-visit MC method was used on the same problem. Would the variance of the estimator still be infinite? Why or why not?
+
+**My answer:**
+
+![Exercise 5.8](exercise_5_8.jpg)
+
+## Exercise 5.9
+

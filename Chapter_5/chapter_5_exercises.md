@@ -98,3 +98,40 @@ The results with Example 5.5 and shown in Figure 5.4 used a first-visit MC metho
 
 ## Exercise 5.9
 
+Modify the algorithm for first-visit MC policy evaluation (Section 5.1) to use the incremental implementation for sample averages described in Section 2.4.
+
+**My answer:**
+
+Input: a policy $\pi$ to be evaluated
+Initialize:
+  * $V(s) \in \mathbb{R}$, arbitrarily for all $s \in \mathcal{S}$
+  * $N(s) \leftarrow 0$ for all $s \in \mathcal{S}$
+  
+Loop forever (for each episode):
+  * Generate an episode following $\pi: S_0, A_0, R_1, S_1, A_2, R_2, \dots, S_{T-1}, A_{T-1}, R_T$
+  * $G \leftarrow 0$
+  * Loop for each step of the episode, $t = T-1, T-2, \dots, 0:$
+    * $G \leftarrow \gamma G + R_{t+1}$
+    * Unless $S_t$ appears in $S_0, S_1, \dots, S_{t-1}:$
+      * $N(S_t) \leftarrow N(S_t) + 1$
+      * $V(S_t) \leftarrow V(S_t) + \frac{1}{N(S_t)} \big[G - V(S_t) \big]$
+
+## Exercise 5.10
+
+Derive the weighted-average update rule (5.8) from (5.7). Follow the pattern of the derivation of the unweighted rule (2.3).
+
+**My answer:**
+
+$$
+\begin{aligned}
+V_{n+1} &= \frac{\sum_{k=1}^n W_k G_k}{\sum_{k=1}^n W_k} \\
+&= \frac{1}{\sum_{k=1}^n W_k} \bigg[W_n G_n + \sum_{k=1}^{n-1} W_k G_k \bigg] \\
+&= \frac{1}{\sum_{k=1}^n W_k} \bigg[W_n G_n + \bigg(\sum_{k=1}^{n-1} W_k\bigg) \frac{1}{\sum_{k=1}^{n-1} W_k} \sum_{k=1}^{n-1} W_k G_k \bigg] \\
+&= \frac{1}{\sum_{k=1}^n W_k} \bigg[W_n G_n + V_n \sum_{k=1}^{n-1} W_k \bigg] \\
+&= \frac{1}{\sum_{k=1}^n W_k} \bigg[W_n G_n - W_n V_n + W_n V_n + V_n \sum_{k=1}^{n-1} W_k \bigg] \\
+&= \frac{1}{\sum_{k=1}^n W_k} \bigg[W_n G_n - W_n V_n + V_n \sum_{k=1}^n W_k \bigg] \\
+&= V_n + \frac{1}{\sum_{k=1}^n W_k} \bigg[W_n G_n - W_n V_n \bigg] \\
+&= V_n + \frac{W_n}{\sum_{k=1}^n W_k} \bigg[G_n - V_n \bigg] \\
+&= V_n + \frac{W_n}{C_n} \bigg[G_n - V_n \bigg] \\
+\end{aligned}
+$$

@@ -135,3 +135,28 @@ V_{n+1} &= \frac{\sum_{k=1}^n W_k G_k}{\sum_{k=1}^n W_k} \\
 &= V_n + \frac{W_n}{C_n} \bigg[G_n - V_n \bigg] \\
 \end{aligned}
 $$
+
+## Exercise 5.11
+
+In the boxed algorithm for off-policy MC control, you may have been expecting the $W$ update to have involved the importance-sampling ratio $\frac{\pi(A_t|S_t)}{b(A_t|S_t)}$, but instead it involves $\frac{1}{b(A_t|S_t)}$. Why is this nevertheless correct?
+
+**My answer:**
+
+Because the target policy $\pi$ is deterministic with $\pi(A_t | S_t) = 1$ for all relevant state-action pairs, since we have the following before updating $W$:
+
+> If $A_t \neq \pi(S_t)$ then exit inner Loop (proceed to next episode)
+
+## Exercise 5.12: Racetrack (programming)
+
+Consider driving a race car around a turn like those shown in Figure 5.5. You want to go as fast as possible, but not so fast as to run off the track. In our simplified racetrack, the car is at one of a discrete set of grid positions, the cells in the diagram. The velocity is also discrete, a number of grid cells moved horizontally and vertically per time step. The actions are increments to the velocity components. Each may be changed by +1, -1, or 0 in each step, for a total of nine (3 x 3) actions. Both velocity components are restricted to be nonnegative and less than 5, and they cannot both be zero except at the starting line. Each episode begins in one of the randomly selected start states with both velocity components zero and ends when the car crosses the finish line. The rewards are 1 for each step until the car crosses the finish line. If the car hits the track boundary, it is moved back to a random position on the starting line, both velocity components are reduced to zero, and the episode continues. Before updating the car's location at each time step, check to see if the projected path of the car intersects the track boundary. If it intersects the finish line, the episode ends; if it intersects anywhere else, the car is considered to have hit the track boundary and is sent back to the starting line. To make the task more challenging, with probability 0.1 at each time step the velocity increments are both zero, independently of the intended increments. Apply a Monte Carlo control method to this task to compute the optimal policy from each starting state. Exhibit several trajectories following the optimal policy (but turn the noise off for these trajectories).
+
+**My answer:**
+
+
+
+
+
+Exercise 5.15 Make new equations analogous to the importance-sampling Monte Carlo
+estimates (5.5) and (5.6), but for action value estimates Q(s, a). You will need new
+notation T(s, a) for the time steps on which the state–action pair s, a is visited on the
+episode. Do these estimates involve more or less importance-sampling correction?

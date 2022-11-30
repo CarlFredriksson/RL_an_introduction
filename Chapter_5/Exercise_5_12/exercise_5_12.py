@@ -57,8 +57,20 @@ def get_medium_map():
 
 def get_small_map():
     starting_line = {(3, 0)}
+    finishing_line = {(4, 2)}
+    track = {(3,1), (3,2)}
+    return starting_line, finishing_line, track
+
+def get_tiny_map():
+    starting_line = {(3, 0)}
     finishing_line = {(4, 1)}
     track = {(3,1)}
+    return starting_line, finishing_line, track
+
+def get_super_tiny_map():
+    starting_line = {(3, 0)}
+    finishing_line = {(4, 0)}
+    track = {}
     return starting_line, finishing_line, track
 
 def plot_map(starting_line, finishing_line, track, grid_size, fig_size):
@@ -98,22 +110,14 @@ def get_available_actions(state):
                     available_actions.append((v_x_inc, v_y_inc))
      return available_actions
 
-def get_eps_greedy_probabilities(state, greedy_action, eps=0):
-    probabilities = {}
-    available_actions = get_available_actions(state)
-    num_available_actions = len(available_actions)
-    for action in available_actions:
-        probabilities[action] = eps / num_available_actions
-        if action == greedy_action:
-            probabilities[action] += 1 - eps
-    return probabilities
-
 def generate_start_state(starting_line):
     start_x, start_y = random.choice(list(starting_line))
     return start_x, start_y, 0, 0
 
-def select_action_according_to_policy(policy, state):
-    return random.choices(list(policy[state].keys()), list(policy[state].values()))[0]
+def select_action_according_to_policy(policy, state, eps):
+    if random.random() < eps:
+        return random.choice(get_available_actions(state))
+    return policy[state]
 
 def get_line_grid_intersections(line_start_x, line_start_y, line_end_x, line_end_y):
     row_indices, col_indices = line(line_start_y, line_start_x, line_end_y, line_end_x)
@@ -128,7 +132,7 @@ def check_intersections(starting_line, finishing_line, track, intersections):
     return "on_track"
 
 def generate_episode(starting_line, finishing_line, track, policy,
-    max_num_steps=1000000, noise=0):
+    max_num_steps=1000000, noise=0, eps=0):
     states = []
     actions = []
     rewards = []
@@ -136,7 +140,7 @@ def generate_episode(starting_line, finishing_line, track, policy,
     for t in range(max_num_steps):
         states.append(state)
         x, y, v_x, v_y = state
-        action = select_action_according_to_policy(policy, state)
+        action = select_action_according_to_policy(policy, state, eps)
         actions.append(action)
         if random.random() < noise:
             action = (0, 0)
@@ -175,7 +179,7 @@ def initialize_learning_on_pol(starting_line, track):
             for v_y in range(6):
                 state = (x, y, v_x, v_y)
                 available_actions = get_available_actions(state)
-                policy[state] = get_eps_greedy_probabilities(state, random.choice(available_actions), 1)
+                policy[state] = random.choice(available_actions)
                 for a in available_actions:
                     Q[(state, a)] = 0
                     N[(state, a)] = 0
@@ -191,37 +195,52 @@ def initialize_learning_off_pol(starting_line, track):
             for v_y in range(6):
                 state = (x, y, v_x, v_y)
                 available_actions = get_available_actions(state)
-                policy[state] = get_eps_greedy_probabilities(state, available_actions[0], 0)
-                b[state] = get_eps_greedy_probabilities(state, available_actions[0], 1)
+                policy[state] = available_actions[0]
+                b[state] = available_actions[0]
                 for a in available_actions:
                     Q[(state, a)] = 0
                     C[(state, a)] = 0
     return policy, b, Q, C
 
 # On-policy every visit MC control (eps-soft policies)
-def learn_from_episode_on_pol(policy, Q, N, states, actions, rewards, gamma=1, eps=0.1):
+def learn_from_episode_on_pol(policy, Q, N, states, actions, rewards, learning_rate=None):
     G = 0
     for t in range(len(states) - 1, -1, -1):
         s = states[t]
         a = actions[t]
-        G = gamma * G + rewards[t]
+        G = G + rewards[t]
         N[(s, a)] += 1
-        Q[(s, a)] += (G - Q[(s, a)]) / N[(s, a)]
-        policy[s] = get_eps_greedy_probabilities(s, get_greedy_action(Q, s), eps)
+        if learning_rate is not None:
+            Q[(s, a)] += learning_rate * (G - Q[(s, a)])
+        else:
+            Q[(s, a)] += (G - Q[(s, a)]) / N[(s, a)]
+        policy[s] = get_greedy_action(Q, s)
     return policy, Q, N
 
 # Off-policy every visit MC control (weighted importance sampling)
-def learn_from_episode_off_pol(policy, b, Q, C, states, actions, rewards, gamma=1):
+def learn_from_episode_off_pol(policy, b, Q, C, states, actions, rewards):
     G = 0
     W = 1
     for t in range(len(states) - 1, -1, -1):
         s = states[t]
         a = actions[t]
-        G = gamma * G + rewards[t]
+        G = G + rewards[t]
         C[(s, a)] += W
         Q[(s, a)] += (W / C[(s, a)]) * (G - Q[(s, a)])
-        policy[s] = get_eps_greedy_probabilities(s, get_greedy_action(Q, s))
-        if policy[s] != a:
+        
+        # Argmax over a, break ties by favoring the last selected action by b,
+        # then by the deterministic ordering of get_greedy_action.
+        # If not "favoring the last selected action by b", and simply relying on
+        # the ordering of get_greedy_action, the algorithm can easily get stuck,
+        # even though get_greedy_action provides consistent ordering.
+        greedy_action = get_greedy_action(Q, s)
+        if Q[(s, a)] == Q[(s, greedy_action)]:
+            policy[s] = get_eps_greedy_probabilities(s, a)
+        else:
+            policy[s] = get_eps_greedy_probabilities(s, greedy_action)
+
+        # Break if pi(s) != a
+        if list(policy[s].keys())[list(policy[s].values()).index(1)] != a:
             break
         W = W * (1 / b[s][a])
     return policy, Q, C

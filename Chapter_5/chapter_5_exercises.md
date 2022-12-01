@@ -152,8 +152,13 @@ Consider driving a race car around a turn like those shown in Figure 5.5. You wa
 
 **My answer:**
 
+I got the best results using on-policy every-visit MC control using $\epsilon$-greedy policies with $\epsilon$ decreasing over time, and using a constant learning rate of 0.1 rather than using sample averages. The policy is not optimal after learning for a million episodes, but it's pretty good - see trajectories below.
 
+![On-policy trajectory 1](Exercise_5_12/on_policy_trajectory_1.png)
 
+![On-policy trajectory 2](Exercise_5_12/on_policy_trajectory_2.png)
+
+![On-policy trajectory 3](Exercise_5_12/on_policy_trajectory_3.png)
 
 
 Exercise 5.15 Make new equations analogous to the importance-sampling Monte Carlo

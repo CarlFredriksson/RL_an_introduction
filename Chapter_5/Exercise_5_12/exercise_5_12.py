@@ -170,6 +170,16 @@ def get_greedy_action(Q, state):
             greedy_action = action
     return greedy_action
 
+def get_eps_greedy_probabilities(state, greedy_action, eps=0):
+    probabilities = {}
+    available_actions = get_available_actions(state)
+    num_available_actions = len(available_actions)
+    for action in available_actions:
+        probabilities[action] = eps / num_available_actions
+        if action == greedy_action:
+            probabilities[action] += 1 - eps
+    return probabilities
+
 def initialize_learning_on_pol(starting_line, track):
     policy = {}
     Q = {}
@@ -218,7 +228,7 @@ def learn_from_episode_on_pol(policy, Q, N, states, actions, rewards, learning_r
     return policy, Q, N
 
 # Off-policy every visit MC control (weighted importance sampling)
-def learn_from_episode_off_pol(policy, b, Q, C, states, actions, rewards):
+def learn_from_episode_off_pol(policy, b, Q, C, states, actions, rewards, eps):
     G = 0
     W = 1
     for t in range(len(states) - 1, -1, -1):
@@ -228,20 +238,10 @@ def learn_from_episode_off_pol(policy, b, Q, C, states, actions, rewards):
         C[(s, a)] += W
         Q[(s, a)] += (W / C[(s, a)]) * (G - Q[(s, a)])
         
-        # Argmax over a, break ties by favoring the last selected action by b,
-        # then by the deterministic ordering of get_greedy_action.
-        # If not "favoring the last selected action by b", and simply relying on
-        # the ordering of get_greedy_action, the algorithm can easily get stuck,
-        # even though get_greedy_action provides consistent ordering.
-        #greedy_action = get_greedy_action(Q, s)
-        #if Q[(s, a)] == Q[(s, greedy_action)]:
-        #    policy[s] = a
-        #else:
-        #    policy[s] = greedy_action
         policy[s] = get_greedy_action(Q, s)
+        b_probabilities_given_s = get_eps_greedy_probabilities(s, b[s], eps=eps)
         b[s] = policy[s]
-
         if policy[s] != a:
             break
-        W = W * (1 / b[s][a])
+        W = W * (1 / b_probabilities_given_s[a])
     return policy, b, Q, C

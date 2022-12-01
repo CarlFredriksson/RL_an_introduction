@@ -195,8 +195,8 @@ def initialize_learning_off_pol(starting_line, track):
             for v_y in range(6):
                 state = (x, y, v_x, v_y)
                 available_actions = get_available_actions(state)
-                policy[state] = available_actions[0]
-                b[state] = available_actions[0]
+                policy[state] = available_actions[-1]
+                b[state] = policy[state]
                 for a in available_actions:
                     Q[(state, a)] = 0
                     C[(state, a)] = 0
@@ -233,14 +233,15 @@ def learn_from_episode_off_pol(policy, b, Q, C, states, actions, rewards):
         # If not "favoring the last selected action by b", and simply relying on
         # the ordering of get_greedy_action, the algorithm can easily get stuck,
         # even though get_greedy_action provides consistent ordering.
-        greedy_action = get_greedy_action(Q, s)
-        if Q[(s, a)] == Q[(s, greedy_action)]:
-            policy[s] = get_eps_greedy_probabilities(s, a)
-        else:
-            policy[s] = get_eps_greedy_probabilities(s, greedy_action)
+        #greedy_action = get_greedy_action(Q, s)
+        #if Q[(s, a)] == Q[(s, greedy_action)]:
+        #    policy[s] = a
+        #else:
+        #    policy[s] = greedy_action
+        policy[s] = get_greedy_action(Q, s)
+        b[s] = policy[s]
 
-        # Break if pi(s) != a
-        if list(policy[s].keys())[list(policy[s].values()).index(1)] != a:
+        if policy[s] != a:
             break
         W = W * (1 / b[s][a])
-    return policy, Q, C
+    return policy, b, Q, C

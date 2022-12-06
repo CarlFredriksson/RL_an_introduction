@@ -160,6 +160,27 @@ I got the best results using on-policy every-visit MC control using $\epsilon$-g
 
 ![On-policy trajectory 3](Exercise_5_12/on_policy_trajectory_3.png)
 
+## Exercise 5.13
+
+Show the steps to derive (5.14) from (5.12).
+
+**My answer:**
+
+$$
+\begin{aligned}
+\mathbb{E}[\rho_{t:T-1} R_{t+1}] &= \mathbb{E}\bigg[\frac{\pi(A_t | S_t)}{b(A_t | S_t)} \frac{\pi(A_{t+1} | S_{t+1})}{b(A_{t+1} | S_{t+1})} \frac{\pi(A_{t+2} | S_{t+2})}{b(A_{t+2} | S_{t+2})} \dots \frac{\pi(A_{T-1} | S_{T-1})}{b(A_{T-1} | S_{T-1})} R_{T-1} \bigg] \\
+&= \mathbb{E}\bigg[\frac{\pi(A_t | S_t)}{b(A_t | S_t)} R_{t+1} \bigg] \mathbb{E}\bigg[\frac{\pi(A_{t+1} | S_{t+1})}{b(A_{t+1} | S_{t+1})} \bigg] \mathbb{E}\bigg[\frac{\pi(A_{t+2} | S_{t+2})}{b(A_{t+2} | S_{t+2})}\bigg] \dots \mathbb{E}\bigg[\frac{\pi(A_{T-1} | S_{T-1})}{b(A_{T-1} | S_{T-1})} \bigg] \\
+
+&= \mathbb{E}\bigg[\frac{\pi(A_t | S_t)}{b(A_t | S_t)} R_{t+1} \bigg] \\
+&= \mathbb{E}\bigg[\rho_{t:t} R_{t+1} \bigg] \\
+\end{aligned}
+$$
+
+The second equality is due to $A_t | S_t, A_{t+1} | S_{t+1}, \dots A_{T-1} | S_{T-1}$ being independent random variables. The third equality is due to (5.13).
+
+## Exercise 5.14
+
+
 
 Exercise 5.15 Make new equations analogous to the importance-sampling Monte Carlo
 estimates (5.5) and (5.6), but for action value estimates Q(s, a). You will need new

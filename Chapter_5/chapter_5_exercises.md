@@ -206,8 +206,21 @@ Loop forever (for each episode):
 
 ## Exercise 5.15
 
-Make new equations analogous to the importance-sampling Monte Carlo estimates (5.5) and (5.6), but for action value estimates Q(s, a). You will need new notation T(s, a) for the time steps on which the state–action pair s, a is visited on the episode. Do these estimates involve more or less importance-sampling correction?
+Make new equations analogous to the importance-sampling Monte Carlo estimates (5.5) and (5.6), but for action value estimates $Q(s, a)$. You will need new notation $\mathcal{T}(s, a)$ for the time steps on which the state–action pair $s, a$ is visited on the episode. Do these estimates involve more or less importance-sampling correction?
 
 **My answer:**
 
+Analogous to (5.5):
+
+$$
+Q(s, a) = \frac{\sum_{t \in \mathcal{T}(s, a)} \rho_{t+1:T(t)-1} G_t}{|\mathcal{T}(s, a)|}
+$$
+
+Analogous to (5.6):
+
+$$
+Q(s, a) = \frac{\sum_{t \in \mathcal{T}(s, a)} \rho_{t+1:T(t)-1} G_t}{\sum_{t \in \mathcal{T}(s, a)} \rho_{t+1:T(t)-1}}
+$$
+
+These estimates involve one less step of importance-sampling correction, since the first action is already given.
 

@@ -180,9 +180,34 @@ The second equality is due to $A_t | S_t, A_{t+1} | S_{t+1}, \dots A_{T-1} | S_{
 
 ## Exercise 5.14
 
+Modify the algorithm for off-policy Monte Carlo control (page 111) to use the idea of the truncated weighted-average estimator (5.10). Note that you will first need to convert this equation to action values.
+
+**My answer:**
+
+I believe this would work (but there are many optimizations that can be made):
+
+Initialize, for all $s \in \mathcal{S}, a \in \mathcal{A}(s)$:
+  * $Q(s, a) \in \mathbb{R}$ (arbitrarily)
+  * $\pi(s) \leftarrow \argmax_a Q(s, a)$ (with ties broken consistently) 
+  * $Numerator(s, a) \leftarrow 0$
+  * $Denominator(s, a) \leftarrow 0$
+  
+Loop forever (for each episode):
+  * $b \leftarrow$ any soft policy
+  * Generate an episode following $b: S_0, A_0, R_1, S_1, A_2, R_2, \dots, S_{T-1}, A_{T-1}, R_T$
+  * Loop for each step of the episode, $t = T-1, T-2, \dots, 0:$
+    * $Num \leftarrow (1 - \gamma) \sum_{h=t+1}^{T(t)-1} \gamma^{h-t-1} \rho_{t:h-1} \bar{G}_{t:h} + \gamma^{T(t)-t-1} \rho_{t:T(t)-1} \bar{G}_{t:T(t)}$
+    * $Den \leftarrow (1 - \gamma) \sum_{h=t+1}^{T(t)-1} \gamma^{h-t-1} \rho_{t:h-1} + \gamma^{T(t)-t-1} \rho_{t:T(t)-1}$
+    * $Numerator(S_t, A_t) \leftarrow Numerator(S_t, A_t) + Num$
+    * $Denominator(S_t, A_t) \leftarrow Denominator(S_t, A_t) + Den$
+    * $Q(S_t, A_t) \leftarrow \frac{Numerator(S_t, A_t)}{Denominator(S_t, A_t)}$
+    * $\pi(S_t) \leftarrow \argmax_a Q(S_t, a)$ (with ties broken consistently)
+    * If $A_t \neq \pi(S_t)$ then exit inner Loop (proceed to next episode)
+
+## Exercise 5.15
+
+Make new equations analogous to the importance-sampling Monte Carlo estimates (5.5) and (5.6), but for action value estimates Q(s, a). You will need new notation T(s, a) for the time steps on which the state–action pair s, a is visited on the episode. Do these estimates involve more or less importance-sampling correction?
+
+**My answer:**
 
 
-Exercise 5.15 Make new equations analogous to the importance-sampling Monte Carlo
-estimates (5.5) and (5.6), but for action value estimates Q(s, a). You will need new
-notation T(s, a) for the time steps on which the state–action pair s, a is visited on the
-episode. Do these estimates involve more or less importance-sampling correction?

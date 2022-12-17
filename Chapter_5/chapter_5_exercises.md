@@ -62,7 +62,7 @@ $$
 Every-visit:
 
 $$
-V(s) = \frac{G_0 + G_0 + \dots + G_{9}}{|\mathcal{T}(s)|} = \frac{10 + 9 + \dots + 1}{10} = 10 (\frac{10 + 1}{2}) = 55
+V(s) = \frac{G_0 + G_1 + \dots + G_{9}}{|\mathcal{T}(s)|} = \frac{10 + 9 + \dots + 1}{10} = 10 (\frac{10 + 1}{2}) = 55
 $$
 
 ## Exercise 5.6

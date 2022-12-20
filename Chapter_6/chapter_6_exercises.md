@@ -26,3 +26,56 @@ Thus the additional amount that must be added is:
 $$
 \sum_{k=t+1}^{T-1} \gamma^{k-t} \big[V_k(S_k) - V_t(S_k) \big] 
 $$
+
+## Exercise 6.2
+
+This is an exercise to help develop your intuition about why TD methods are often more efficient than Monte Carlo methods. Consider the driving home example and how it is addressed by TD and Monte Carlo methods. Can you imagine a scenario in which a TD update would be better on average than a Monte Carlo update? Give an example scenario—a description of past experience and a current state—in which you would expect the TD update to be better. Here's a hint: Suppose you have lots of experience driving home from work. Then you move to a new building and a new parking lot (but you still enter the highway at the same place). Now you are starting to learn predictions for the new building. Can you see why TD updates are likely to be much better, at least initially, in this case? Might the same sort of thing happen in the original scenario?
+
+**My answer:**
+
+I can't think of an easy answer for the hint-scenario. I feel like I'm lacking information - it seems that it would be affected by the reward variance, $\alpha$, and how we initialize the new states for example?
+
+One scenario I can think of where a TD update would be better: If we observe an extreme reward in an episode, that outlier will affect the value estimate for only one state in one TD update, but it will affect the estimate for all states visited before that reward was received in one Monte Carlo update.
+
+## Exercise 6.3
+
+From the results shown in the left graph of the random walk example it appears that the first episode results in a change in only $V(A)$. What does this tell you about what happened on the first episode? Why was only the estimate for this one state changed? By exactly how much was it changed?
+
+**My answer:**
+
+The first episode terminated on the left side. Only $V(A)$ was changed since the TD error was 0 for all other states:
+
+$$
+\delta_t = R_{t+1} + \gamma V(S_{t+1}) - V(S_t) = 0 + 0.5 - 0.5 = 0
+$$
+
+$$
+V(S_t) \leftarrow V(S_t) + \alpha [R_{t+1} + \gamma V(S_{t+1}) - V(S_t)] = 0.5 + 0.1 \cdot 0 = 0.5
+$$
+
+The TD error for $t = T-1$ where $S_t = A$:
+
+$$
+\delta_t = R_{t+1} + \gamma V(S_{t+1}) - V(S_t) = R_T + \gamma V(S_T) - V(A) = 0 + 0 - 0.5 = -0.5
+$$
+
+Thus we have only one relevant update:
+
+$$
+V(A) \leftarrow V(A) + \alpha [R_T + \gamma V(S_T) - V(A)] = 0.5 + 0.1 (-0.5) = 0.45
+$$
+
+The estimate for $V(A)$ was changed by -0.05.
+
+## Exercise 6.4
+
+The specific results shown in the right graph of the random walk example are dependent on the value of the step-size parameter, $\alpha$. Do you think the conclusions about which algorithm is better would be affected if a wider range of $\alpha$ values were used? Is there a different, fixed value of $\alpha$ at which either algorithm would have performed significantly better than shown? Why or why not?
+
+**My answer:**
+
+With $\alpha = 0$, both algorithms would be stuck with the initial estimates (but 0 is probably not in the set of possible values for $\alpha$).
+
+I don't think there is a fixed value of $\alpha$ at which either algorithm would have performed significantly better than shown. With larger $\alpha$, the algorithms initially learn quicker, but will stop improving quicker compared to smaller $\alpha$, due to larger indefinite fluctuations. In order to significantly improve, I believe that we need a dynamic $\alpha$ that starts of large in order to quickly learn better estimates than the initial estimates, but gets smaller over time and eventually reaches 0 in order to remove the indefinite fluctuations.
+
+## Exercise 6.5
+

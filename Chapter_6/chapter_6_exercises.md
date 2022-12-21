@@ -79,3 +79,14 @@ I don't think there is a fixed value of $\alpha$ at which either algorithm would
 
 ## Exercise 6.5
 
+In the right graph of the random walk example, the RMS error of the TD method seems to go down and then up again, particularly at high $\alpha$’s. What could have caused this? Do you think this always occurs, or might it be a function of how the approximate value function was initialized?
+
+**My answer:**
+
+The value estimates other than $V(C)$ will quickly improve in the beginning due their initializations differing significantly from their true values. However, the estimates will never converge to their true values due to the recency bias caused by the fixed value $\alpha$.
+
+It will take some episodes before $V(C)$ starts to get updated, and when it does it will become a worse estimate. Due to initializing all estimates to 0.5, which is the true value for $V(C) = v_\pi(C) = 0.5$, it can't become a better estimate. It will move towards $V(B)$ in some updates and towards $V(D)$ in others.
+
+Thus I believe it might be a function of how the approximate value function (the value estimates) was initialized.
+
+## Exercise 6.6

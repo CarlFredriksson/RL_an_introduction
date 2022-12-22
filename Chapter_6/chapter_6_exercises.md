@@ -90,3 +90,37 @@ It will take some episodes before $V(C)$ starts to get updated, and when it does
 Thus I believe it might be a function of how the approximate value function (the value estimates) was initialized.
 
 ## Exercise 6.6
+
+In Example 6.2 we stated that the true values for the random walk example are $\frac{1}{6}$, $\frac{2}{6}$, $\frac{3}{6}$, $\frac{4}{6}$, $\frac{5}{6}$, $\frac{1}{6}$, for states $A$ through $E$. Describe at least two different ways that these could have been computed. Which would you guess we actually used? Why?
+
+**My answer:**
+
+On option is to use Monte Carlo prediction with sample averaging (first-visit or every-visit), which will converge to the true values $v_\pi$ (unlike using a fixed value $\alpha$). However, convergence is only guaranteed in the limit.
+
+A better option is to use value/policy iteration from dynamic programming. However, this requires specifying the dynamics function of the problem.
+
+Since the state space is so small and the dynamics so simple, I believe the best method (and probably the one the authors used) is to simply solve the Bellman equation:
+
+$$
+v_\pi(s) = \sum_{a \in \mathcal{A}(s)} \pi(a | s) \sum_{s^\prime, r} p(s^\prime, r | s, a) \big[r + \gamma v_\pi(s^\prime) \big], \quad \text{for all} \; s \in \mathcal{S}
+$$
+
+Since it's a Markov reward process (an MDP without actions), we can simplify:
+
+$$
+v_\pi(s) = \sum_{s^\prime, r} p(s^\prime, r | s) \big[r + \gamma v_\pi(s^\prime) \big], \quad \text{for all} \; s \in \mathcal{S}
+$$
+
+Inputting the dynamics of the problem, we end up with the following system of linear equations:
+
+$$
+\begin{aligned}
+v_\pi(A) &= \frac{1}{2} v_\pi(B) \\
+v_\pi(B) &= \frac{1}{2} v_\pi(A) + \frac{1}{2} v_\pi(C) \\
+v_\pi(C) &= \frac{1}{2} v_\pi(B) + \frac{1}{2} v_\pi(D) \\
+v_\pi(D) &= \frac{1}{2} v_\pi(C) + \frac{1}{2} v_\pi(E) \\
+v_\pi(E) &= \frac{1}{2} v_\pi(D) + \frac{1}{2} \\
+\end{aligned}
+$$
+
+which can easily be solved by hand.

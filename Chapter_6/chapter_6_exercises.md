@@ -124,3 +124,22 @@ v_\pi(E) &= \frac{1}{2} v_\pi(D) + \frac{1}{2} \\
 $$
 
 which can easily be solved by hand.
+
+## Exercise 6.7
+
+Design an off-policy version of the TD(0) update that can be used with arbitrary target policy $\pi$ and covering behavior policy $b$, using at each step $t$ the importance sampling ratio $\rho_{t:t}$ (5.3).
+
+**My answer:**
+
+$$
+V(S_t) \leftarrow V(S_t) + \alpha \rho_{t:t} [R_{t+1} + \gamma V(S_{t+1}) - V(S_t)]
+$$
+
+where
+
+$$
+\rho_{t:t} = \frac{\pi(A_t | S_t)}{b(A_t | S_t)}
+$$
+
+## Exercise 6.8
+

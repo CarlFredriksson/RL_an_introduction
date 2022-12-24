@@ -143,3 +143,30 @@ $$
 
 ## Exercise 6.8
 
+Show that an action-value version of (6.6) holds for the action-value form of the TD error $\delta_t = R_{t+1} + Q(S_{t+1}, A_{t+1}) - Q(S_t, A_t)$, again assuming that the values don't change from step to step.
+
+**My answer:**
+
+$$
+\begin{aligned}
+G_t - Q(S_t, A_t) &= R_{t+1} + \gamma G_{t+1} - Q(S_t, A_t) + \gamma Q(S_{t+1}, A_{t+1}) - \gamma Q(S_{t+1}, A_{t+1}) \\
+&= \delta_t + \gamma \big[G_{t+1} - Q(S_{t+1}, A_{t+1}) \big] \\
+&= \delta_t + \gamma \delta_{t+1} + \gamma^2 \big[G_{t+2} - Q(S_{t+2}, A_{t+2}) \big] \\
+&= \delta_t + \gamma \delta_{t+1} + \gamma^2 \delta_{t+2} + \dots + \gamma^{T-t-1} \delta_{T-1} + \gamma^{T-t} \big[G_T - Q(S_T, A_T) \big] \\
+&= \delta_t + \gamma \delta_{t+1} + \gamma^2 \delta_{t+2} + \dots + \gamma^{T-t-1} \delta_{T-1} + \gamma^{T-t} \big[0 - 0 \big] \\
+&= \sum_{k=t}^{T-1} \gamma^{k-t} \delta_k
+\end{aligned}
+$$
+
+## Exercise 6.9: Windy Gridworld with King’s Moves (programming)
+
+Re-solve the windy gridworld assuming eight possible actions, including the diagonal moves, rather than four. How much better can you do with the extra actions? Can you do even better by including a ninth action that causes no movement at all other than that caused by the wind?
+
+**My answer:**
+
+
+## Exercise 6.10: Stochastic Wind (programming)
+
+Re-solve the windy gridworld task with King's moves, assuming that the effect of the wind, if there is any, is stochastic, sometimes varying by 1 from the mean values given for each column. That is, a third of the time you move exactly according to these values, as in the previous exercise, but also a third of the time you move one cell above that, and another third of the time you move one cell below that. For example, if you are one cell to the right of the goal and you move left, then one-third of the time you move one cell above the goal, one-third of the time you move two cells above the goal, and one-third of the time you move to the goal.
+
+**My answer:**

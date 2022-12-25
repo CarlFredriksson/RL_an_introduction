@@ -9,6 +9,7 @@ class Environment:
         self.max_y = 6
         self.wind_per_col = np.array([0, 0, 0, 1, 1, 1, 2, 2, 1, 0])
         self.terminal_state = (7, 3)
+        self.available_actions = ("up", "down", "right", "left")
 
     def take_action(self, state, action):
         x, y = state
@@ -17,6 +18,10 @@ class Environment:
         if x < self.min_x or x > self.max_x or y < self.min_y or y > self.max_y:
             raise ValueError(f"state '{state}' is not valid")
         
+        # Apply wind
+        y += self.wind_per_col[x]
+        x, y = self._keep_position_within_grid(x, y)
+
         # Move according to action
         if action == "up":
             y += 1
@@ -28,10 +33,6 @@ class Environment:
             x -= 1
         else:
             raise ValueError(f"action '{action}' is not valid")
-        x, y = self._keep_position_within_grid(x, y)
-        
-        # Apply wind
-        y += self.wind_per_col[x]
         new_state = self._keep_position_within_grid(x, y)
 
         reward = -1
@@ -44,24 +45,44 @@ class Environment:
         return x, y
 
 class SarsaAgent:
-    def __init__(self, step_size, eps, Q_init):
+    def __init__(self, step_size, Q_init):
         self.step_size = step_size
-        self.eps = eps
         self.Q = Q_init
     
     # Eps-greedy action selection
-    def select_action(self, state, available_actions):
+    def select_action(self, state, available_actions, eps):
         # Select random action with probability eps
-        if random.random() < self.eps:
+        if random.random() < eps:
             return random.choice(available_actions)
 
-        # Select greedy action
-        max_val = -np.inf
-        greedy_action = None
+        # Select greedy action, ties broken randomly
+        max_value = -np.inf
+        greedy_actions = []
         for action in available_actions:
-            val = self.Q[state][action]
-            if val > max_val:
-                max_val = val
-                greedy_action = action
+            value = self.Q[state][action]
+            if value > max_value:
+                max_value = value
+                greedy_actions = [action]
+            elif value == max_value:
+                greedy_actions.append(action)
         
-        return greedy_action
+        return random.choice(greedy_actions)
+
+    def learn(self, state, action, reward, next_state, next_action):
+        self.Q[state][action] += self.step_size * (reward + self.Q[next_state][next_action] - self.Q[state][action])
+
+def run_episode(environment, agent, initial_state, eps, max_num_steps=100000):
+    trajectory = []
+    state = initial_state
+    action = agent.select_action(state, environment.available_actions, eps)
+    trajectory.append((state, action))
+    for t in range(max_num_steps):
+        reward, next_state, reached_terminal_state = environment.take_action(state, action)
+        next_action = agent.select_action(next_state, environment.available_actions, eps)
+        agent.learn(state, action, reward, next_state, next_action)
+        state = next_state
+        action = next_action
+        trajectory.append((state, action))
+        if reached_terminal_state:
+            break
+    return trajectory

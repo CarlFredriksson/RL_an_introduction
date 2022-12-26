@@ -1,5 +1,7 @@
 import numpy as np
 import random
+import matplotlib.pyplot as plt
+from matplotlib import colors
 
 class Environment:
     def __init__(self):
@@ -86,3 +88,36 @@ def run_episode(environment, agent, initial_state, eps, max_num_steps=100000):
         if reached_terminal_state:
             break
     return trajectory
+
+def train_agent(environment, agent, num_episodes):
+    episode_lengths = []
+    for ep in range(num_episodes):
+        eps = (1 - ep) / num_episodes
+        trajectory = run_episode(environment, agent, (0, 3), eps)
+        episode_lengths.append(len(trajectory) - 1)
+    return episode_lengths
+
+def plot_training(episode_lengths, fig_size, title):
+    fig, ax = plt.subplots(figsize=fig_size)
+    plt.plot(np.arange(len(episode_lengths)), episode_lengths)
+    plt.xlabel("Episode", fontsize="12")
+    plt.ylabel("Time steps until terminal state reached", fontsize="12")
+    plt.title(title, fontsize=14)
+
+def plot_trajectory(trajectory, grid_size, terminal_state, fig_size, title):
+    data = np.zeros(grid_size)
+    for i in range(data.shape[0]):
+        for j in range(data.shape[1]):
+            if (j, i) == terminal_state:
+                data[i, j] = 1
+            else:
+                data[i, j] = 0
+    fig, ax = plt.subplots(figsize=fig_size)
+    ax.set_xticks(np.arange(0, grid_size[1], 1))
+    ax.set_yticks(np.arange(0, grid_size[0], 1))
+    cmap = colors.ListedColormap(["white", "green"])
+    plt.pcolormesh(data, edgecolors="k", cmap=cmap)
+    x = [trajectory[t][0][0] + 0.5 for t in range(len(trajectory))]
+    y = [trajectory[t][0][1] + 0.5 for t in range(len(trajectory))]
+    plt.plot(x, y, ".-")
+    plt.title(title, fontsize=14)

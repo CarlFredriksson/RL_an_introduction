@@ -17,14 +17,11 @@ class Environment:
 
     def take_action(self, state, action):
         x, y = state
+        wind = self.wind_per_col[x]
 
         # Validate state
         if x < self.min_x or x > self.max_x or y < self.min_y or y > self.max_y:
             raise ValueError(f"state '{state}' is not valid")
-        
-        # Apply wind
-        y += self.wind_per_col[x]
-        x, y = self._keep_position_within_grid(x, y)
 
         # Move according to action
         if action == "up":
@@ -49,6 +46,10 @@ class Environment:
             x -= 1
         else:
             raise ValueError(f"action '{action}' is not valid")
+        x, y = self._keep_position_within_grid(x, y)
+
+        # Apply wind
+        y += wind
         new_state = self._keep_position_within_grid(x, y)
 
         reward = -1

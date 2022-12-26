@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from matplotlib import colors
 
 class Environment:
-    def __init__(self, allow_diagonal_actions=False):
+    def __init__(self, allow_diagonal_actions=False, use_stochastic_wind=False):
         self.min_x = 0
         self.max_x = 9
         self.min_y = 0
@@ -14,10 +14,17 @@ class Environment:
         self.available_actions = ("up", "down", "right", "left")
         if allow_diagonal_actions:
             self.available_actions += ("up-right", "up-left", "down-right", "down-left")
+        self.use_stochastic_wind = use_stochastic_wind
 
     def take_action(self, state, action):
         x, y = state
         wind = self.wind_per_col[x]
+        if wind > 0 and self.use_stochastic_wind:
+            rand_int = random.randint(0, 2)
+            if rand_int == 1:
+                wind += 1
+            elif rand_int == 2:
+                wind -= 1
 
         # Validate state
         if x < self.min_x or x > self.max_x or y < self.min_y or y > self.max_y:

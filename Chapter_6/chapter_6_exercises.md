@@ -164,9 +164,26 @@ Re-solve the windy gridworld assuming eight possible actions, including the diag
 
 **My answer:**
 
+I started by solving the original problem:
+
+![Windy Gridworld Trainining - Original Problem](Windy_gridworld/training_original_problem.png)
+
+![Windy Gridworld Trajectory - Original Problem](Windy_gridworld/trajectory_original_problem.png)
+
+Below are the results when diagonal moves are included, note that there are multiple optimal trajectories. The optimal trajectories are of length 7, much shorter than the 15 in the original problem. It's not possible to do better by including a ninth action that causes no movement at all other than that caused by the wind, because the wind only moves upwards and trajectories of length 7 are the shortest possible when moving at most 1 cell horizontally per step.
+
+![Windy Gridworld Trainining - 6.9](Windy_gridworld/training_6_9.png)
+
+![Windy Gridworld Trajectory - 6.9](Windy_gridworld/trajectory_6_9.png)
 
 ## Exercise 6.10: Stochastic Wind (programming)
 
 Re-solve the windy gridworld task with King's moves, assuming that the effect of the wind, if there is any, is stochastic, sometimes varying by 1 from the mean values given for each column. That is, a third of the time you move exactly according to these values, as in the previous exercise, but also a third of the time you move one cell above that, and another third of the time you move one cell below that. For example, if you are one cell to the right of the goal and you move left, then one-third of the time you move one cell above the goal, one-third of the time you move two cells above the goal, and one-third of the time you move to the goal.
 
 **My answer:**
+
+Stochastic wind makes the problem significantly harder. The agent probably did not learn an optimal policy, but the final trajectory looks pretty good considering the stochasticity.
+
+![Windy Gridworld Trainining - 6.10](Windy_gridworld/training_6_10.png)
+
+![Windy Gridworld Trajectory - 6.10](Windy_gridworld/trajectory_6_10.png)

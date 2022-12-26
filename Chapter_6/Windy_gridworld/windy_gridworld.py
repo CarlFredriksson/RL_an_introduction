@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from matplotlib import colors
 
 class Environment:
-    def __init__(self):
+    def __init__(self, allow_diagonal_actions=False):
         self.min_x = 0
         self.max_x = 9
         self.min_y = 0
@@ -12,6 +12,8 @@ class Environment:
         self.wind_per_col = np.array([0, 0, 0, 1, 1, 1, 2, 2, 1, 0])
         self.terminal_state = (7, 3)
         self.available_actions = ("up", "down", "right", "left")
+        if allow_diagonal_actions:
+            self.available_actions += ("up-right", "up-left", "down-right", "down-left")
 
     def take_action(self, state, action):
         x, y = state
@@ -33,6 +35,18 @@ class Environment:
             x += 1
         elif action == "left":
             x -= 1
+        elif action == "up-right":
+            y += 1
+            x += 1
+        elif action == "up-left":
+            y += 1
+            x -= 1
+        elif action == "down-right":
+            y -= 1
+            x += 1
+        elif action == "down-left":
+            y -= 1
+            x -= 1
         else:
             raise ValueError(f"action '{action}' is not valid")
         new_state = self._keep_position_within_grid(x, y)
@@ -47,9 +61,14 @@ class Environment:
         return x, y
 
 class SarsaAgent:
-    def __init__(self, step_size, Q_init):
+    def __init__(self, step_size, max_x, max_y, available_actions):
         self.step_size = step_size
-        self.Q = Q_init
+        self.Q = {}
+        for x in range(max_x + 1):
+            for y in range(max_y + 1):
+                self.Q[(x, y)] = {}
+                for action in available_actions:
+                    self.Q[(x, y)][action] = 0
     
     # Eps-greedy action selection
     def select_action(self, state, available_actions, eps):
@@ -103,6 +122,7 @@ def plot_training(episode_lengths, fig_size, title):
     plt.xlabel("Episode", fontsize="12")
     plt.ylabel("Time steps until terminal state reached", fontsize="12")
     plt.title(title, fontsize=14)
+    plt.ylim(0, 100)
 
 def plot_trajectory(trajectory, grid_size, terminal_state, fig_size, title):
     data = np.zeros(grid_size)

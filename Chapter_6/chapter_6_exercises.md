@@ -187,3 +187,20 @@ Stochastic wind makes the problem significantly harder. The agent probably did n
 ![Windy Gridworld Trainining - 6.10](Windy_gridworld/training_6_10.png)
 
 ![Windy Gridworld Trajectory - 6.10](Windy_gridworld/trajectory_6_10.png)
+
+## Exercise 6.11
+
+Why is Q-learning considered an off-policy control method?
+
+**My answer:**
+
+Because the method improves a policy different from that used to generate the data. It has a behavior policy $b$ that determines action selection during learning, and a target policy $\pi$ that the agent improves over time. The behavior policy is derived from $Q$, but needs to make the agent explore, for example by being $\epsilon$-greedy with regards to $Q$. The target policy is greedy with regards to $Q$.
+
+## Exercise 6.12
+
+Suppose action selection is greedy. Is Q-learning then exactly the same algorithm as Sarsa? Will they make exactly the same action selections and weight
+updates?
+
+**My answer:**
+
+If both Sarsa and Q-learning use greedy action selection they are the same algorithm and will make the exact same action selections and weight updates.

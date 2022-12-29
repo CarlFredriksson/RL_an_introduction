@@ -204,3 +204,23 @@ updates?
 **My answer:**
 
 If both Sarsa and Q-learning use greedy action selection they are the same algorithm and will make the exact same action selections and weight updates.
+
+## Exercise 6.13
+
+What are the update equations for Double Expected Sarsa with an $\epsilon$-greedy target policy?
+
+**My answer:**
+
+* Algorithm parameters: step size $\alpha \in (0,1]$, small $\epsilon > 0$
+* Initialize $Q_1(s,a)$ and $Q_2(s,a)$, for all $s \in \mathcal{S}^+$, $a \in \mathcal{A}(s)$, such that $Q(terminal,\cdot) = 0$
+* Loop for each episode:
+  * Initialize $S$
+  * Loop for each step of episode:
+    * Choose $A$ from $S$ using the policy $\epsilon$-greedy in $Q_1 + Q_2$
+    * Take action $A$, observe $R$, $S^\prime$
+    * With 0.5 probability:
+      * $Q_1(S,A) \leftarrow Q_1(S,A) + \alpha \big[R + \gamma \sum_a \pi(a|S_{t+1}) Q_2(S^\prime,a) - Q_1(S,A) \big]$
+    * else:
+      * $Q_2(S,A) \leftarrow Q_2(S,A) + \alpha \big[R + \gamma \sum_a \pi(a|S_{t+1}) Q_1(S^\prime,a) - Q_2(S,A) \big]$
+    * $S \leftarrow S^\prime$
+  * until $S$ is terminal

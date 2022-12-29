@@ -224,3 +224,13 @@ What are the update equations for Double Expected Sarsa with an $\epsilon$-greed
       * $Q_2(S,A) \leftarrow Q_2(S,A) + \alpha \big[R + \gamma \sum_a \pi(a|S_{t+1}) Q_1(S^\prime,a) - Q_2(S,A) \big]$
     * $S \leftarrow S^\prime$
   * until $S$ is terminal
+
+## Exercise 6.14
+
+Describe how the task of Jack's Car Rental (Example 4.2) could be reformulated in terms of afterstates. Why, in terms of this specific task, would such a reformulation be likely to speed convergence?
+
+**My answer:**
+
+The original formulation defines states as the number of cars at each location at the end of the day, and actions as the number of cars moved between the two locations overnight. Since the overnight car moving is completely deterministic, we can reformulate the task using afterstates, defined as the number of cars at each location after the overnight moves. This is likely to speed up convergence due to removing the need to waste computations on state-action pairs that, except for the deterministic cost difference of moving different number of cars, are functionally identical. As an example, let's say that we have 4 cars at location A and 1 car at location B at the end of the day. We move 1 car from A to B, ending up with 3 and 2 respectively. This would affect the immediate reward by -2\$. Let's instead say that we have 5 cars at location A and 0 cars at location B at the end of the day. We move 2 cars from A to B, again ending up with 3 and 2 respectively. This time the immediate reward is affected by -4\$ since an additional car was moved. However, the expected future return from the next state would be the same since both state-action pairs deterministically result in (3, 2) before any random dynamics come into play.
+
+TODO: maybe show how policy iteration would work with this reformulation

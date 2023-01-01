@@ -6,13 +6,13 @@ class Environment:
         self.terminal_state = 0
         self.available_actions = ("up", "down", "right", "left")
         self.transitions = (
-            {"up": 0, "down": 0, "right": 0, "left": 0},
+            {"up": 0, "down": 0, "right": 0, "left": 0}, # Terminal state
             {"up": 1, "down": 5, "right": 2, "left": 0},
             {"up": 2, "down": 6, "right": 3, "left": 1},
             {"up": 3, "down": 7, "right": 3, "left": 2},
             {"up": 0, "down": 8, "right": 5, "left": 4},
             {"up": 1, "down": 9, "right": 6, "left": 4},
-            {"up": 2, "down": 10, "right": 5, "left": 7},
+            {"up": 2, "down": 10, "right": 7, "left": 5},
             {"up": 3, "down": 11, "right": 7, "left": 6},
             {"up": 4, "down": 12, "right": 9, "left": 8},
             {"up": 5, "down": 13, "right": 10, "left": 8},

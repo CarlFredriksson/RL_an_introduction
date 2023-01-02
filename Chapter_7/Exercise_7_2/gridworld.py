@@ -1,5 +1,6 @@
 import numpy as np
 import random
+import matplotlib.pyplot as plt
 
 class Environment:
     def __init__(self):
@@ -31,3 +32,14 @@ class Environment:
     
     def generate_random_start_state(self):
         return random.randint(1, len(self.transitions) - 1)
+
+def compute_rms_error(V):
+    v_truth = np.array([0, -14, -20, -22, -14, -18, -20, -20, -20, -20, -18, -14, -22, -20, -14])
+    return np.sqrt(np.sum(np.power(V - v_truth, 2)) / len(V))
+
+def plot_progress(rms_error_per_episode, fig_size, title):
+    fig, ax = plt.subplots(figsize=fig_size)
+    plt.plot(np.arange(len(rms_error_per_episode)), rms_error_per_episode)
+    plt.xlabel("Episode", fontsize="12")
+    plt.ylabel("RMSE", fontsize="12")
+    plt.title(title, fontsize=14)

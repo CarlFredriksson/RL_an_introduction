@@ -14,17 +14,17 @@ G_t - V_t(S_t) &= R_{t+1} + \gamma G_{t+1} - V_t(S_t) + \gamma V_t(S_{t+1}) - \g
 &= \delta_t + \gamma \big[G_{t+1} - V_t(S_{t+1}) \big] \\
 &= \delta_t + \gamma \big[G_{t+1} - V_t(S_{t+1}) + V_{t+1}(S_{t+1}) - V_{t+1}(S_{t+1}) \big] \\
 &= \delta_t + \gamma \big[G_{t+1} - V_{t+1}(S_{t+1}) \big] + \gamma \big[V_{t+1}(S_{t+1}) - V_t(S_{t+1}) \big] \\
-&= \delta_t + \gamma \delta_{t+1} + \gamma \big[V_{t+1}(S_{t+1}) - V_t(S_{t+1}) \big] + \gamma^2 \big[G_{t+2} - V_t(S_{t+2}) \big] \\
-&= \delta_t + \gamma \delta_{t+1} + \gamma \big[V_{t+1}(S_{t+1}) - V_t(S_{t+1}) \big] + \gamma^2 \delta_{t+2} + \gamma^2 \big[V_{t+2}(S_{t+2}) - V_t(S_{t+2}) \big] + \\ &\quad \dots + \gamma^{T-t-1} \delta_{T-1} + \gamma^{T-t-1} \big[V_{T-1}(S_{T-1}) - V_t(S_{T-1}) \big] + \gamma^{T-t} \big[G_T - V_t(S_{T}) \big] \\
-&= \delta_t + \gamma \delta_{t+1} + \gamma \big[V_{t+1}(S_{t+1}) - V_t(S_{t+1}) \big] + \gamma^2 \delta_{t+2} + \gamma^2 \big[V_{t+2}(S_{t+2}) - V_t(S_{t+2}) \big] + \\ &\quad \dots + \gamma^{T-t-1} \delta_{T-1} + \gamma^{T-t-1} \big[V_{T-1}(S_{T-1}) - V_t(S_{T-1}) \big] + \gamma^{T-t} \big[0 - 0 \big] \\
-&= \sum_{k=t}^{T-1} \gamma^{k-t} \delta_k + \sum_{k=t+1}^{T-1} \gamma^{k-t} \big[V_k(S_k) - V_t(S_k) \big] 
+&= \delta_t + \gamma \delta_{t+1} + \gamma \big[V_{t+1}(S_{t+1}) - V_t(S_{t+1}) \big] + \gamma^2 \big[G_{t+2} - V_{t+1}(S_{t+2}) \big] \\
+&= \delta_t + \gamma \delta_{t+1} + \gamma \big[V_{t+1}(S_{t+1}) - V_t(S_{t+1}) \big] + \gamma^2 \delta_{t+2} + \gamma^2 \big[V_{t+2}(S_{t+2}) - V_{t+1}(S_{t+2}) \big] + \\ &\quad \dots + \gamma^{T-t-1} \delta_{T-1} + \gamma^{T-t-1} \big[V_{T-1}(S_{T-1}) - V_{T-2}(S_{T-1}) \big] + \gamma^{T-t} \big[G_T - V_{T-1}(S_{T}) \big] \\
+&= \delta_t + \gamma \delta_{t+1} + \gamma \big[V_{t+1}(S_{t+1}) - V_t(S_{t+1}) \big] + \gamma^2 \delta_{t+2} + \gamma^2 \big[V_{t+2}(S_{t+2}) - V_{t+1}(S_{t+2}) \big] + \\ &\quad \dots + \gamma^{T-t-1} \delta_{T-1} + \gamma^{T-t-1} \big[V_{T-1}(S_{T-1}) - V_{T-2}(S_{T-1}) \big] + \gamma^{T-t} \big[0 - 0 \big] \\
+&= \sum_{k=t}^{T-1} \gamma^{k-t} \delta_k + \sum_{k=t}^{T-1} \gamma^{k-t+1} \big[V_{k+1}(S_{k+1}) - V_k(S_{k+1}) \big] 
 \end{aligned}
 $$
 
 Thus the additional amount that must be added is:
 
 $$
-\sum_{k=t+1}^{T-1} \gamma^{k-t} \big[V_k(S_k) - V_t(S_k) \big] 
+\sum_{k=t}^{T-1} \gamma^{k-t+1} \big[V_{k+1}(S_{k+1}) - V_k(S_{k+1}) \big] 
 $$
 
 ## Exercise 6.2

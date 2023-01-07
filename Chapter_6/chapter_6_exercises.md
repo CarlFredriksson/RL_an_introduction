@@ -205,7 +205,7 @@ updates?
 
 **My answer:**
 
-If both Sarsa and Q-learning use greedy action selection they are the same algorithm and will make the exact same action selections and weight updates.
+The would actually be subtly different, they will not always make the same action selections, and thus won't always make the same weight updates either. As an example, consider a transition $t \to t+1$ in which the state remains the same and the learning update changes which action is the greedy action. On time step $t+1$, Q-learning will take the newly greedy action, but Sarsa will take the formerly greedy action. This is because Sarsa must commit to $A_{t+1}$ at $t$, before updating $Q$, since this action is used in the update at time $t$. Q-learning will select $A_{t+1}$ after the update at time $t$.
 
 ## Exercise 6.13
 
@@ -213,19 +213,19 @@ What are the update equations for Double Expected Sarsa with an $\epsilon$-greed
 
 **My answer:**
 
-* Algorithm parameters: step size $\alpha \in (0,1]$, small $\epsilon > 0$
-* Initialize $Q_1(s,a)$ and $Q_2(s,a)$, for all $s \in \mathcal{S}^+$, $a \in \mathcal{A}(s)$, such that $Q(terminal,\cdot) = 0$
-* Loop for each episode:
-  * Initialize $S$
-  * Loop for each step of episode:
-    * Choose $A$ from $S$ using the policy $\epsilon$-greedy in $Q_1 + Q_2$
-    * Take action $A$, observe $R$, $S^\prime$
-    * With 0.5 probability:
-      * $Q_1(S,A) \leftarrow Q_1(S,A) + \alpha \big[R + \gamma \sum_a \pi(a|S_{t+1}) Q_2(S^\prime,a) - Q_1(S,A) \big]$
-    * else:
-      * $Q_2(S,A) \leftarrow Q_2(S,A) + \alpha \big[R + \gamma \sum_a \pi(a|S_{t+1}) Q_1(S^\prime,a) - Q_2(S,A) \big]$
-    * $S \leftarrow S^\prime$
-  * until $S$ is terminal
+Let $Q_1$ and $Q_2$ be the two action-value functions and $\pi_1$ and $\pi_2$ be their $\epsilon$-greedy policies respectively. Then the updates would be:
+
+$$
+Q_1(S_t,A_t) \leftarrow Q_1(S_t,A_t) + \alpha \big[R_{t+1} + \gamma \sum_a \pi_2(a|S_{t+1}) Q_1(S_{t+1},a) - Q_1(S_t,A_t) \big]
+$$
+
+and
+
+$$
+Q_2(S_t,A_t) \leftarrow Q_2(S_t,A_t) + \alpha \big[R_{t+1} + \gamma \sum_a \pi_1(a|S_{t+1}) Q_2(S_{t+1},a) - Q_2(S_t,A_t) \big]
+$$
+
+one of which would be done on each step as usual.
 
 ## Exercise 6.14
 
@@ -234,10 +234,6 @@ Describe how the task of Jack's Car Rental (Example 4.2) could be reformulated i
 **My answer:**
 
 The original formulation defines states as the number of cars at each location at the end of the day, and actions as the number of cars moved between the two locations overnight. Since the overnight car moving is completely deterministic, we can reformulate the task using afterstates, defined as the number of cars at each location after the overnight moves. This is likely to speed up convergence due to removing the need to waste computations on state-action pairs that, except for the deterministic cost difference of moving different number of cars, are functionally identical. As an example, let's say that we have 4 cars at location A and 1 car at location B at the end of the day. We move 1 car from A to B, ending up with 3 and 2 respectively. This would affect the immediate reward by -2\$. Let's instead say that we have 5 cars at location A and 0 cars at location B at the end of the day. We move 2 cars from A to B, again ending up with 3 and 2 respectively. This time the immediate reward is affected by -4\$ since an additional car was moved. However, the expected future return from the next state would be the same since both state-action pairs deterministically result in (3, 2) before any probabilistic dynamics come into play.
-
-<!--
-The original formulation defines states as the number of cars at each location at the end of the day, and actions as the number of cars moved between the two locations overnight. Note that the overnight car moving is completely deterministic, and probabilistic dynamics start when the the business opens the next morning. I was initially trying to define afterstates as the number of cars at each location after the overnight moves - since this is all that matters for the expected future return. However, I couldn't figure out how to handle 
--->
 
 The evaluation update in policy iteration could look something like this:
 

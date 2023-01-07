@@ -33,9 +33,11 @@ This is an exercise to help develop your intuition about why TD methods are ofte
 
 **My answer:**
 
-I can't think of an easy answer for the hint-scenario. I feel like I'm lacking information - it seems that it would be affected by the reward variance, $\alpha$, and how we initialize the new states for example?
+I was confused by this exercise before receiving the solutions. "Then you move to a new building and a new parking lot" - refers to moving office building, not moving to a new apartment building (you drive to the same home).
 
-One scenario I can think of where a TD update would be better: If we observe an extreme reward in an episode, that outlier will affect the value estimate for only one state in one TD update, but it will affect the estimate for all states visited before that reward was received in one Monte Carlo update.
+TD updates are likely to be much better in the hint-scenario because they bootstrap. They can utilize the accurate estimates of travel times after entering the highway that have already been built on lots of experience. While Monte Carlo methods will be fully affected by variance over the whole journey, TD methods will be much less affected by variance in the part after the highway. This is because Monte Carlo updates use all observed rewards until the episode is terminated, while TD methods only use immediate reward together with an estimate of the next state's value (for the later part of the journey only the immediate rewards would be noisy since the value estimates should be very accurate).
+
+The same sort of thing could happen in the original problem as well. Especially if a state can be reached in different ways, from different trajectories. When you come across a familiar state from a new direction, a TD method enables you to take advantage of what you have learned about the state along other trajectories. For example, if there is a traffic jam or construction on your usual route that forces you to enter the highway at a different point, the experience from the highway onwards can be utilized.
 
 ## Exercise 6.3
 

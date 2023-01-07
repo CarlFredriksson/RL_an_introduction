@@ -97,7 +97,7 @@ In Example 6.2 we stated that the true values for the random walk example are $\
 
 **My answer:**
 
-On option is to use Monte Carlo prediction with sample averaging (first-visit or every-visit), which will converge to the true values $v_\pi$ (unlike using a fixed value $\alpha$). However, convergence is only guaranteed in the limit.
+One option is to use Monte Carlo prediction with sample averaging (first-visit or every-visit), which will converge to the true values $v_\pi$ (unlike using a fixed value $\alpha$). However, convergence is only guaranteed in the limit.
 
 A better option is to use value/policy iteration from dynamic programming. However, this requires specifying the dynamics function of the problem.
 

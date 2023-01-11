@@ -46,3 +46,22 @@ I think changing the left-side outcome from 0 to -1 was made to make terminating
 I think changing from 0 to -1 penalizes larger values of $n$, because:
 * More updates will use ordinary full returns without bootstrapping - and ordinary full returns from trajectories terminating to the left would increase variance more with -1.
 * As mentioned above, trajectories that start of to the right before eventually terminating to the left, and vice versa, are more likely to move some of the value estimates the wrong direction with larger values of $n$ - this would be more consequential with -1.
+
+## Exercise 7.4
+
+Prove that the n-step return of Sarsa (7.4) can be written exactly in terms of a novel TD error, as:
+
+$$
+G_{t:t+n} = Q_{t-1}(S_t,A_t) + \sum_{k=t}^{min(t+n,T)-1} \gamma^{k-t} \big[R_{k+1} + \gamma Q_k(S_{k+1},A_{k+1}) - Q_{k-1}(S_k,A_k) \big]
+$$
+
+**My answer:**
+
+$$
+\begin{aligned}
+G_{t:t+n} &= R_{t+1} + \gamma G_{t+1:t+n} + Q_{t-1}(S_t,A_t) - Q_{t-1}(S_t,A_t) + \gamma Q_t(S_{t+1},A_{t+1}) - \gamma Q_t(S_{t+1},A_{t+1}) \\
+&= Q_{t-1}(S_t,A_t) + \big[R_{t+1} + \gamma Q_t(S_{t+1},A_{t+1}) - Q_{t-1}(S_t,A_t) \big] + \gamma \big[G_{t+1:t+n} - Q_t(S_{t+1},A_{t+1}) \big] \\
+&= Q_{t-1}(S_t,A_t) + \big[R_{t+1} + \gamma Q_t(S_{t+1},A_{t+1}) - Q_{t-1}(S_t,A_t) \big] \\ &\quad + \gamma \big[R_{t+2} + \gamma Q_{t+1}(S_{t+2},A_{t+2}) - Q_t(S_{t+1},A_{t+1}) \big] + \gamma^2 \big[G_{t+2:t+n} - Q_{t+1}(S_{t+2},A_{t+2}) \big] \\
+&= Q_{t-1}(S_t,A_t) + \sum_{k=t}^{min(t+n,T)-1} \gamma^{k-t} \big[R_{k+1} + \gamma Q_k(S_{k+1},A_{k+1}) - Q_{k-1}(S_k,A_k) \big]
+\end{aligned}
+$$

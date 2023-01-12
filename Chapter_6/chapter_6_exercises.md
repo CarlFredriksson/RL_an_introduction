@@ -196,7 +196,7 @@ Why is Q-learning considered an off-policy control method?
 
 **My answer:**
 
-Because the method improves a policy different from that used to generate the data. It has a behavior policy $b$ that determines action selection during learning, and a target policy $\pi$ that the agent improves over time. The behavior policy is derived from $Q$, but needs to make the agent explore, for example by being $\epsilon$-greedy with regards to $Q$. The target policy is greedy with regards to $Q$.
+Because the method learns about and improves a policy different from that used to generate the data. It has a behavior policy $b$ that determines action selection during learning, and a target policy $\pi$ that the agent learns action-values for and improves over time. The behavior policy is derived from $Q$, but needs to make the agent explore, for example by being $\epsilon$-greedy with regards to $Q$. The target policy is greedy with regards to $Q$.
 
 ## Exercise 6.12
 

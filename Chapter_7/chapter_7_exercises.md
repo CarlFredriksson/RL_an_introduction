@@ -65,3 +65,29 @@ G_{t:t+n} &= R_{t+1} + \gamma G_{t+1:t+n} + Q_{t-1}(S_t,A_t) - Q_{t-1}(S_t,A_t) 
 &= Q_{t-1}(S_t,A_t) + \sum_{k=t}^{min(t+n,T)-1} \gamma^{k-t} \big[R_{k+1} + \gamma Q_k(S_{k+1},A_{k+1}) - Q_{k-1}(S_k,A_k) \big]
 \end{aligned}
 $$
+
+## Exercise 7.5
+
+Write the pseudocode for the off-policy state-value prediction algorithm described above.
+
+**My answer:**
+
+* Input: a behavior policy $b$ and a target policy $\pi$
+* Algorithm parameters: step size $\alpha \in (0,1]$, a positive integer $n$
+* Initialize $V(s)$ arbitrarily, for all $s \in \mathcal{S}$
+* All store and access operations (for $S_t$ and $R_t$) can take their index mod $n+1$
+* Loop for each episode:
+  * Initialize and store $S_0 \neq \text{terminal}$
+  * $T \leftarrow \infty$
+  * Loop for $t=0,1,2,\dots:$
+    * If $t<T$, then:
+      * Take an action according to $b(\cdot|S_t)$
+      * Observe and store the next reward $R_{t+1}$ and the next state $S_{t+1}$
+      * If $S_{t+1}$ is terminal, then $T \leftarrow t+1$
+      * $\rho_t = \frac{\pi(S_t|A_t)}{b(S_t|A_t)}$
+    * $\tau \leftarrow t-n+1$ ($\tau$ is the time whose state's estimate is being updated)
+    * If $\tau \geq 0$:
+      * $G \leftarrow \bigg(\sum_{i=\tau+1}^{\min(\tau+n,T)} \gamma^{i-\tau-1} R_i \prod_{j=\tau}^{i-1} \rho_j\bigg) + (1-\rho_\tau) V(S_\tau) + \bigg(\sum_{i=\tau+1}^{\min(\tau+n,T)-1} \gamma^{i-\tau} (1-\rho_i) V(S_i) \prod_{j=\tau}^{i-2} \rho_j\bigg)$
+      * If $\tau+n < T$, then: $G \leftarrow G + \gamma^n V(S_{\tau+n}) \prod_{j=\tau}^{\tau+n-1} \rho_j$
+      * $V(S_\tau) \leftarrow V(S_\tau) + \alpha \big[G - V(S_\tau) \big]$
+  * Until $\tau=T-1$

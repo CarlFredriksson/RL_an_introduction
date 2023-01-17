@@ -91,3 +91,82 @@ Write the pseudocode for the off-policy state-value prediction algorithm describ
       * If $\tau+n < T$, then: $G \leftarrow G + \gamma^n V(S_{\tau+n}) \prod_{j=\tau}^{\tau+n-1} \rho_j$
       * $V(S_\tau) \leftarrow V(S_\tau) + \alpha \big[G - V(S_\tau) \big]$
   * Until $\tau=T-1$
+
+## Exercise 7.6
+
+Prove that the control variate in the above equations does not change the expected value of the return.
+
+**My answer:**
+
+Let $G_{t:h}^{cv}$ denote the return with control variates. Let's assume that $h < T$, then we have:
+
+$$
+\begin{aligned}
+G_{t:h}^{cv} &= R_{t+1} + \gamma \rho_{t+1} \big[G_{t+1:h} - Q_{h-1}(S_{t+1}, A_{t+1})\big] + \gamma \overline{V}_{h-1}(S_{t+1}) \\
+&= R_{t+1} + \gamma \overline{V}_{h-1}(S_{t+1}) - \gamma \rho_{t+1} Q_{h-1}(S_{t+1}, A_{t+1}) + \\
+&\qquad + \gamma \rho_{t+1} \bigg(R_{t+2} + \gamma \rho_{t+2} \big[G_{t+2:h} - Q_{h-1}(S_{t+2}, A_{t+2})\big] + \gamma \overline{V}_{h-1}(S_{t+2})\bigg) \\
+
+&= R_{t+1} + \gamma \rho_{t+1} R_{t+2} + \gamma^2 \rho_{t+1:t+2} R_{t+3} + \dots + \gamma^{h-t-1} \rho_{t+1:h-1} R_h + \\
+&\qquad + \gamma \overline{V}_{h-1}(S_{t+1}) + \gamma^2 \rho_{t+1} \overline{V}_{h-1}(S_{t+2}) + \dots + \gamma^{h-t} \rho_{t+1:h-1} \overline{V}_{h-1}(S_h) - \\
+&\qquad - \big[\gamma \rho_{t+1} Q_{h-1}(S_{t+1}, A_{t+1}) + \gamma^2 \rho_{t+1:t+2} Q_{h-1}(S_{t+2}, A_{t+2}) + \dots + \gamma^{h-t} \rho_{t+1:h} Q_{h-1}(S_h, A_h)\big] + \\
+&\qquad + \gamma^{h-t} \rho_{t+1:h} G_{h:h} \\
+
+&= R_{t+1} + \gamma \rho_{t+1} R_{t+2} + \gamma^2 \rho_{t+1:t+2} R_{t+3} + \dots + \gamma^{h-t-1} \rho_{t+1:h-1} R_h + \\
+&\qquad + \gamma \overline{V}_{h-1}(S_{t+1}) + \gamma^2 \rho_{t+1} \overline{V}_{h-1}(S_{t+2}) + \dots + \gamma^{h-t} \rho_{t+1:h-1} \overline{V}_{h-1}(S_h) - \\
+&\qquad - \big[\gamma \rho_{t+1} Q_{h-1}(S_{t+1}, A_{t+1}) + \gamma^2 \rho_{t+1:t+2} Q_{h-1}(S_{t+2}, A_{t+2}) + \dots + \gamma^{h-t-1} \rho_{t+1:h-1} Q_{h-1}(S_{h-1}, A_{h-1})\big] \\
+
+&= R_{t+1} + \gamma \overline{V}_{h-1}(S_{t+1}) + \sum_{i=t+1}^{h-1} \gamma^{i-t} \rho_{t+1:i} R_{i+1} + \sum_{i=t+1}^{h-1} \gamma^{i-t+1} \rho_{t+1:i} \overline{V}_{h-1}(S_{i+1}) - \\
+&\qquad -\sum_{i=t+1}^{h-1} \gamma^{i-t} \rho_{t+1:i} Q_{h-1}(S_i, A_i)
+\end{aligned}
+$$
+
+Thus we have:
+
+$$
+\begin{aligned}
+\mathbb{E}[G_{t:h}^{cv}] &= \mathbb{E}\bigg[R_{t+1} + \gamma \overline{V}_{h-1}(S_{t+1}) + \sum_{i=t+1}^{h-1} \gamma^{i-t} \rho_{t+1:i} R_{i+1} + \sum_{i=t+1}^{h-1} \gamma^{i-t+1} \rho_{t+1:i} \overline{V}_{h-1}(S_{i+1})- \\
+&\qquad -\sum_{i=t+1}^{h-1} \gamma^{i-t} \rho_{t+1:i} Q_{h-1}(S_i, A_i)\bigg] \\
+
+&= \mathbb{E}\big[R_{t+1}\big] + \gamma \mathbb{E}\big[\overline{V}_{h-1}(S_{t+1})\big] + \sum_{i=t+1}^{h-1} \gamma^{i-t} \mathbb{E}\big[\rho_{t+1:i} R_{i+1}\big] + \sum_{i=t+1}^{h-1} \gamma^{i-t+1} \mathbb{E}\big[\rho_{t+1:i} \overline{V}_{h-1}(S_{i+1})\big] - \\
+&\qquad -\sum_{i=t+1}^{h-1} \gamma^{i-t} \mathbb{E}\big[\rho_{t+1:i} Q_{h-1}(S_i, A_i)\big] \\
+
+&= \mathbb{E}\big[R_{t+1}\big] + \gamma \mathbb{E}\big[\overline{V}_{h-1}(S_{t+1})\big] + \sum_{i=t+1}^{h-1} \gamma^{i-t} \mathbb{E}\big[\rho_{t+1:i}\big] \mathbb{E}\big[R_{i+1}\big] + \sum_{i=t+1}^{h-1} \gamma^{i-t+1} \mathbb{E}\big[\rho_{t+1:i}\big] \mathbb{E}\big[\overline{V}_{h-1}(S_{i+1})\big] - \\
+&\qquad -\sum_{i=t+1}^{h-1} \gamma^{i-t} \mathbb{E}\big[\rho_{t+1:i}\big] \mathbb{E}\big[Q_{h-1}(S_i, A_i)\big] \qquad (\mathbb{E}[XY] = \mathbb{E}[X] \mathbb{E}[Y] \; \text{when} \; X,Y \; \text{are independent}) \\
+
+&= \mathbb{E}\big[R_{t+1}\big] + \gamma \mathbb{E}\big[\overline{V}_{h-1}(S_{t+1})\big] + \sum_{i=t+1}^{h-1} \gamma^{i-t} \mathbb{E}\big[R_{i+1}\big] + \sum_{i=t+1}^{h-1} \gamma^{i-t+1} \mathbb{E}\big[\overline{V}_{h-1}(S_{i+1})\big] - \\
+&\qquad -\sum_{i=t+1}^{h-1} \gamma^{i-t} \mathbb{E}\big[Q_{h-1}(S_i, A_i)\big] \\
+
+&= \mathbb{E}\big[R_{t+1}\big] + \gamma \overline{V}_{h-1}(S_{t+1}) + \sum_{i=t+1}^{h-1} \gamma^{i-t} \mathbb{E}\big[R_{i+1}\big] + \sum_{i=t+1}^{h-1} \gamma^{i-t+1} \overline{V}_{h-1}(S_{i+1}) - \\
+&\qquad -\sum_{i=t+1}^{h-1} \gamma^{i-t} \overline{V}_{h-1}(S_i) \\
+
+&= \mathbb{E}\big[R_{t+1}\big] + \gamma^{h-t} \overline{V}_{h-1}(S_h) + \sum_{i=t+1}^{h-1} \gamma^{i-t} \mathbb{E}\big[R_{i+1}\big] \\
+
+&= \mathbb{E}\big[R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \dots + \gamma^{h-t-1} R_h + \gamma^{h-t} \overline{V}_{h-1}(S_h)\big] \\
+
+&= \mathbb{E}\big[G_{t:h}\big] \\
+\end{aligned}
+$$
+
+Let's now assume $h \geq T$, then we have (I left out some steps for brevity):
+
+$$
+\begin{aligned}
+G_{t:h}^{cv} &= R_{t+1} + \gamma \overline{V}_{h-1}(S_{t+1}) + \sum_{i=t+1}^{T-1} \gamma^{i-t} \rho_{t+1:i} R_{i+1} + \sum_{i=t+1}^{T-2} \gamma^{i-t+1} \rho_{t+1:i} \overline{V}_{h-1}(S_{i+1}) - \\
+&\qquad -\sum_{i=t+1}^{T-1} \gamma^{i-t} \rho_{t+1:i} Q_{h-1}(S_i, A_i)
+\end{aligned}
+$$
+
+Thus we have:
+
+$$
+\begin{aligned}
+\mathbb{E}[G_{t:h}^{cv}] &= \bigg[R_{t+1} + \gamma \overline{V}_{h-1}(S_{t+1}) + \sum_{i=t+1}^{T-1} \gamma^{i-t} \rho_{t+1:i} R_{i+1} + \sum_{i=t+1}^{T-2} \gamma^{i-t+1} \rho_{t+1:i} \overline{V}_{h-1}(S_{i+1}) - \\
+&\qquad -\sum_{i=t+1}^{T-1} \gamma^{i-t} \rho_{t+1:i} Q_{h-1}(S_i, A_i)\bigg] \\
+
+&= \mathbb{E}\bigg[R_{t+1} + \sum_{i=t+1}^{T-1} \gamma^{i-t} R_{i+1}\bigg] \\
+
+&= \mathbb{E}\big[G_{t:h}\big] 
+\end{aligned}
+$$
+
+Thus we have shown that $\mathbb{E}[G_{t:h}^{cv}] = \mathbb{E}\big[G_{t:h}\big]$. In other words, the control variate does not change the expected value of the return.

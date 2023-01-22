@@ -141,20 +141,18 @@ $$
 &= \mathbb{E}\big[R_{t+1}\big] + \gamma \mathbb{E}\big[\overline{V}_{h-1}(S_{t+1})\big] + \sum_{i=t+1}^{h-1} \gamma^{i-t} \mathbb{E}\big[\rho_{t+1:i} R_{i+1}\big] + \sum_{i=t+1}^{h-1} \gamma^{i-t+1} \mathbb{E}\big[\rho_{t+1:i} \overline{V}_{h-1}(S_{i+1})\big] - \\
 &\qquad -\sum_{i=t+1}^{h-1} \gamma^{i-t} \mathbb{E}\big[\rho_{t+1:i} Q_{h-1}(S_i, A_i)\big] \\
 
-&= \mathbb{E}\big[R_{t+1}\big] + \gamma \mathbb{E}\big[\overline{V}_{h-1}(S_{t+1})\big] + \sum_{i=t+1}^{h-1} \gamma^{i-t} \mathbb{E}\big[\rho_{t+1:i}\big] \mathbb{E}\big[R_{i+1}\big] + \sum_{i=t+1}^{h-1} \gamma^{i-t+1} \mathbb{E}\big[\rho_{t+1:i}\big] \mathbb{E}\big[\overline{V}_{h-1}(S_{i+1})\big] - \\
+&= \mathbb{E}\big[R_{t+1}\big] + \gamma \mathbb{E}\big[\overline{V}_{h-1}(S_{t+1})\big] + \sum_{i=t+1}^{h-1} \gamma^{i-t} \mathbb{E}\big[\rho_{t+1:i} R_{i+1}\big] + \sum_{i=t+1}^{h-1} \gamma^{i-t+1} \mathbb{E}\big[\rho_{t+1:i}\big] \mathbb{E}\big[\overline{V}_{h-1}(S_{i+1})\big] - \\
 &\qquad -\sum_{i=t+1}^{h-1} \gamma^{i-t} \mathbb{E}\big[\rho_{t+1:i}\big] \mathbb{E}\big[Q_{h-1}(S_i, A_i)\big] \qquad (\mathbb{E}[XY] = \mathbb{E}[X] \mathbb{E}[Y] \; \text{when} \; X,Y \; \text{are independent}) \\
 
-&= \mathbb{E}\big[R_{t+1}\big] + \gamma \mathbb{E}\big[\overline{V}_{h-1}(S_{t+1})\big] + \sum_{i=t+1}^{h-1} \gamma^{i-t} \mathbb{E}\big[R_{i+1}\big] + \sum_{i=t+1}^{h-1} \gamma^{i-t+1} \mathbb{E}\big[\overline{V}_{h-1}(S_{i+1})\big] - \\
-&\qquad -\sum_{i=t+1}^{h-1} \gamma^{i-t} \mathbb{E}\big[Q_{h-1}(S_i, A_i)\big] \\
+&= \mathbb{E}\big[R_{t+1}\big] + \gamma \mathbb{E}\big[\overline{V}_{h-1}(S_{t+1})\big] + \sum_{i=t+1}^{h-1} \gamma^{i-t} \mathbb{E}\big[\rho_{t+1:i} R_{i+1}\big] + \sum_{i=t+1}^{h-1} \gamma^{i-t+1} \mathbb{E}\big[\overline{V}_{h-1}(S_{i+1})\big] - \\
+&\qquad -\sum_{i=t+1}^{h-1} \gamma^{i-t} \mathbb{E}\big[Q_{h-1}(S_i, A_i)\big] \qquad (\mathbb{E}[\rho_{t+1:i}] = 1) \\
 
-&= \mathbb{E}\big[R_{t+1}\big] + \gamma \overline{V}_{h-1}(S_{t+1}) + \sum_{i=t+1}^{h-1} \gamma^{i-t} \mathbb{E}\big[R_{i+1}\big] + \sum_{i=t+1}^{h-1} \gamma^{i-t+1} \overline{V}_{h-1}(S_{i+1}) - \\
+&= \mathbb{E}\big[R_{t+1}\big] + \gamma \overline{V}_{h-1}(S_{t+1}) + \sum_{i=t+1}^{h-1} \gamma^{i-t} \mathbb{E}\big[\rho_{t+1:i} R_{i+1}\big] + \sum_{i=t+1}^{h-1} \gamma^{i-t+1} \overline{V}_{h-1}(S_{i+1}) - \\
 &\qquad -\sum_{i=t+1}^{h-1} \gamma^{i-t} \overline{V}_{h-1}(S_i) \\
 
-&= \mathbb{E}\big[R_{t+1}\big] + \gamma^{h-t} \overline{V}_{h-1}(S_h) + \sum_{i=t+1}^{h-1} \gamma^{i-t} \mathbb{E}\big[R_{i+1}\big] \\
+&= \mathbb{E}\big[R_{t+1}\big] + \gamma^{h-t} \overline{V}_{h-1}(S_h) + \sum_{i=t+1}^{h-1} \gamma^{i-t} \mathbb{E}\big[\rho_{t+1:i} R_{i+1}\big] \\
 
-&= \mathbb{E}\big[R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \dots + \gamma^{h-t-1} R_h + \gamma^{h-t} \overline{V}_{h-1}(S_h)\big] \\
-
-&= \mathbb{E}\big[G_{t:h}\big] \\
+&= \mathbb{E}\big[R_{t+1} + \gamma \rho_{t+1:t+1} R_{t+2} + \gamma^2 \rho_{t+1:t+2} R_{t+3} + \dots + \gamma^{h-t-1} \rho_{t+1:h-1} R_h + \gamma^{h-t} \rho_{t+1:h} \overline{V}_{h-1}(S_h)\big]
 \end{aligned}
 $$
 
@@ -174,11 +172,10 @@ $$
 \mathbb{E}[G_{t:h}^{cv}] &= \bigg[R_{t+1} + \gamma \overline{V}_{h-1}(S_{t+1}) + \sum_{i=t+1}^{T-1} \gamma^{i-t} \rho_{t+1:i} R_{i+1} + \sum_{i=t+1}^{T-2} \gamma^{i-t+1} \rho_{t+1:i} \overline{V}_{h-1}(S_{i+1}) - \\
 &\qquad -\sum_{i=t+1}^{T-1} \gamma^{i-t} \rho_{t+1:i} Q_{h-1}(S_i, A_i)\bigg] \\
 
-&= \mathbb{E}\bigg[R_{t+1} + \sum_{i=t+1}^{T-1} \gamma^{i-t} R_{i+1}\bigg] \\
+&= \mathbb{E}\bigg[R_{t+1} + \sum_{i=t+1}^{T-1} \gamma^{i-t} \rho_{t+1:i} R_{i+1}\bigg] \\
 
-&= \mathbb{E}\big[G_{t:h}\big] 
+&= \mathbb{E}\big[R_{t+1} + \gamma \rho_{t+1:t+1} R_{t+2} + \gamma^2 \rho_{t+1:t+2} R_{t+3} + \dots + \gamma^{T-t-1} \rho_{t+1:T-1} R_T\big]
 \end{aligned}
 $$
 
-Thus we have shown that $\mathbb{E}[G_{t:h}^{cv}] = \mathbb{E}\big[G_{t:h}\big]$. In other words, the control variate does not change the expected value of the return.
-
+Thus we have shown that the control variate does not change the expected value of the return.

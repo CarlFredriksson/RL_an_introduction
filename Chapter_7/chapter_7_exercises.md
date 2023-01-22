@@ -57,13 +57,24 @@ $$
 
 **My answer:**
 
+Let $\delta_t = R_{t+1} + \gamma Q_t(S_{t+1},A_{t+1}) - Q_{t-1}(S_t,A_t)$ and $t+n < T$. Then we have:
+
 $$
 \begin{aligned}
 G_{t:t+n} &= R_{t+1} + \gamma G_{t+1:t+n} + Q_{t-1}(S_t,A_t) - Q_{t-1}(S_t,A_t) + \gamma Q_t(S_{t+1},A_{t+1}) - \gamma Q_t(S_{t+1},A_{t+1}) \\
 &= Q_{t-1}(S_t,A_t) + \big[R_{t+1} + \gamma Q_t(S_{t+1},A_{t+1}) - Q_{t-1}(S_t,A_t) \big] + \gamma \big[G_{t+1:t+n} - Q_t(S_{t+1},A_{t+1}) \big] \\
 &= Q_{t-1}(S_t,A_t) + \big[R_{t+1} + \gamma Q_t(S_{t+1},A_{t+1}) - Q_{t-1}(S_t,A_t) \big] \\ &\quad + \gamma \big[R_{t+2} + \gamma Q_{t+1}(S_{t+2},A_{t+2}) - Q_t(S_{t+1},A_{t+1}) \big] + \gamma^2 \big[G_{t+2:t+n} - Q_{t+1}(S_{t+2},A_{t+2}) \big] \\
-&= Q_{t-1}(S_t,A_t) + \sum_{k=t}^{min(t+n,T)-1} \gamma^{k-t} \big[R_{k+1} + \gamma Q_k(S_{k+1},A_{k+1}) - Q_{k-1}(S_k,A_k) \big]
+&= Q_{t-1}(S_t,A_t) + \delta_t + \gamma \delta_{t+1} + \dots + \gamma^{n-1} \delta_{t+n-1} + \gamma^n \big[G_{t+2n:t+n} - Q_{t+n-1}(S_{t+n},A_{t+n}) \big] \\
+&= Q_{t-1}(S_t,A_t) + \delta_t + \gamma \delta_{t+1} + \dots + \gamma^{n-1} \delta_{t+n-1} + \gamma^n \big[Q_{t+n-1}(S_{t+n},A_{t+n}) - Q_{t+n-1}(S_{t+n},A_{t+n}) \big] \\
+&= Q_{t-1}(S_t,A_t) + \delta_t + \gamma \delta_{t+1} + \dots + \gamma^{n-1} \delta_{t+n-1} \\
+&= Q_{t-1}(S_t,A_t) + \sum_{k=t}^{t+n-1} \gamma^{k-t} \big[R_{k+1} + \gamma Q_k(S_{k+1},A_{k+1}) - Q_{k-1}(S_k,A_k) \big]
 \end{aligned}
+$$
+
+In general, where $t+n \geq T$ is also possible, we get:
+
+$$
+G_{t:t+n} = Q_{t-1}(S_t,A_t) + \sum_{k=t}^{min(t+n,T)-1} \gamma^{k-t} \big[R_{k+1} + \gamma Q_k(S_{k+1},A_{k+1}) - Q_{k-1}(S_k,A_k) \big]
 $$
 
 ## Exercise 7.5
@@ -170,3 +181,4 @@ $$
 $$
 
 Thus we have shown that $\mathbb{E}[G_{t:h}^{cv}] = \mathbb{E}\big[G_{t:h}\big]$. In other words, the control variate does not change the expected value of the return.
+

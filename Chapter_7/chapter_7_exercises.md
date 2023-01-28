@@ -83,6 +83,35 @@ Write the pseudocode for the off-policy state-value prediction algorithm describ
 
 **My answer:**
 
+One version:
+
+* Input: a behavior policy $b$ and a target policy $\pi$
+* Algorithm parameters: step size $\alpha \in (0,1]$, a positive integer $n$
+* Initialize $V(s)$ arbitrarily, for all $s \in \mathcal{S}$
+* All store and access operations (for $S_t$ and $R_t$) can take their index mod $n+1$
+* Loop for each episode:
+  * Initialize and store $S_0 \neq \text{terminal}$
+  * $T \leftarrow \infty$
+  * Loop for $t=0,1,2,\dots:$
+    * If $t<T$, then:
+      * Take an action according to $b(\cdot|S_t)$
+      * Observe and store the next reward $R_{t+1}$ and the next state $S_{t+1}$
+      * If $S_{t+1}$ is terminal, then $T \leftarrow t+1$
+      * $\rho_t = \frac{\pi(S_t|A_t)}{b(S_t|A_t)}$
+    * $\tau \leftarrow t-n+1$ ($\tau$ is the time whose state's estimate is being updated)
+    * If $\tau \geq 0$:
+      * $G \leftarrow 0$
+      * $h \leftarrow T$
+      * If $\tau+n < T$, then:
+        * $G \leftarrow V(S_{\tau+n})$
+        * $h \leftarrow \tau+n$
+      * Loop for $i=h-1, h-2, \dots, \tau$:
+        * $G \leftarrow \rho_i(R_{i+1} + \gamma G) + (1-\rho_i)V(S_i)$
+      * $V(S_\tau) \leftarrow V(S_\tau) + \alpha \big[G - V(S_\tau) \big]$
+  * Until $\tau=T-1$
+
+Another version:
+
 * Input: a behavior policy $b$ and a target policy $\pi$
 * Algorithm parameters: step size $\alpha \in (0,1]$, a positive integer $n$
 * Initialize $V(s)$ arbitrarily, for all $s \in \mathcal{S}$
@@ -100,7 +129,7 @@ Write the pseudocode for the off-policy state-value prediction algorithm describ
     * If $\tau \geq 0$:
       * $G \leftarrow \bigg(\sum_{i=\tau+1}^{\min(\tau+n,T)} \gamma^{i-\tau-1} R_i \prod_{j=\tau}^{i-1} \rho_j\bigg) + (1-\rho_\tau) V(S_\tau) + \bigg(\sum_{i=\tau+1}^{\min(\tau+n,T)-1} \gamma^{i-\tau} (1-\rho_i) V(S_i) \prod_{j=\tau}^{i-2} \rho_j\bigg)$
       * If $\tau+n < T$, then: $G \leftarrow G + \gamma^n V(S_{\tau+n}) \prod_{j=\tau}^{\tau+n-1} \rho_j$
-      * $V(S_\tau) \leftarrow V(S_\tau) + \alpha \big[G - V(S_\tau) \big]$
+      * $V(S_\tau) \leftarrow V(S_\tau) + \alpha \big[G - V(S_\tau)\big]$
   * Until $\tau=T-1$
 
 ## Exercise 7.6
@@ -179,3 +208,34 @@ $$
 $$
 
 Thus we have shown that the control variate does not change the expected value of the return.
+
+## Exercise 7.7
+
+Write the pseudocode for the off-policy action-value prediction algorithm described immediately above. Pay particular attention to the termination conditions for the recursion upon hitting the horizon or the end of episode.
+
+**My answer:**
+
+* Input: a behavior policy $b$ and a target policy $\pi$
+* Algorithm parameters: step size $\alpha \in (0,1]$, a positive integer $n$
+* Initialize $Q(s,a)$ arbitrarily, for all $s \in \mathcal{S}, a \in \mathcal{A}(s)$
+* All store and access operations (for $S_t$ and $R_t$) can take their index mod $n+1$
+* Loop for each episode:
+  * Initialize and store $S_0 \neq \text{terminal}$
+  * $T \leftarrow \infty$
+  * Loop for $t=0,1,2,\dots:$
+    * If $t<T$, then:
+      * Take an action according to $b(\cdot|S_t)$
+      * Observe and store the next reward $R_{t+1}$ and the next state $S_{t+1}$
+      * If $S_{t+1}$ is terminal, then $T \leftarrow t+1$
+      * $\rho_t = \frac{\pi(S_t|A_t)}{b(S_t|A_t)}$
+    * $\tau \leftarrow t-n+1$ ($\tau$ is the time whose state's estimate is being updated)
+    * If $\tau \geq 0$:
+      * $G \leftarrow R_T$
+      * $h \leftarrow T-1$
+      * If $\tau+n < T$, then:
+        * $G \leftarrow Q(S_{\tau+n},A_{\tau+n})$
+        * $h \leftarrow \tau+n$
+      * Loop for $i=h-1, h-2, \dots, \tau$:
+        * $G \leftarrow R_{i+1} + \gamma \rho_i\big[G - Q(S_{i+1},A_{i+1})\big] + \gamma \overline{V}(S_{i+1})$
+      * $Q(S_\tau,A_\tau) \leftarrow Q(S_\tau,A_\tau) + \alpha \big[G - Q(S_\tau,A_\tau)\big]$
+  * Until $\tau=T-1$

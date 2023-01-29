@@ -239,3 +239,26 @@ Write the pseudocode for the off-policy action-value prediction algorithm descri
         * $G \leftarrow R_{i+1} + \gamma \rho_i\big[G - Q(S_{i+1},A_{i+1})\big] + \gamma \overline{V}(S_{i+1})$
       * $Q(S_\tau,A_\tau) \leftarrow Q(S_\tau,A_\tau) + \alpha \big[G - Q(S_\tau,A_\tau)\big]$
   * Until $\tau=T-1$
+
+## Exercise 7.8
+
+Show that the general (off-policy) version of the n-step return (7.13) can still be written exactly and compactly as the sum of state-based TD errors (6.5) if the approximate state value function does not change.
+
+**My answer:**
+
+Let $V_{h-1}$ be denoted as $V$ for brevity, then we have:
+
+$$
+\begin{aligned}
+G_{t:h} &= \rho_t(R_{t+1} + \gamma G_{t+1:h}) + (1-\rho_t)V(S_t) \\
+&= \rho_t R_{t+1} + \gamma \rho_t G_{t+1:h} + V(S_t) - \rho_t V(S_t) + \gamma \rho_t V(S_{t+1}) - \gamma \rho_t V(S_{t+1}) \\
+&= V(S_t) + \rho_t \big[R_{t+1} + \gamma V(S_{t+1}) - V(S_t)\big] + \gamma \rho_t \big[G_{t+1:h} - V(S_{t+1})\big] \\
+&= V(S_t) + \rho_t \delta_t + \gamma \rho_t \big[G_{t+1:h} - V(S_{t+1})\big] \\
+&= V(S_t) + \rho_t \delta_t + \gamma \rho_t \big[\rho_{t+1}R_{t+2} + \gamma \rho_{t+1} G_{t+2:h} + V(S_{t+1}) - \rho_{t+1}V(S_{t+1}) + \gamma \rho_{t+1} V(S_{t+2}) - \gamma \rho_{t+1} V(S_{t+2}) - V(S_{t+1})\big] \\
+&= V(S_t) + \rho_t \delta_t + \gamma \rho_{t:t+1} \big[R_{t+2} + \gamma V(S_{t+2}) - V(S_{t+1})\big] + \gamma^2 \rho_{t:t+1} \big[G_{t+2:h} - V(S_{t+2})\big] \\
+&= V(S_t) + \rho_t \delta_t + \gamma \rho_{t:t+1} \delta_{t+1} + \gamma^2 \rho_{t:t+1} \big[G_{t+2:h} - V(S_{t+2})\big] \\
+&= V(S_t) + \rho_t \delta_t + \gamma \rho_{t:t+1} \delta_{t+1} + \dots + \gamma^{h-t-1} \rho_{t:h-1} \delta_{h-1} + \gamma^{h-t} \rho_{t:h-1} \big[G_{h:h} - V(S_h)\big] \\
+&= V(S_t) + \rho_t \delta_t + \gamma \rho_{t:t+1} \delta_{t+1} + \dots + \gamma^{h-t-1} \rho_{t:h-1} \delta_{h-1} + \gamma^{h-t} \rho_{t:h-1} \big[V(S_h) - V(S_h)\big] \\
+&= V(S_t) + \sum_{k=t}^{h-1} \gamma^{k-t} \rho_{t:k} \delta_k
+\end{aligned}
+$$

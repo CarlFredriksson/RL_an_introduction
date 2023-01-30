@@ -246,7 +246,7 @@ Show that the general (off-policy) version of the n-step return (7.13) can still
 
 **My answer:**
 
-Let $V_{h-1}$ be denoted as $V$ for brevity, then we have:
+Let $\delta_t = R_{t+1} + \gamma V(S_{t+1}) - V(S_t)$ and let $V_{h-1}$ be denoted as $V$ for brevity, then we have:
 
 $$
 \begin{aligned}
@@ -262,3 +262,58 @@ G_{t:h} &= \rho_t(R_{t+1} + \gamma G_{t+1:h}) + (1-\rho_t)V(S_t) \\
 &= V(S_t) + \sum_{k=t}^{h-1} \gamma^{k-t} \rho_{t:k} \delta_k
 \end{aligned}
 $$
+
+## Exercise 7.9
+
+Repeat the above exercise for the action version of the off-policy n-step return (7.14) and the Expected Sarsa TD error (the quantity in brackets in Equation 6.9).
+
+**My answer:**
+
+Let
+
+$$
+\begin{aligned}
+\delta_t &= R_{t+1} + \gamma \sum_a \pi(a|S_{t+1})Q(S_{t+1},a) - Q(S_t,A_t) \\
+&= R_{t+1} + \gamma \overline{V}(S_{t+1}) - Q(S_t,A_t)
+\end{aligned}
+$$
+
+Let $Q_{h-1}$ be denoted $Q$ and $\overline{V}_{h-1}$ be denoted as $\overline{V}$ for brevity, then we have:
+
+$$
+\begin{aligned}
+G_{t:h} &= R_{t+1} + \gamma \rho_{t+1} \big[G_{t+1:h} - Q(S_{t+1},A_{t+1})\big] - \gamma \overline{V}(S_{t+1}) \\
+&= R_{t+1} + \gamma \rho_{t+1} \big[G_{t+1:h} - Q(S_{t+1},A_{t+1})\big] - \gamma \overline{V}(S_{t+1}) + Q(S_t,A_t) - Q(S_t,A_t) \\
+&= Q(S_t,A_t) + \delta_t + \gamma \rho_{t+1} \big[G_{t+1:h} - Q(S_{t+1},A_{t+1})\big] \\
+&= Q(S_t,A_t) + \delta_t + \gamma \rho_{t+1} \bigg(R_{t+2} + \gamma \rho_{t+2} \big[G_{t+2:h} - Q(S_{t+2},A_{t+2})\big] + \gamma \overline{V}(S_{t+2}) - Q(S_{t+1},A_{t+1})\bigg) \\
+&= Q(S_t,A_t) + \delta_t + \gamma \rho_{t+1} \delta_{t+1} + \gamma^2 \rho_{t+1:t+2} \delta_{t+2} + \gamma^3 \rho_{t+1:t+3} \big[G_{t+3:h} - Q(S_{t+3},A_{t+3})\big]
+\end{aligned}
+$$
+
+For $t<T$ we have:
+
+$$
+\begin{aligned}
+G_{t:h} &= Q(S_t,A_t) + \delta_t + \gamma \rho_{t+1} \delta_{t+1} + \gamma^2 \rho_{t+1:t+2} \delta_{t+2} + \dots + \gamma^{h-t-1} \rho_{t+1:h-1} \delta_{h-1} + \gamma^{h-t} \rho_{t+1:h} \big[G_{h:h} - Q(S_h,A_h)\big] \\
+&= Q(S_t,A_t) + \delta_t + \gamma \rho_{t+1} \delta_{t+1} + \gamma^2 \rho_{t+1:t+2} \delta_{t+2} + \dots + \gamma^{h-t-1} \rho_{t+1:h-1} \delta_{h-1} + \gamma^{h-t} \rho_{t+1:h} \big[Q(S_h,A_h) - Q(S_h,A_h)\big] \\
+&= Q(S_t,A_t) + \delta_t + \sum_{k=t+1}^{h-1} \gamma^{k-t} \rho_{t+1:k} \delta_k
+\end{aligned}
+$$
+
+For $t \geq T$ we have:
+
+$$
+\begin{aligned}
+G_{t:h} &= Q(S_t,A_t) + \delta_t + \gamma \rho_{t+1} \delta_{t+1} + \gamma^2 \rho_{t+1:t+2} \delta_{t+2} + \dots + \gamma^{T-t-2} \rho_{t+1:T-2} \delta_{T-2} + \gamma^{T-t-1} \rho_{t+1:T-1} \big[G_{T-1:h} - Q(S_{T-1},A_{T-1})\big] \\
+&= Q(S_t,A_t) + \delta_t + \gamma \rho_{t+1} \delta_{t+1} + \gamma^2 \rho_{t+1:t+2} \delta_{t+2} + \dots + \gamma^{T-t-2} \rho_{t+1:T-2} \delta_{T-2} + \gamma^{T-t-1} \rho_{t+1:T-1} \big[R_T - Q(S_{T-1},A_{T-1})\big] \\
+&= Q(S_t,A_t) + \delta_t + \bigg(\sum_{k=t+1}^{T-2} \gamma^{k-t} \rho_{t+1:k} \delta_k \bigg) + \gamma^{T-t-1} \rho_{t+1:T-1} \big[R_T - Q(S_{T-1},A_{T-1})\big]
+\end{aligned}
+$$
+
+## Exercise 7.10 (programming)
+
+Devise a small off-policy prediction problem and use it to show that the off-policy learning algorithm using (7.13) and (7.2) is more data efficient than the simpler algorithm using (7.1) and (7.9).
+
+**My answer:**
+
+TODO

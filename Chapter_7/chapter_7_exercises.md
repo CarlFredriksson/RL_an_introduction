@@ -338,7 +338,8 @@ G_{t:t+n} &= R_{t+1} + \gamma \sum_{a \neq A_{t+1}} \pi(a|S_{t+1}) Q(S_{t+1},a) 
 &= R_{t+1} + \gamma \sum_a \pi(a|S_{t+1}) Q(S_{t+1},a) - \gamma \pi(A_{t+1}|S_{t+1})Q(S_{t+1},A_{t+1}) + \gamma \pi(A_{t+1}|S_{t+1}) G_{t+1:h} + Q(S_t,A_t) - Q(S_t,A_t) \\
 &= Q(S_t,A_t) + \big[R_{t+1} + \gamma \overline{V}(S_{t+1}) - Q(S_t,A_t)] + \gamma \pi(A_{t+1}|S_{t+1}) \big[G_{t+1:h} - Q(S_{t+1},A_{t+1})\big] \\
 &= Q(S_t,A_t) + \delta_t + \gamma \pi(A_{t+1}|S_{t+1}) \big[G_{t+1:h} - Q(S_{t+1},A_{t+1})\big] \\
-&= Q(S_t,A_t) + \delta_t + \gamma \pi(A_{t+1}|S_{t+1}) \big[R_{t+2} + \gamma \sum_a \pi(a|S_{t+2}) Q(S_{t+2},a) - \gamma \pi(A_{t+2}|S_{t+2})Q(S_{t+2},A_{t+2}) + \gamma \pi(A_{t+2}|S_{t+2}) G_{t+2:h} - Q(S_{t+1},A_{t+1})\big] \\
+&= Q(S_t,A_t) + \delta_t + \gamma \pi(A_{t+1}|S_{t+1}) \big[R_{t+2} + \gamma \sum_a \pi(a|S_{t+2}) Q(S_{t+2},a) - \\
+&\qquad - \gamma \pi(A_{t+2}|S_{t+2})Q(S_{t+2},A_{t+2}) + \gamma \pi(A_{t+2}|S_{t+2}) G_{t+2:h} - Q(S_{t+1},A_{t+1})\big] \\
 &= Q(S_t,A_t) + \delta_t + \gamma \pi(A_{t+1}|S_{t+1}) \delta_{t+1} + \gamma^2 \pi(A_{t+1}|S_{t+1}) \pi(A_{t+2}|S_{t+2}) \big[G_{t+2:h} - Q(S_{t+2},A_{t+2})] \\
 &= Q(S_t,A_t) + \delta_t + \gamma \pi(A_{t+1}|S_{t+1}) \delta_{t+1} + \dots + \delta_{h-1} \prod_{i=t+1}^{h-1} \gamma \pi(A_i|S_i) + \big[G_{h:h} - Q(S_h,A_h)] \prod_{k=t+1}^h \gamma \pi(A_i|S_i) \\
 &= Q(S_t,A_t) + \delta_t + \gamma \pi(A_{t+1}|S_{t+1}) \delta_{t+1} + \dots + \delta_{h-1} \prod_{i=t+1}^{h-1} \gamma \pi(A_i|S_i) \\

@@ -246,7 +246,7 @@ Show that the general (off-policy) version of the n-step return (7.13) can still
 
 **My answer:**
 
-Let $\delta_t = R_{t+1} + \gamma V(S_{t+1}) - V(S_t)$ and let $V_{h-1}$ be denoted as $V$ for brevity, then we have:
+Let $\delta_t = R_{t+1} + \gamma V(S_{t+1}) - V(S_t)$, then we have:
 
 $$
 \begin{aligned}
@@ -278,7 +278,7 @@ $$
 \end{aligned}
 $$
 
-Let $Q_{h-1}$ be denoted $Q$ and $\overline{V}_{h-1}$ be denoted as $\overline{V}$ for brevity, then we have:
+Then we have:
 
 $$
 \begin{aligned}
@@ -317,3 +317,32 @@ Devise a small off-policy prediction problem and use it to show that the off-pol
 **My answer:**
 
 TODO
+
+## Exercise 7.11
+
+Show that if the approximate action values are unchanging, then the tree-backup return (7.16) can be written as a sum of expectation-based TD errors:
+
+$$
+G_{t:t+n} = Q(S_t,A_t) + \sum_{k=t}^{min(t+n,T)-1} \delta_k \prod_{i=t+1}^k \gamma \pi(A_i|S_i)
+$$
+
+where $\delta_t = R_{t+1} + \gamma \overline{V_t}(S_{t+1}) - Q(S_t,A_t)$ and $\overline{V_t}$ is given by (7.8).
+
+**My answer:**
+
+Let $h = min(t+n,T)-1$, then we have:
+
+$$
+\begin{aligned}
+G_{t:t+n} &= R_{t+1} + \gamma \sum_{a \neq A_{t+1}} \pi(a|S_{t+1}) Q(S_{t+1},a) + \gamma \pi(A_{t+1}|S_{t+1}) G_{t+1:h} \\
+&= R_{t+1} + \gamma \sum_a \pi(a|S_{t+1}) Q(S_{t+1},a) - \gamma \pi(A_{t+1}|S_{t+1})Q(S_{t+1},A_{t+1}) + \gamma \pi(A_{t+1}|S_{t+1}) G_{t+1:h} + Q(S_t,A_t) - Q(S_t,A_t) \\
+&= Q(S_t,A_t) + \big[R_{t+1} + \gamma \overline{V}(S_{t+1}) - Q(S_t,A_t)] + \gamma \pi(A_{t+1}|S_{t+1}) \big[G_{t+1:h} - Q(S_{t+1},A_{t+1})\big] \\
+&= Q(S_t,A_t) + \delta_t + \gamma \pi(A_{t+1}|S_{t+1}) \big[G_{t+1:h} - Q(S_{t+1},A_{t+1})\big] \\
+&= Q(S_t,A_t) + \delta_t + \gamma \pi(A_{t+1}|S_{t+1}) \big[R_{t+2} + \gamma \sum_a \pi(a|S_{t+2}) Q(S_{t+2},a) - \gamma \pi(A_{t+2}|S_{t+2})Q(S_{t+2},A_{t+2}) + \gamma \pi(A_{t+2}|S_{t+2}) G_{t+2:h} - Q(S_{t+1},A_{t+1})\big] \\
+&= Q(S_t,A_t) + \delta_t + \gamma \pi(A_{t+1}|S_{t+1}) \delta_{t+1} + \gamma^2 \pi(A_{t+1}|S_{t+1}) \pi(A_{t+2}|S_{t+2}) \big[G_{t+2:h} - Q(S_{t+2},A_{t+2})] \\
+&= Q(S_t,A_t) + \delta_t + \gamma \pi(A_{t+1}|S_{t+1}) \delta_{t+1} + \dots + \delta_{h-1} \prod_{i=t+1}^{h-1} \gamma \pi(A_i|S_i) + \big[G_{h:h} - Q(S_h,A_h)] \prod_{k=t+1}^h \gamma \pi(A_i|S_i) \\
+&= Q(S_t,A_t) + \delta_t + \gamma \pi(A_{t+1}|S_{t+1}) \delta_{t+1} + \dots + \delta_{h-1} \prod_{i=t+1}^{h-1} \gamma \pi(A_i|S_i) \\
+&= Q(S_t,A_t) + \sum_{k=t}^{h-1} \delta_k \prod_{i=t+1}^{k} \gamma \pi(A_i|S_i) \\
+&= Q(S_t,A_t) + \sum_{k=t}^{\min(t+n-1,T-1)} \delta_k \prod_{i=t+1}^{k} \gamma \pi(A_i|S_i) 
+\end{aligned}
+$$

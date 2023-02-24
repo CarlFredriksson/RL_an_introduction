@@ -282,8 +282,8 @@ Then we have:
 
 $$
 \begin{aligned}
-G_{t:h} &= R_{t+1} + \gamma \rho_{t+1} \big[G_{t+1:h} - Q(S_{t+1},A_{t+1})\big] - \gamma \overline{V}(S_{t+1}) \\
-&= R_{t+1} + \gamma \rho_{t+1} \big[G_{t+1:h} - Q(S_{t+1},A_{t+1})\big] - \gamma \overline{V}(S_{t+1}) + Q(S_t,A_t) - Q(S_t,A_t) \\
+G_{t:h} &= R_{t+1} + \gamma \rho_{t+1} \big[G_{t+1:h} - Q(S_{t+1},A_{t+1})\big] + \gamma \overline{V}(S_{t+1}) \\
+&= R_{t+1} + \gamma \rho_{t+1} \big[G_{t+1:h} - Q(S_{t+1},A_{t+1})\big] + \gamma \overline{V}(S_{t+1}) + Q(S_t,A_t) - Q(S_t,A_t) \\
 &= Q(S_t,A_t) + \delta_t + \gamma \rho_{t+1} \big[G_{t+1:h} - Q(S_{t+1},A_{t+1})\big] \\
 &= Q(S_t,A_t) + \delta_t + \gamma \rho_{t+1} \bigg(R_{t+2} + \gamma \rho_{t+2} \big[G_{t+2:h} - Q(S_{t+2},A_{t+2})\big] + \gamma \overline{V}(S_{t+2}) - Q(S_{t+1},A_{t+1})\bigg) \\
 &= Q(S_t,A_t) + \delta_t + \gamma \rho_{t+1} \delta_{t+1} + \gamma^2 \rho_{t+1:t+2} \delta_{t+2} + \gamma^3 \rho_{t+1:t+3} \big[G_{t+3:h} - Q(S_{t+3},A_{t+3})\big]

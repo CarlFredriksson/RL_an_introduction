@@ -316,7 +316,9 @@ Devise a small off-policy prediction problem and use it to show that the off-pol
 
 **My answer:**
 
-TODO
+I again programmed an experiment using the 4x4 gridworld in Example 4.1. The method with control variates was indeed more data efficient and required much fewer episodes until convergence. A constant step size of $\alpha = 0.001$ was used for all algorithms and the results were averaged over 10 runs per algorithm.
+
+![Ex 7.10 Gridworld Result](Exercise_7_10/gridworld_result.png)
 
 ## Exercise 7.11
 

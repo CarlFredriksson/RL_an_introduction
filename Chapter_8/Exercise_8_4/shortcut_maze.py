@@ -60,38 +60,85 @@ def update_cumulative_reward(cumulative_reward, reward, t):
     cumulative_reward[t] = prev_cumulative_reward + reward
     return cumulative_reward
 
-def run_q_learning(env, num_time_steps, num_time_steps_before_second_wall, eps, learning_rate, gamma):
-    cumulative_reward = np.zeros(num_time_steps)
-    Q = np.zeros((env.grid_size[0], env.grid_size[1], len(env.available_actions)))
-    state = env.start_state
-    for t in range(num_time_steps):
-        first_wall_active = True if t < num_time_steps_before_second_wall else False
-        action = eps_greedy_action_selection(Q, state, eps)
-        reward, new_state = env.take_action(state, action, first_wall_active)
-        Q[state][action] += learning_rate * (reward + gamma * np.max(Q[new_state]) - Q[state][action])
-        cumulative_reward = update_cumulative_reward(cumulative_reward, reward, t)
-        state = new_state
-    return cumulative_reward
+def run_q_learning(env, num_runs, num_time_steps, num_time_steps_before_second_wall, eps, learning_rate, gamma):
+    avg_cumulative_reward = np.zeros(num_time_steps)
+    for _ in range(num_runs):
+        cumulative_reward = np.zeros(num_time_steps)
+        Q = np.zeros((env.grid_size[0], env.grid_size[1], len(env.available_actions)))
+        state = env.start_state
+        for t in range(num_time_steps):
+            first_wall_active = True if t < num_time_steps_before_second_wall else False
+            action = eps_greedy_action_selection(Q, state, eps)
+            reward, new_state = env.take_action(state, action, first_wall_active)
+            Q[state][action] += learning_rate * (reward + gamma * np.max(Q[new_state]) - Q[state][action])
+            cumulative_reward = update_cumulative_reward(cumulative_reward, reward, t)
+            state = new_state
 
-def run_dyna_q(env, num_time_steps, num_time_steps_before_second_wall, eps, learning_rate, gamma, n):
-    cumulative_reward = np.zeros(num_time_steps)
-    Q = np.zeros((env.grid_size[0], env.grid_size[1], len(env.available_actions)))
-    model = {}
-    state = env.start_state
-    for t in range(num_time_steps):
-        # Experience with the environment
-        first_wall_active = True if t < num_time_steps_before_second_wall else False
-        action = eps_greedy_action_selection(Q, state, eps)
-        reward, new_state = env.take_action(state, action, first_wall_active)
-        Q[state][action] += learning_rate * (reward + gamma * np.max(Q[new_state]) - Q[state][action])
-        model[(state, action)] = (reward, new_state)
-        cumulative_reward = update_cumulative_reward(cumulative_reward, reward, t)
-        state = new_state
-
-        # Planning
-        for _ in range(n):
-            rand_state, rand_action = random.choice(list(model.keys()))
-            reward, new_state = model[(rand_state, rand_action)]
-            Q[rand_state][rand_action] += learning_rate * (reward + gamma * np.max(Q[new_state]) - Q[rand_state][rand_action])
+        avg_cumulative_reward += cumulative_reward
+    avg_cumulative_reward /= num_runs
 
     return cumulative_reward
+
+def run_dyna_q(env, num_runs, num_time_steps, num_time_steps_before_second_wall, eps, learning_rate, gamma, n):
+    avg_cumulative_reward = np.zeros(num_time_steps)
+    for _ in range(num_runs):
+        cumulative_reward = np.zeros(num_time_steps)
+        Q = np.zeros((env.grid_size[0], env.grid_size[1], len(env.available_actions)))
+        model = {}
+        state = env.start_state
+        for t in range(num_time_steps):
+            # Experience with the environment
+            first_wall_active = True if t < num_time_steps_before_second_wall else False
+            action = eps_greedy_action_selection(Q, state, eps)
+            reward, new_state = env.take_action(state, action, first_wall_active)
+            Q[state][action] += learning_rate * (reward + gamma * np.max(Q[new_state]) - Q[state][action])
+            model[(state, action)] = (reward, new_state)
+            cumulative_reward = update_cumulative_reward(cumulative_reward, reward, t)
+            state = new_state
+
+            # Planning
+            for _ in range(n):
+                rand_state, rand_action = random.choice(list(model.keys()))
+                reward, new_state = model[(rand_state, rand_action)]
+                Q[rand_state][rand_action] += learning_rate * (reward + gamma * np.max(Q[new_state]) - Q[rand_state][rand_action])
+
+        avg_cumulative_reward += cumulative_reward
+    avg_cumulative_reward /= num_runs
+
+    return avg_cumulative_reward
+
+def run_dyna_q_plus(env, num_runs, num_time_steps, num_time_steps_before_second_wall, eps, learning_rate, gamma, n, kappa):
+    avg_cumulative_reward = np.zeros(num_time_steps)
+    for _ in range(num_runs):
+        cumulative_reward = np.zeros(num_time_steps)
+        Q = np.zeros((env.grid_size[0], env.grid_size[1], len(env.available_actions)))
+        model = {}
+        for x in range(env.grid_size[0]):
+            for y in range(env.grid_size[1]):
+                for a in env.available_actions:
+                    model[((x, y), a)] = (0, (x, y))
+        steps_since_tried = np.zeros((env.grid_size[0], env.grid_size[1], len(env.available_actions)))
+        state = env.start_state
+        for t in range(num_time_steps):
+            # Experience with the environment
+            first_wall_active = True if t < num_time_steps_before_second_wall else False
+            action = eps_greedy_action_selection(Q, state, eps)
+            reward, new_state = env.take_action(state, action, first_wall_active)
+            Q[state][action] += learning_rate * (reward + gamma * np.max(Q[new_state]) - Q[state][action])
+            model[(state, action)] = (reward, new_state)
+            steps_since_tried += 1
+            steps_since_tried[state][action] = 0
+            cumulative_reward = update_cumulative_reward(cumulative_reward, reward, t)
+            state = new_state
+
+            # Planning
+            for _ in range(n):
+                rand_state, rand_action = random.choice(list(model.keys()))
+                reward, new_state = model[(rand_state, rand_action)]
+                reward += kappa * np.sqrt(steps_since_tried[rand_state][rand_action])
+                Q[rand_state][rand_action] += learning_rate * (reward + gamma * np.max(Q[new_state]) - Q[rand_state][rand_action])
+
+        avg_cumulative_reward += cumulative_reward
+    avg_cumulative_reward /= num_runs
+
+    return avg_cumulative_reward

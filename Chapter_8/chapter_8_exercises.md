@@ -33,3 +33,13 @@ It took longer for Dyna-Q to find an optimal policy. However, once it was found 
 The exploration bonus described above actually changes the estimated values of states and actions. Is this necessary? Suppose the bonus $\kappa \sqrt{\tau}$ was used not in updates, but solely in action selection. That is, suppose the action selected was always that for which $Q(S_t, a) + \kappa \sqrt{\tau(S_t,a)}$ was maximal. Carry out a gridworld experiment that tests and illustrates the strengths and weaknesses of this alternate approach.
 
 **My answer:**
+
+I used the same shortcut maze problem as in Example 8.3. It seems like the alternate approach to Dyna-Q+ (Dyna-Q+ v2 in the plot), performed better on the problem before the shortcut opened, but worse after. Note that the methods were highly sensitive to parameter settings and the shown results are simply from one set of parameter settings.
+
+TODO:
+* mention 1 run vs 10 run average
+* maybe the way actions are selected is the key diff
+
+![Ex 8.4 Shortcut Maze Result One Run](Exercise_8_4/shortcut_maze_result_one_run.png)
+
+![Ex 8.4 Shortcut Maze Result 10 Run Average](Exercise_8_4/shortcut_maze_result_10_run_avg.png)

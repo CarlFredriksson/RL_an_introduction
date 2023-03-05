@@ -52,3 +52,14 @@ How might the tabular Dyna-Q algorithm shown on page 164 be modified to handle s
 
 **My answer:**
 
+To handle stochastic environments we could change to model to be a distribution over all experienced reward and next state pairs $(R_{t+1}, S_{t+1})$. For example, the model for state $s$ and action $a$ could be updated as follows:
+
+* $Model(s,a) \leftarrow \{1: (r_1, s_1)\}$
+* $Model(s,a) \leftarrow \{\frac{1}{2}: (r_1, s_1), \frac{1}{2}: (r_2, s_2)\}$
+* $Model(s,a) \leftarrow \{\frac{2}{3}: (r_1, s_1), \frac{1}{3}: (r_2, s_2)\}$
+
+with the left side of the ":" denoting the probability of observing the reward and next state pair in the parenthesis. In this example, $(r_1, s_1)$ was first observed after taking action $a$ in $s$, then $(r_2, s_2)$, and then $(r_1, s_1)$ again. In the planning stage we could sample from the model distribution we have created or use expected updates.
+
+This method would handle changing environment poorly, due to that it could take a long time until the model has been sufficiently updated to reflect the change (unlike the original algorithm on page 164 that completely changes the model for the taken state-action pair after every experience).
+
+To handle both stochastic environments and changing environments, one could have a model with a distribution, but weigh recent experience stronger in order for the model to adapt quicker to changes.

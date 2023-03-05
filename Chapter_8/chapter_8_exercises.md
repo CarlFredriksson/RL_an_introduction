@@ -34,12 +34,21 @@ The exploration bonus described above actually changes the estimated values of s
 
 **My answer:**
 
-I used the same shortcut maze problem as in Example 8.3. It seems like the alternate approach to Dyna-Q+ (Dyna-Q+ v2 in the plot), performed better on the problem before the shortcut opened, but worse after. Note that the methods were highly sensitive to parameter settings and the shown results are simply from one set of parameter settings.
+I used the same shortcut maze problem as in Example 8.3. It seems like the alternate approach to Dyna-Q+ (Dyna-Q+ v2 in the plot), performed better on the problem before the shortcut opened, but worse after. 
 
-TODO:
-* mention 1 run vs 10 run average
-* maybe the way actions are selected is the key diff
+Below is a plot where the algorithms were run one time each. It seems like Dyna-Q+ v2 started to find the shortcut slower than Dyna-Q+ and didn't exploit it as well when found.
 
 ![Ex 8.4 Shortcut Maze Result One Run](Exercise_8_4/shortcut_maze_result_one_run.png)
 
+Below is a plot where the cumulative reward was averaged over 10 runs per algorithm. Averaging over multiple runs provides a fairer comparison since performance varies between runs.
+
 ![Ex 8.4 Shortcut Maze Result 10 Run Average](Exercise_8_4/shortcut_maze_result_10_run_avg.png)
+
+Note that the methods were highly sensitive to parameter settings and the shown results are simply from one set of parameter settings. Thus I find it hard to make strong statements regarding strengths and weaknesses of the alternative approach to Dyna-Q+.
+
+## Exercise 8.5
+
+How might the tabular Dyna-Q algorithm shown on page 164 be modified to handle stochastic environments? How might this modification perform poorly on changing environments such as considered in this section? How could the algorithm be modified to handle stochastic environments *and* changing environments?
+
+**My answer:**
+

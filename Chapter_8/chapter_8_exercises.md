@@ -70,11 +70,17 @@ The analysis above assumed that all of the $b$ possible next states were equally
 
 **My answer:**
 
-I think that this would strengthen the case for sample updates over expected updates. The $b$ states (successor states) that are more likely to occur are more important for the updates. For example, let's say that we have two different successor states with respective probabilities 99% and 1%. The latter will have almost no impact on the expected update.
+I think that this would strengthen the case for sample updates over expected updates. The $b$ states (successor states) that are more likely to occur are more important for the updates. As an example, let's assume that we have two different successor states $s^\prime_1, s^\prime_2$ with respective probabilities of 0.99 and 0.01 to occur after taking action $a$ in state $s$. The latter will have almost no impact on the expected update (unless it's coupled with a relatively massive immediate reward).
 
 $$
-\begin{align}
+\begin{aligned}
 Q(s,a) &\leftarrow \sum_{s^\prime,r} \hat{p}(s^\prime,r|s,a) \big[r + \gamma \max_{a^\prime} Q(s^\prime,a^\prime)\big] \\
-&= \sum_r \hat{p}(r|s,a) r + \sum_{s^\prime} \hat{p}(s^\prime|s,a) \gamma \max_{a^\prime} Q(s^\prime,a^\prime)
-\end{align}
+&= \sum_r \hat{p}(r|s,a) r + \sum_{s^\prime} \hat{p}(s^\prime|s,a) \gamma \max_{a^\prime} 
+Q(s^\prime,a^\prime) \\
+&= r(s,a) + 0.99 \gamma \max_{a^\prime} 
+Q(s^\prime_1,a^\prime) + 0.01 \gamma \max_{a^\prime} 
+Q(s^\prime_2,a^\prime)
+\end{aligned}
 $$
+
+Sample updates will be more likely to work with important samples, while expected updates will be unaffected. A way of thinking about it is that expected updates will waste computations on the less important successor states. In general, the less likely states are of occurring the worse the cost-benefit ratio will be for their part in expected updates since the computational cost stays the same.

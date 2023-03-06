@@ -63,3 +63,18 @@ with the left side of the ":" denoting the probability of observing the reward a
 This method would handle changing environment poorly, due to that it could take a long time until the model has been sufficiently updated to reflect the change (unlike the original algorithm on page 164 that completely changes the model for the taken state-action pair after every experience).
 
 To handle both stochastic environments and changing environments, one could have a model with a distribution, but weigh recent experience stronger in order for the model to adapt quicker to changes.
+
+## Exercise 8.6
+
+The analysis above assumed that all of the $b$ possible next states were equally likely to occur. Suppose instead that the distribution was highly skewed, that some of the $b$ states were much more likely to occur than most. Would this strengthen or weaken the case for sample updates over expected updates? Support your answer.
+
+**My answer:**
+
+I think that this would strengthen the case for sample updates over expected updates. The $b$ states (successor states) that are more likely to occur are more important for the updates. For example, let's say that we have two different successor states with respective probabilities 99% and 1%. The latter will have almost no impact on the expected update.
+
+$$
+\begin{align}
+Q(s,a) &\leftarrow \sum_{s^\prime,r} \hat{p}(s^\prime,r|s,a) \big[r + \gamma \max_{a^\prime} Q(s^\prime,a^\prime)\big] \\
+&= \sum_r \hat{p}(r|s,a) r + \sum_{s^\prime} \hat{p}(s^\prime|s,a) \gamma \max_{a^\prime} Q(s^\prime,a^\prime)
+\end{align}
+$$

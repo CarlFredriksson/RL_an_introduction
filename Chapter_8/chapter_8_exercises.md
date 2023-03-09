@@ -84,3 +84,13 @@ Q(s^\prime_2,a^\prime)
 $$
 
 Sample updates will be more likely to work with important samples, while expected updates will be unaffected. A way of thinking about it is that expected updates will waste computations on the less important successor states. In general, the less likely states are of occurring the worse the cost-benefit ratio will be for their part in expected updates since the computational cost stays the same.
+
+## Exercise 8.7
+
+Some of the graphs in Figure 8.8 seem to be scalloped in their early portions, particularly the upper graph for $b = 1$ and the uniform distribution. Why do you think this is? What aspects of the data shown support your hypothesis?
+
+**My answer:**
+
+I think the scalloping happens when the uniform case does many updates to state-action pairs that are unlikely to be visited by the current $\epsilon$-greedy policy. These updates don't immediately do much to improve the value of the start state under the greedy policy. However, when the policy changes and some of these state-action pairs become more likely to be visited, the updates that previously didn't do much to improve the value of the start state become utilized and the value quickly improves. This happens multiple times with a lessened effect each time due to more state-action pairs getting more correct values over time.
+
+It doesn't happen the same way for the on-policy case because more updates are done to state-action pairs that are immediately relevant for the current policy.

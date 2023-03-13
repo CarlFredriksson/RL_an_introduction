@@ -94,3 +94,9 @@ Some of the graphs in Figure 8.8 seem to be scalloped in their early portions, p
 I think the scalloping happens when the uniform case does many updates to state-action pairs that are unlikely to be visited by the current $\epsilon$-greedy policy. These updates don't immediately do much to improve the value of the start state under the greedy policy. However, when the policy changes and some of these state-action pairs become more likely to be visited, the updates that previously didn't do much to improve the value of the start state become utilized and the value quickly improves. This happens multiple times with a lessened effect each time due to more state-action pairs getting more correct values over time.
 
 It doesn't happen the same way for the on-policy case because more updates are done to state-action pairs that are immediately relevant for the current policy.
+
+## Exercise 8.8 (programming)
+
+Replicate the experiment whose results are shown in the lower part of Figure 8.8, then try the same experiment but with $b = 3$. Discuss the meaning of your results.
+
+**My answer:**

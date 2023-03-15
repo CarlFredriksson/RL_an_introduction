@@ -29,7 +29,7 @@ class Environment:
         if np.random.rand() < 0.1:
             return expected_rewards[-1], self.terminal_state, True
         
-        # Randomly select one of b next states
+        # Randomly transition to one of b next states
         rand_index = np.random.randint(0, self.b)
         expected_reward = expected_rewards[rand_index]
         next_state = next_states[rand_index]
@@ -47,12 +47,24 @@ def eps_greedy_action_selection(Q, state, eps):
     # Select the maximizing action - ties broken randomly
     return arg_max_random_tie_break(Q[state])
 
-def update_Q(Q, transitions, state, action):
+def compute_expected_update(Q, transitions, state, action):
     next_states, expected_rewards = transitions[state][action]
     b = len(next_states)
-    new_value = 0
+    updated_value = 0
     for i in range(b):
         transition_probability = (1 - 0.1) / b
-        new_value += transition_probability * (expected_rewards[i] + Q[next_states[i]].max())
-    new_value += 0.1 * expected_rewards[-1]
-    Q[state][action] = new_value
+        updated_value += transition_probability * (expected_rewards[i] + Q[next_states[i]].max())
+    updated_value += 0.1 * expected_rewards[-1]
+    return updated_value
+
+def compute_start_state_value(environment, Q, num_runs=10000, max_num_steps_per_run=1000000):
+    sum_of_expected_rewards = 0
+    for _ in range(num_runs):
+        state = environment.starting_state
+        for _ in range(max_num_steps_per_run):
+            action = eps_greedy_action_selection(Q, state, 0)
+            expected_reward, state, reached_terminal_state = environment.take_action(state, action)
+            sum_of_expected_rewards += expected_reward
+            if reached_terminal_state:
+                break
+    return sum_of_expected_rewards / num_runs

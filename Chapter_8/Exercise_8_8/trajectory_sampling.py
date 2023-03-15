@@ -47,7 +47,7 @@ def eps_greedy_action_selection(Q, state, eps):
     # Select the maximizing action - ties broken randomly
     return arg_max_random_tie_break(Q[state])
 
-def compute_expected_update(Q, transitions, state, action):
+def compute_expected_update(transitions, Q, state, action):
     next_states, expected_rewards = transitions[state][action]
     b = len(next_states)
     updated_value = 0
@@ -57,14 +57,14 @@ def compute_expected_update(Q, transitions, state, action):
     updated_value += 0.1 * expected_rewards[-1]
     return updated_value
 
-def compute_start_state_value(environment, Q, num_runs=10000, max_num_steps_per_run=1000000):
+def compute_start_state_value(environment, Q, num_episodes=1000, max_num_steps_per_episode=1000000):
     sum_of_expected_rewards = 0
-    for _ in range(num_runs):
+    for _ in range(num_episodes):
         state = environment.starting_state
-        for _ in range(max_num_steps_per_run):
+        for _ in range(max_num_steps_per_episode):
             action = eps_greedy_action_selection(Q, state, 0)
             expected_reward, state, reached_terminal_state = environment.take_action(state, action)
             sum_of_expected_rewards += expected_reward
             if reached_terminal_state:
                 break
-    return sum_of_expected_rewards / num_runs
+    return sum_of_expected_rewards / num_episodes

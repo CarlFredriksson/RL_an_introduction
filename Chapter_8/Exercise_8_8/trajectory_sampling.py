@@ -39,18 +39,6 @@ class Environment:
 def arg_max_random_tie_break(x):
      return np.random.choice(np.flatnonzero(x == x.max()))
 
-def max_random_tie_break(x):
-    return x[arg_max_random_tie_break(x)]
-
-def update_Q(Q, transitions, state, action):
-    next_states, expected_rewards = transitions[state][action]
-    b = len(next_states)
-    update = 0
-    for i in range(b):
-        transition_probability = (1 - 0.1) / b
-        update += transition_probability * (expected_rewards[i] + max_random_tie_break(Q[next_states[i]]))
-    update += 0.1 * expected_rewards[-1]
-
 def eps_greedy_action_selection(Q, state, eps):
     # Select a random action with probability eps
     if np.random.random() < eps:
@@ -58,3 +46,13 @@ def eps_greedy_action_selection(Q, state, eps):
     
     # Select the maximizing action - ties broken randomly
     return arg_max_random_tie_break(Q[state])
+
+def update_Q(Q, transitions, state, action):
+    next_states, expected_rewards = transitions[state][action]
+    b = len(next_states)
+    new_value = 0
+    for i in range(b):
+        transition_probability = (1 - 0.1) / b
+        new_value += transition_probability * (expected_rewards[i] + Q[next_states[i]].max())
+    new_value += 0.1 * expected_rewards[-1]
+    Q[state][action] = new_value

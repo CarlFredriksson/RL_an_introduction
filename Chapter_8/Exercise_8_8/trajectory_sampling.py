@@ -68,3 +68,49 @@ def compute_start_state_value(environment, Q, num_episodes=1000, max_num_steps_p
             if reached_terminal_state:
                 break
     return sum_of_expected_rewards / num_episodes
+
+def run_on_policy_updates(num_runs, num_steps_per_run, start_value_computation_steps, num_states, num_actions, b, eps):
+    start_state_value = np.zeros(len(start_value_computation_steps))
+    for _ in range(num_runs):
+        environment = Environment(num_states, num_actions, b)
+        Q = np.zeros((num_states, num_actions))
+        state = environment.starting_state
+        i = 0
+        start_state_value[i] += compute_start_state_value(environment, Q)
+        for t in range(1, num_steps_per_run + 1):
+            action = eps_greedy_action_selection(Q, state, eps)
+            _, next_state, reached_terminal_state = environment.take_action(state, action)
+            Q[state][action] = compute_expected_update(environment.transitions, Q, state, action)
+            state = next_state
+            if reached_terminal_state:
+                state = environment.starting_state
+            if t in start_value_computation_steps:
+                i += 1
+                i %= len(start_value_computation_steps)
+                start_state_value[i] += compute_start_state_value(environment, Q)
+    start_state_value /= num_runs
+    return start_state_value
+
+def run_uniform_updates(num_runs, num_steps_per_run, start_value_computation_steps, num_states, num_actions, b):
+    state_action_pairs = []
+    for s in range(num_states):
+        for a in range(num_actions):
+            state_action_pairs.append((s, a))
+    start_state_value = np.zeros(len(start_value_computation_steps))
+    for _ in range(num_runs):
+        environment = Environment(num_states, num_actions, b)
+        Q = np.zeros((num_states, num_actions))
+        i = 0
+        start_state_value[i] += compute_start_state_value(environment, Q)
+        j = 0
+        for t in range(1, num_steps_per_run + 1):
+            state, action = state_action_pairs[j]
+            j += 1
+            j %= len(state_action_pairs)
+            Q[state][action] = compute_expected_update(environment.transitions, Q, state, action)
+            if t in start_value_computation_steps:
+                i += 1
+                i %= len(start_value_computation_steps)
+                start_state_value[i] += compute_start_state_value(environment, Q)
+    start_state_value /= num_runs
+    return start_state_value

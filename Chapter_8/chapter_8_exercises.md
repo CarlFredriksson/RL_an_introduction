@@ -100,3 +100,9 @@ It doesn't happen the same way for the on-policy case because more updates are d
 Replicate the experiment whose results are shown in the lower part of Figure 8.8, then try the same experiment but with $b = 3$. Discuss the meaning of your results.
 
 **My answer:**
+
+My results differed from the shown results in Figure 8.8 and I did not find the reason why. The value of the start state under greedy policy converges to a higher value and uniform sampling overtakes on-policy sampling after fewer expected updates. I suspect that I've either misunderstood parts of the problem description or have a bug somewhere. The results are however qualitatively similar, with on-policy sampling initially resulting in faster planning but uniform sampling winning in the long run.
+
+As in the plot for the 1000 states case, we can see that for $b=3$, fewer expected updates need to be done before uniform sampling overtakes on-policy sampling compared to for $b=1$. We can see that for both $b=1$ and $b=3$, the initial advantage lasts longer for the 10000 state case. One way to explain this is that the larger the state space, the more useless updates uniform sampling will result in. Additionally, with a larger state space it will take more updates before the main drawback of on-policy sampling - when the same old parts of the space gets updated over and over unnecessarily - becomes significant.
+
+![Ex 8.8 Results](Exercise_8_8/trajectory_sampling_results.png)

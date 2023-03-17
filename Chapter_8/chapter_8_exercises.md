@@ -18,7 +18,7 @@ Why did the Dyna agent with exploration bonus, Dyna-Q+, perform better in the fi
 
 **My answer:**
 
-The increased exploration made Dyna-Q+ find an optimal policy quicker (while still continuing to explore - which is why line is not completely straight). Less exploration can lead to exploitation of sub-par policies for longer.
+The increased exploration made Dyna-Q+ find an optimal policy quicker (while still continuing to explore - which is why the line is not completely straight). Less exploration can lead to exploitation of sub-par policies for longer.
 
 ## Exercise 8.3
 

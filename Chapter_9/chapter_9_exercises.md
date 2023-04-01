@@ -87,3 +87,15 @@ Suppose we believe that one of two state dimensions is more likely to have an ef
 **My answer:**
 
 Tilings with tiles that are elongated across the state dimension that is more likely to have an effect on the value function. For example stripes or rectangular tiles.
+
+## Exercise 9.5
+
+Suppose you are using tile coding to transform a seven-dimensional continuous state space into binary feature vectors to estimate a state value function $\hat{v}(s,\textbf{w}) \approx v_\pi(s)$. You believe that the dimensions do not interact strongly, so you decide to use eight tilings of each dimension separately (stripe tilings), for $7 \times 8 = 56$ tilings. In addition, in case there are some pairwise interactions between the dimensions, you also take all $\binom{7}{2} = 21$ pairs of dimensions and tile each pair conjunctively with rectangular tiles. You make two tilings for each pair of dimensions, making a grand total of $21 \times 2 + 56 = 98$ tilings. Given these feature vectors, you suspect that you still have to average out some noise, so you decide that you want learning to be gradual, taking about 10 presentations with the same feature vector before learning nears its asymptote. What step-size parameter $\alpha$ should you use? Why?
+
+**My answer:**
+
+With tile coding, exactly one feature (corresponding to one tile in the tiling) is active (=1) in a tiling at one time, and all other features are inactive (=0). Thus the number of active features is always the same as the number of tilings. We have:
+
+$$
+\alpha \overset{.}{=} (\tau \mathbb{E}[\textbf{x}^\top \textbf{x}])^{-1} = (10 \times 98)^{-1} = 980^{-1} \approx 0.001
+$$

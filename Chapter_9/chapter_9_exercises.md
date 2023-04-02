@@ -99,3 +99,42 @@ With tile coding, exactly one feature (corresponding to one tile in the tiling) 
 $$
 \alpha \overset{.}{=} (\tau \mathbb{E}[\textbf{x}^\top \textbf{x}])^{-1} = (10 \times 98)^{-1} = 980^{-1} \approx 0.001
 $$
+
+## Exercise 9.6
+
+If $\tau = 1$ and $\textbf{x}(S_t)^\top \textbf{x}(S_t) = \mathbb{E}[\textbf{x}^\top \textbf{x}]$, prove that (9.19) together with (9.7) and linear function approximation results in the error being reduced to zero in one update.
+
+**My answer:**
+
+We have:
+
+$$
+\alpha \overset{.}{=} (\tau \mathbb{E}[\textbf{x}^\top \textbf{x}])^{-1} = \frac{1}{\textbf{x}(S_t)^\top \textbf{x}(S_t)}
+$$
+
+and:
+
+$$
+\begin{aligned}
+w_{t+1} &\overset{.}{=} w_t + \alpha \big[U_t - \hat{v}(S_t,\textbf{w}_t)\big] \nabla \hat{v}(S_t,\textbf{w}_t) \\
+&= w_t + \frac{1}{\textbf{x}(S_t)^\top \textbf{x}(S_t)} \big[U_t - \hat{v}(S_t,\textbf{w}_t)\big] \textbf{x}(S_t) \\
+\end{aligned}
+$$
+
+We are trying to prove:
+
+$$
+U_t - \hat{v}(S_t,\textbf{w}_{t+1}) = 0 \iff \hat{v}(S_t,\textbf{w}_{t+1}) = U_t
+$$
+
+Proof:
+
+$$
+\begin{aligned}
+\hat{v}(S_t,\textbf{w}_{t+1}) &\overset{.}{=} \textbf{w}_{t+1}^\top \textbf{x}(S_t) \\
+&= \bigg(w_t + \frac{1}{\textbf{x}(S_t)^\top \textbf{x}(S_t)} \bigg[U_t - \hat{v}(S_t,\textbf{w}_t)\bigg] \textbf{x}(S_t)\bigg)^\top \textbf{x}(S_t) \\
+&= w_t^\top \textbf{x}(S_t) + \frac{1}{\textbf{x}(S_t)^\top \textbf{x}(S_t)} \bigg[U_t - \hat{v}(S_t,\textbf{w}_t)\bigg] \textbf{x}(S_t)^\top \textbf{x}(S_t) \\
+&= \hat{v}(S_t,\textbf{w}_t) + U_t - \hat{v}(S_t,\textbf{w}_t) \\
+&= U_t
+\end{aligned}
+$$

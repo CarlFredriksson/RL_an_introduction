@@ -106,22 +106,22 @@ If $\tau = 1$ and $\textbf{x}(S_t)^\top \textbf{x}(S_t) = \mathbb{E}[\textbf{x}^
 
 **My answer:**
 
-We have:
+We have
 
 $$
 \alpha \overset{.}{=} (\tau \mathbb{E}[\textbf{x}^\top \textbf{x}])^{-1} = \frac{1}{\textbf{x}(S_t)^\top \textbf{x}(S_t)}
 $$
 
-and:
+and
 
 $$
 \begin{aligned}
-w_{t+1} &\overset{.}{=} w_t + \alpha \big[U_t - \hat{v}(S_t,\textbf{w}_t)\big] \nabla \hat{v}(S_t,\textbf{w}_t) \\
-&= w_t + \frac{1}{\textbf{x}(S_t)^\top \textbf{x}(S_t)} \big[U_t - \hat{v}(S_t,\textbf{w}_t)\big] \textbf{x}(S_t) \\
+\textbf{w}_{t+1} &\overset{.}{=} \textbf{w}_t + \alpha \big[U_t - \hat{v}(S_t,\textbf{w}_t)\big] \nabla \hat{v}(S_t,\textbf{w}_t) \\
+&= \textbf{w}_t + \frac{1}{\textbf{x}(S_t)^\top \textbf{x}(S_t)} \big[U_t - \hat{v}(S_t,\textbf{w}_t)\big] \textbf{x}(S_t) \\
 \end{aligned}
 $$
 
-We are trying to prove:
+We are trying to prove
 
 $$
 U_t - \hat{v}(S_t,\textbf{w}_{t+1}) = 0 \iff \hat{v}(S_t,\textbf{w}_{t+1}) = U_t
@@ -132,9 +132,41 @@ Proof:
 $$
 \begin{aligned}
 \hat{v}(S_t,\textbf{w}_{t+1}) &\overset{.}{=} \textbf{w}_{t+1}^\top \textbf{x}(S_t) \\
-&= \bigg(w_t + \frac{1}{\textbf{x}(S_t)^\top \textbf{x}(S_t)} \bigg[U_t - \hat{v}(S_t,\textbf{w}_t)\bigg] \textbf{x}(S_t)\bigg)^\top \textbf{x}(S_t) \\
-&= w_t^\top \textbf{x}(S_t) + \frac{1}{\textbf{x}(S_t)^\top \textbf{x}(S_t)} \bigg[U_t - \hat{v}(S_t,\textbf{w}_t)\bigg] \textbf{x}(S_t)^\top \textbf{x}(S_t) \\
+&= \bigg(\textbf{w}_t + \frac{1}{\textbf{x}(S_t)^\top \textbf{x}(S_t)} \bigg[U_t - \hat{v}(S_t,\textbf{w}_t)\bigg] \textbf{x}(S_t)\bigg)^\top \textbf{x}(S_t) \\
+&= \textbf{w}_t^\top \textbf{x}(S_t) + \frac{1}{\textbf{x}(S_t)^\top \textbf{x}(S_t)} \bigg[U_t - \hat{v}(S_t,\textbf{w}_t)\bigg] \textbf{x}(S_t)^\top \textbf{x}(S_t) \\
 &= \hat{v}(S_t,\textbf{w}_t) + U_t - \hat{v}(S_t,\textbf{w}_t) \\
 &= U_t
+\end{aligned}
+$$
+
+## Exercise 9.7
+
+One of the simplest artificial neural networks consists of a single semi-linear unit with a logistic nonlinearity. The need to handle approximate value functions of this form is common in games that end with either a win or a loss, in which case the value of a state can be interpreted as the probability of winning. Derive the learning algorithm for this case, from (9.7), such that no gradient notation appears.
+
+**My answer:**
+
+Let $z = \textbf{w}^\top \textbf{x}(s)$, then we have
+
+$$
+\hat{v}(s,\textbf{w}) \overset{.}{=} \frac{1}{1+e^{-\textbf{w}^\top \textbf{x}(s)}} = \frac{1}{1+e^{-z}}
+$$
+
+We can compute the gradient of $\hat{v}(s,\textbf{w})$ with respect to $\textbf{w}$
+
+$$
+\begin{aligned}
+\nabla \hat{v}(s,\textbf{w}) &= \frac{\delta}{\delta \textbf{w}} \bigg(\frac{1}{1+e^{-z}}\bigg) \\
+&= \frac{\delta}{\delta z} \bigg(\frac{1}{1+e^{-z}}\bigg) \frac{\delta}{\delta \textbf{w}} \bigg(\textbf{w}^\top \textbf{x}(s)\bigg) \\
+&= \frac{e^{-z}}{(1+e^{-z})^2} \textbf{x}(s)
+\end{aligned}
+$$
+
+Thus we have
+
+$$
+\begin{aligned}
+\textbf{w}_{t+1} &\overset{.}{=} \textbf{w}_t + \alpha \bigg[U_t - \hat{v}(S_t,\textbf{w}_t)\bigg] \nabla \hat{v}(S_t,\textbf{w}_t) \\
+&= \textbf{w}_t + \alpha \bigg[U_t - \hat{v}(S_t,\textbf{w}_t)\bigg] \frac{e^{-z}}{(1+e^{-z})^2} \textbf{x}(s) \\
+&= \textbf{w}_t + \alpha \bigg[U_t - \hat{v}(S_t,\textbf{w}_t)\bigg] \frac{e^{-\textbf{w}^\top \textbf{x}(s)}}{(1+e^{-\textbf{w}^\top \textbf{x}(s)})^2} \textbf{x}(s)
 \end{aligned}
 $$

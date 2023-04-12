@@ -151,17 +151,24 @@ $$
 \hat{v}(s,\textbf{w}) \overset{.}{=} \frac{1}{1+e^{-\textbf{w}^\top \textbf{x}(s)}} = \frac{1}{1+e^{-z}}
 $$
 
-We can compute the gradient of $\hat{v}(s,\textbf{w})$ with respect to $\textbf{w}$
+We can compute the partial derivatives of $\hat{v}(s,\textbf{w})$ with respect to the components $w_i$ of $\textbf{w}$
 
 $$
 \begin{aligned}
-\nabla \hat{v}(s,\textbf{w}) &= \frac{\delta}{\delta \textbf{w}} \bigg(\frac{1}{1+e^{-z}}\bigg) \\
-&= \frac{\delta}{\delta z} \bigg(\frac{1}{1+e^{-z}}\bigg) \frac{\delta}{\delta \textbf{w}} \bigg(\textbf{w}^\top \textbf{x}(s)\bigg) \\
-&= \frac{e^{-z}}{(1+e^{-z})^2} \textbf{x}(s)
+\frac{\delta \hat{v}(s,\textbf{w})}{\delta w_i} &= \frac{\delta}{\delta w_i} \bigg(\frac{1}{1+e^{-z}}\bigg) \\
+&= \frac{\delta}{\delta z} \bigg(\frac{1}{1+e^{-z}}\bigg) \frac{\delta z}{\delta w_i} \\
+&= \frac{\delta}{\delta z} \bigg(\frac{1}{1+e^{-z}}\bigg) \frac{\delta}{\delta w_i} \bigg(\textbf{w}^\top \textbf{x}(s)\bigg) \\
+&= \frac{e^{-z}}{(1+e^{-z})^2} x_i(s)
 \end{aligned}
 $$
 
 Thus we have
+
+$$
+\nabla \hat{v}(S_t,\textbf{w}_t) = \frac{e^{-z}}{(1+e^{-z})^2} \textbf{x}(S_t)
+$$
+
+which gives us
 
 $$
 \begin{aligned}
@@ -170,3 +177,53 @@ $$
 &= \textbf{w}_t + \alpha \bigg[U_t - \hat{v}(S_t,\textbf{w}_t)\bigg] \frac{e^{-\textbf{w}^\top \textbf{x}(s)}}{(1+e^{-\textbf{w}^\top \textbf{x}(s)})^2} \textbf{x}(s)
 \end{aligned}
 $$
+
+## Exercise 9.8
+
+Arguably, the squared error used to derive (9.7) is inappropriate for the case treated in the preceding exercise, and the right error measure is the cross-entropy loss (which you can find on Wikipedia). Repeat the derivation in Section 9.3, using the cross-entropy loss instead of the squared error in (9.4), all the way to an explicit form with no gradient or logarithm notation in it. Is your final form more complex, or simpler, than that you obtained in the preceding exercise?
+
+**My answer:**
+
+Since we have two outcomes (win and lose), we can write the cross-entropy loss for state $s$ as
+
+$$
+\begin{aligned}
+f(s,\textbf{w}) &\overset{.}{=} -\bigg(v_\pi(s) \log\big(\hat{v}(s,\textbf{w})\big) + \big(1-v_\pi(s)\big)\log\big(1-\hat{v}(s,\textbf{w})\big)\bigg) 
+\end{aligned}
+$$
+
+Let $z = \textbf{w}^\top \textbf{x}(s)$, and let's denote $v_\pi(s)$ by $v_\pi$ and $\hat{v}(s,\textbf{w})$ by $\hat{v}$ for brevity. We can then compute the partial derivatives with respect to the components $w_i$ of $\textbf{w}$ as follows
+
+$$
+\begin{aligned}
+\frac{\delta f(s,\textbf{w})}{\delta w_i} &= -\frac{\delta}{\delta w_i}\bigg(v_\pi \log(\hat{v}) + (1-v_\pi) \log(1-\hat{v})\bigg) \\
+&= -\bigg(v_\pi \frac{\delta \log(\hat{v})}{\delta w_i} + (1-v_\pi) \frac{\delta \log(1-\hat{v}) }{\delta w_i}\bigg) \\
+&= -\bigg(v_\pi \frac{\delta \log(\hat{v})}{\delta \hat{v}} \frac{\delta \hat{v}}{\delta w_i} + (1-v_\pi) \frac{\delta \log(1-\hat{v})}{\delta \hat{v}} \frac{\delta \hat{v}}{\delta w_i}\bigg) \\
+&= -\bigg(v_\pi \frac{1}{\hat{v}} \frac{\delta \hat{v}}{\delta w_i} + (1-v_\pi) \frac{-1}{1-\hat{v}} \frac{\delta \hat{v}}{\delta w_i}\bigg) \\
+&= -\bigg(\frac{v_\pi}{\hat{v}} - \frac{1 - v_\pi}{1 - \hat{v}}\bigg) \frac{\delta \hat{v}}{\delta w_i} \\
+&= -\frac{v_\pi(s) (1-\hat{v}) - \hat{v} (1-v_\pi)}{\hat{v} (1-\hat{v})} \frac{\delta \hat{v}}{\delta w_i} \\
+&= \frac{\hat{v} - v_\pi}{\hat{v} (1-\hat{v})} \frac{\delta \hat{v}}{\delta w_i} \\
+&= \frac{\hat{v} - v_\pi}{\bigg(\frac{1}{1+e^{-z}} \big(1 - \frac{1}{1+e^{-z}}\big)\bigg)} \frac{e^{-z}}{(1+e^{-z})^2} x_i(s) \\
+&= \frac{(\hat{v} - v_\pi) e^{-z} x_i(s)}{1+e^{-z}-1} \\
+&= (\hat{v} - v_\pi) x_i(s)
+\end{aligned}
+$$
+
+Thus we have
+
+$$
+\nabla f(s,\textbf{w}) = \bigg[\hat{v}(s,\textbf{w}) - v_\pi(s)\bigg] \textbf{x}(s)
+$$
+
+Which gives us the stochastic gradient-descent update
+
+$$
+\begin{aligned}
+\textbf{w}_{t+1} &\overset{.}{=} \textbf{w}_t - \alpha \nabla f(S_t,\textbf{w}) \\
+&= \textbf{w}_t - \alpha \bigg[\hat{v}(S_t,\textbf{w}_t) - v_\pi(S_t)\bigg] \textbf{x}(S_t) \\
+&= \textbf{w}_t + \alpha \bigg[v_\pi(S_t) - \hat{v}(S_t,\textbf{w}_t)\bigg] \textbf{x}(S_t) \\
+&= \textbf{w}_t + \alpha \bigg[U_t - \hat{v}(S_t,\textbf{w}_t)\bigg] \textbf{x}(S_t)
+\end{aligned}
+$$
+
+This final form is simpler than what I obtained in the previous exercise and can be recognized from the linear case (Section 9.4).

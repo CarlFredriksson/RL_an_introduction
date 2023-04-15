@@ -19,3 +19,31 @@ Because they are special cases of $n$-step Sarsa (by setting $n$ to be the lengt
 > How would they perform on the Mountain Car task?
 
 Poorly. The performance seems to be best for intermediate levels of bootstrapping (peaking at $n=4$). Larger $n$ leads to worse performance, and as mentioned above, Monte Carlo (MC) methods are equivalent to the extreme case with the maximum $n$. We can also reason about how the episodes would play out. With MC methods and $\textbf{w}$ initialized to $\textbf{0}$, we would have very long early episodes. Since updates are only made after reaching the terminal state, action selection would be completely random for the entirety of the first episode, which would be incredibly long for the majority of runs.
+
+## Exercise 10.2
+
+Give pseudocode for semi-gradient one-step *Expected* Sarsa for control.
+
+**My answer:**
+
+* Input: a differentiable action-value function parameterization $\hat{q}:\mathcal{S} \times \mathcal{A} \times \mathbb{R}^d \rightarrow \mathbb{R}$
+* Input: a policy $\pi$ (if estimating $q_\pi$)
+* Algorithm parameters: step size $\alpha > 0$, small $\epsilon > 0$
+* Initialize value-function weights $\textbf{w} \in \mathbb{R}^d$ arbitrarily (e.g., $\textbf{w} = \textbf{0}$)
+* Loop for each episode:
+  * Initialize $S \not ={terminal}$
+  * Loop for each step of episode$
+    * Select $A \sim \pi(\cdot|S)$ or $\epsilon$-greedy wrt $\hat{q}(S,\cdot,\textbf{w})$
+    * Take action $A$, observe $R, S^\prime$
+    * $\textbf{w} \leftarrow \textbf{w} + \alpha \big[R + \sum_a \pi(a|S^\prime) \hat{q}(S^\prime,a,\textbf{w}) - \hat{q}(S,A,\textbf{w})\big] \nabla \hat{q}(S,A,\textbf{w})$
+    * $S \leftarrow S^\prime$
+    * If $S$ is terminal:
+      * Go to next episode
+
+## Exercise 10.3
+
+Why do the results shown in Figure 10.4 have higher standard errors at large $n$ than at small $n$?
+
+**My answer:**
+
+I think it's due to larger $n$ resulting in more possible trajectories per update, thus increasing the variance.

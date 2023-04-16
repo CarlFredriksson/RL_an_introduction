@@ -47,3 +47,22 @@ Why do the results shown in Figure 10.4 have higher standard errors at large $n$
 **My answer:**
 
 I think it's due to larger $n$ resulting in more possible trajectories per update, thus increasing the variance.
+
+## Exercise 10.4
+
+Give pseudocode for a differential version of semi-gradient Q-learning.
+
+**My answer:**
+
+* Input: a differentiable action-value function parametrization $\hat{q}:\mathcal{S} \times \mathcal{A} \times \mathbb{R}^d \rightarrow \mathbb{R}$
+* Algorithm parameters: step sizes $\alpha,\beta > 0$, small $\epsilon > 0$
+* Initialize value-function weights $\textbf{w} \in \mathbb{R}^d$ arbitrarily (e.g., $\textbf{w} = \textbf{0}$)
+* Initialize average reward estimate $\overline{R} \in \mathbb{R}$ arbitrarily (e.g., $\overline{R} = 0$)
+* Initialize state $S$
+* Loop for each step:
+  * Choose $A$ as a function of $\hat{q}(S,\cdot,\textbf{w})$ (e.g., $\epsilon$-greedy)
+  * Take action $A$, observe $R,S^\prime$
+  * $\delta \leftarrow R - \overline{R} + \max_a \hat{q}(S^\prime, a, \textbf{w}) - \hat{q}(S, A, \textbf{w})$
+  * $\overline{R} \leftarrow \overline{R} + \beta \delta$
+  * $\textbf{w} \leftarrow \textbf{w} + \alpha \delta \nabla \hat{q}(S,A,\textbf{w})$
+  * $S \leftarrow S^\prime$

@@ -66,3 +66,21 @@ Give pseudocode for a differential version of semi-gradient Q-learning.
   * $\overline{R} \leftarrow \overline{R} + \beta \delta$
   * $\textbf{w} \leftarrow \textbf{w} + \alpha \delta \nabla \hat{q}(S,A,\textbf{w})$
   * $S \leftarrow S^\prime$
+
+## Exercise 10.5
+
+What equations are needed (beyond 10.10) to specify the differential version of TD(0)?
+
+**My answer:**
+
+$\overline{R}$-update:
+
+$$
+\overline{R}_{t+1} \leftarrow \overline{R}_t + \beta \delta_t
+$$
+
+$\textbf{w}$-update:
+
+$$
+\textbf{w}_{t+1} \leftarrow \textbf{w}_t + \alpha \delta_t \nabla \hat{v}(S_t,\textbf{w}_t)
+$$

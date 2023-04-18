@@ -84,3 +84,56 @@ $\textbf{w}$-update:
 $$
 \textbf{w}_{t+1} \leftarrow \textbf{w}_t + \alpha \delta_t \nabla \hat{v}(S_t,\textbf{w}_t)
 $$
+
+## Exercise 10.6
+
+Suppose there is an MDP that under any policy produces the deterministic sequence of rewards $+1,0,+1,0,+1,0,\dots$ going on forever. Technically, this violates ergodicity; there is no stationary limiting distribution $\mu_\pi$ and the limit (10.7) does not exist. Nevertheless, the average reward (10.6) is well defined. What is it? Now consider two states in this MDP. From $A$, the reward sequence is exactly as described above, starting with a $+1$, whereas, from $B$, the reward sequence starts with a $0$ and then continues with $+1,0,+1,0,\dots$ We would like to compute the differential values of $A$ and $B$. Unfortunately, the differential return (10.9) is not well defined when starting from these states as the implicit limit does not exist. To repair this, one could alternatively define the differential value of a state as
+
+$$
+\begin{aligned}
+v_\pi(s) \overset{.}{=} \lim_{\gamma \to 1} \lim_{h \to \infty} \sum_{t=0}^h \gamma^t \bigg(\mathbb{E}_\pi[R_{t+1}|S_0=s] - r(\pi)\bigg)
+\end{aligned}
+$$
+
+Under this definition, what are the differential values of states $A$ and $B$?
+
+**My answer:**
+
+> Nevertheless, the average reward (10.6) is well defined. What is it?
+
+$$
+\begin{aligned}
+r(\pi) &\overset{.}{=} \lim_{h \to \infty} \frac{1}{h} \sum_{t=1}^h \mathbb{E}[R_{t+1}|S_0,A_{0:t-1} \sim \pi] \\
+&= \lim_{h \to \infty} \frac{1}{h} \sum_{t=1}^{h/2} 1+0 \\
+&= \frac{1}{2}
+\end{aligned}
+$$
+
+> Under this definition, what are the differential values of states $A$ and $B$?
+
+$$
+\begin{aligned}
+v_\pi(A) &= \lim_{\gamma \to 1} \lim_{h \to \infty} \sum_{t=0}^h \gamma^t \bigg(\mathbb{E}_\pi[R_{t+1}|S_0=A] - r(\pi)\bigg) \\
+&= \lim_{\gamma \to 1} \lim_{h \to \infty} \sum_{t=0}^h \gamma^t \bigg(\mathbb{E}_\pi[R_{t+1}|S_0=A] - \frac{1}{2}\bigg) \\
+&= \lim_{\gamma \to 1} \bigg[\gamma^0(1 - \frac{1}{2}) + \gamma^1(0 - \frac{1}{2}) + \gamma^2(1 - \frac{1}{2}) + \gamma^3(0 - \frac{1}{2}) + \dots\bigg] \\
+&= \frac{1}{2} \lim_{\gamma \to 1} \bigg[\big(1 - \gamma + \gamma^2 - \gamma^3 + \dots\big)\bigg] \\
+&= \frac{1}{2} \lim_{\gamma \to 1} \lim_{h \to \infty} \sum_{t=0}^h (-1)^t \gamma^t \\
+&= \frac{1}{2} \lim_{\gamma \to 1} \lim_{h \to \infty} \sum_{t=0}^h (-\gamma)^t \\
+&= \frac{1}{2} \lim_{\gamma \to 1} \frac{1}{1-(-\gamma)} \\
+&= \frac{1}{2} \lim_{\gamma \to 1} \frac{1}{1+\gamma} \\
+&= \frac{1}{4} \\
+\end{aligned}
+$$
+
+$$
+\begin{aligned}
+v_\pi(B) &= \lim_{\gamma \to 1} \lim_{h \to \infty} \sum_{t=0}^h \gamma^t \bigg(\mathbb{E}_\pi[R_{t+1}|S_0=B] - r(\pi)\bigg) \\
+&= \lim_{\gamma \to 1} \lim_{h \to \infty} \sum_{t=0}^h \gamma^t \bigg(\mathbb{E}_\pi[R_{t+1}|S_0=B] - \frac{1}{2}\bigg) \\
+&= \lim_{\gamma \to 1} \bigg[\gamma^0(0 - \frac{1}{2}) + \gamma^1(1 - \frac{1}{2}) + \gamma^2(0 - \frac{1}{2}) + \gamma^3(1 - \frac{1}{2}) + \dots\bigg] \\
+&= \frac{1}{2} \lim_{\gamma \to 1} \bigg[\big(-1 + \gamma - \gamma^2 + \gamma^3 - \dots\big)\bigg] \\
+&= \frac{1}{2} \lim_{\gamma \to 1} \lim_{h \to \infty} \sum_{t=0}^h (-1)^{t+1} \gamma^t \\
+&= -\frac{1}{2} \lim_{\gamma \to 1} \lim_{h \to \infty} \sum_{t=0}^h (-1)^t \gamma^t \\
+
+&= -\frac{1}{4} \\
+\end{aligned}
+$$

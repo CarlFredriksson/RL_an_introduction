@@ -116,7 +116,7 @@ $$
 v_\pi(A) &= \lim_{\gamma \to 1} \lim_{h \to \infty} \sum_{t=0}^h \gamma^t \bigg(\mathbb{E}_\pi[R_{t+1}|S_0=A] - r(\pi)\bigg) \\
 &= \lim_{\gamma \to 1} \lim_{h \to \infty} \sum_{t=0}^h \gamma^t \bigg(\mathbb{E}_\pi[R_{t+1}|S_0=A] - \frac{1}{2}\bigg) \\
 &= \lim_{\gamma \to 1} \bigg[\gamma^0(1 - \frac{1}{2}) + \gamma^1(0 - \frac{1}{2}) + \gamma^2(1 - \frac{1}{2}) + \gamma^3(0 - \frac{1}{2}) + \dots\bigg] \\
-&= \frac{1}{2} \lim_{\gamma \to 1} \bigg[\big(1 - \gamma + \gamma^2 - \gamma^3 + \dots\big)\bigg] \\
+&= \frac{1}{2} \lim_{\gamma \to 1} \bigg[1 - \gamma + \gamma^2 - \gamma^3 + \dots\bigg] \\
 &= \frac{1}{2} \lim_{\gamma \to 1} \lim_{h \to \infty} \sum_{t=0}^h (-1)^t \gamma^t \\
 &= \frac{1}{2} \lim_{\gamma \to 1} \lim_{h \to \infty} \sum_{t=0}^h (-\gamma)^t \\
 &= \frac{1}{2} \lim_{\gamma \to 1} \frac{1}{1-(-\gamma)} \\
@@ -130,10 +130,64 @@ $$
 v_\pi(B) &= \lim_{\gamma \to 1} \lim_{h \to \infty} \sum_{t=0}^h \gamma^t \bigg(\mathbb{E}_\pi[R_{t+1}|S_0=B] - r(\pi)\bigg) \\
 &= \lim_{\gamma \to 1} \lim_{h \to \infty} \sum_{t=0}^h \gamma^t \bigg(\mathbb{E}_\pi[R_{t+1}|S_0=B] - \frac{1}{2}\bigg) \\
 &= \lim_{\gamma \to 1} \bigg[\gamma^0(0 - \frac{1}{2}) + \gamma^1(1 - \frac{1}{2}) + \gamma^2(0 - \frac{1}{2}) + \gamma^3(1 - \frac{1}{2}) + \dots\bigg] \\
-&= \frac{1}{2} \lim_{\gamma \to 1} \bigg[\big(-1 + \gamma - \gamma^2 + \gamma^3 - \dots\big)\bigg] \\
+&= \frac{1}{2} \lim_{\gamma \to 1} \bigg[-1 + \gamma - \gamma^2 + \gamma^3 - \dots\bigg] \\
 &= \frac{1}{2} \lim_{\gamma \to 1} \lim_{h \to \infty} \sum_{t=0}^h (-1)^{t+1} \gamma^t \\
 &= -\frac{1}{2} \lim_{\gamma \to 1} \lim_{h \to \infty} \sum_{t=0}^h (-1)^t \gamma^t \\
 
 &= -\frac{1}{4} \\
+\end{aligned}
+$$
+
+## Exercise 10.7
+
+Consider a Markov reward process consisting of a ring of three states $A$, $B$, and $C$, with state transitions going deterministically around the ring. $A$ reward of $+1$ is received upon arrival in $A$ and otherwise the reward is $0$. What are the differential values of the three states, using (10.13)?
+
+**My answer:**
+
+$$
+r(\pi) = \frac{1}{3}
+$$
+
+$$
+\begin{aligned}
+v_\pi(A) &= \lim_{\gamma \to 1} \lim_{h \to \infty} \sum_{t=0}^h \gamma^t \bigg(\mathbb{E}_\pi[R_{t+1}|S_0=A] - r(\pi)\bigg) \\
+&= \lim_{\gamma \to 1} \lim_{h \to \infty} \sum_{t=0}^h \gamma^t \bigg(\mathbb{E}_\pi[R_{t+1}|S_0=A] - \frac{1}{3}\bigg) \\
+&= \lim_{\gamma \to 1} \bigg[\gamma^0(0 - \frac{1}{3}) + \gamma^1(0 - \frac{1}{3}) + \gamma^2(1 - \frac{1}{3}) + \gamma^3(0 - \frac{1}{3}) + \gamma^4(0 - \frac{1}{3}) + \gamma^5(1 - \frac{1}{3}) + \dots\bigg] \\
+&= \frac{1}{3} \lim_{\gamma \to 1} \bigg[-1 - \gamma + 2\gamma^2 - \gamma^3 - \gamma^4 + 2\gamma^5 - \dots\bigg] \\
+&= \frac{1}{3} \lim_{\gamma \to 1} \bigg[(-1-\gamma-\gamma^3-\dots) + 2(\gamma^2+\gamma^5+\gamma^8+\dots)\bigg] \\
+&= \lim_{\gamma \to 1} \bigg[\frac{1}{3}(-1-\gamma-\gamma^2-\dots) + \gamma^2(1+\gamma^3+\gamma^6+\dots)\bigg] \\
+&= \lim_{\gamma \to 1} \bigg[-\frac{1}{3} \lim_{h\to\infty} \sum_{t=0}^h \gamma^t + \gamma^2 \lim_{h\to\infty} \sum_{t=0}^h (\gamma^3)^t\bigg] \\
+&= \lim_{\gamma \to 1} \bigg[-\frac{1}{3(1-\gamma)} + \frac{\gamma^2}{(1-\gamma^3)}\bigg] \\
+&= \lim_{\gamma \to 1} \frac{3\gamma^2(1-\gamma) - (1-\gamma^3)}{3(1-\gamma)(1-\gamma^3)} \\
+&= \frac{1}{3} \lim_{\gamma \to 1} \frac{(\gamma-1)^2(-2\gamma-1)}{(\gamma-1)^2(\gamma^2+\gamma+1)} \\
+&= \frac{1}{3} \lim_{\gamma \to 1} \frac{-2\gamma-1}{\gamma^2+\gamma+1} \\
+&= -\frac{1}{3}
+\end{aligned}
+$$
+
+$$
+\begin{aligned}
+v_\pi(B) &= \lim_{\gamma \to 1} \bigg[\gamma^0(0 - \frac{1}{3}) + \gamma^1(1 - \frac{1}{3}) + \gamma^2(0 - \frac{1}{3}) + \dots\bigg] \\
+&= \frac{1}{3} \lim_{\gamma \to 1} \bigg[-1 + 2\gamma - \gamma^2 - \dots\bigg] \\
+&= \frac{1}{3} \lim_{\gamma \to 1} \bigg[(-1-\gamma^2-\gamma^3-\dots) + 2(\gamma+\gamma^4+\gamma^7+\dots)\bigg] \\
+&= \lim_{\gamma \to 1} \bigg[\frac{1}{3}(-1-\gamma-\gamma^2-\dots) + \gamma(1+\gamma^3+\gamma^6+\dots)\bigg] \\
+&= \lim_{\gamma \to 1} \bigg[-\frac{1}{3(1-\gamma)} + \frac{\gamma}{(1-\gamma^3)}\bigg] \\
+&= \lim_{\gamma \to 1} \frac{3\gamma(1-\gamma) - (1-\gamma^3)}{3(1-\gamma)(1-\gamma^3)} \\
+&= \frac{1}{3} \lim_{\gamma \to 1} \frac{(\gamma-1)^3}{(\gamma-1)^2(\gamma^2+\gamma+1)} \\
+&= \frac{1}{3} \lim_{\gamma \to 1} \frac{\gamma-1}{\gamma^2+\gamma+1} \\
+&= 0
+\end{aligned}
+$$
+
+$$
+\begin{aligned}
+v_\pi(C) &= \lim_{\gamma \to 1} \bigg[\gamma^0(1 - \frac{1}{3}) + \gamma^1(0 - \frac{1}{3}) + \gamma^2(0 - \frac{1}{3}) + \dots\bigg] \\
+&= \frac{1}{3} \lim_{\gamma \to 1} \bigg[2 - \gamma - \gamma^2 - \dots\bigg] \\
+&= \lim_{\gamma \to 1} \bigg[\frac{1}{3}(-1-\gamma-\gamma^2-\dots) + (1+\gamma^3+\gamma^6+\dots)\bigg] \\
+&= \lim_{\gamma \to 1} \bigg[-\frac{1}{3(1-\gamma)} + \frac{1}{(1-\gamma^3)}\bigg] \\
+&= \lim_{\gamma \to 1} \frac{3(1-\gamma) - (1-\gamma^3)}{3(1-\gamma)(1-\gamma^3)} \\
+&= \frac{1}{3} \lim_{\gamma \to 1} \frac{(\gamma-1)^2(\gamma+2)}{(\gamma-1)^2(\gamma^2+\gamma+1)} \\
+&= \frac{1}{3} \lim_{\gamma \to 1} \frac{\gamma+2}{\gamma^2+\gamma+1} \\
+&= \frac{1}{3}
 \end{aligned}
 $$

@@ -191,3 +191,51 @@ v_\pi(C) &= \lim_{\gamma \to 1} \bigg[\gamma^0(1 - \frac{1}{3}) + \gamma^1(0 - \
 &= \frac{1}{3}
 \end{aligned}
 $$
+
+## Exercise 10.8
+
+The pseudocode in the box on page 251 updates $\overline{R}_t$ using $\delta_t$ as an error rather than simply $R_{t+1} - \overline{R}_t$. Both errors work, but using $\delta_t$ is better. To see why, consider the ring MRP of three states from Exercise 10.7. The estimate of the average reward should tend towards its true value of $\frac{1}{3}$. Suppose it was already there and was held stuck there. What would the sequence of $R_{t+1} - \overline{R}_t$ errors be? What would the sequence of $\delta_t$ errors be (using Equation 10.10)? Which error sequence would produce a more stable estimate of the average reward if the estimate were allowed to change in response to the errors? Why?
+
+**My answer:**
+
+> Suppose it was already there and was held stuck there. What would the sequence of $R_{t+1} - \overline{R}_t$ errors be?
+
+$$
+A \rightarrow B: 0 - \frac{1}{3} = -\frac{1}{3}
+$$
+
+$$
+B \rightarrow C: 0 - \frac{1}{3} = -\frac{1}{3}
+$$
+
+$$
+C \rightarrow A: 1 - \frac{1}{3} = \frac{2}{3}
+$$
+
+> What would the sequence of $\delta_t$ errors be (using Equation 10.10)?
+
+$$
+\begin{aligned}
+\delta_t \overset{.}{=} R_{t+1} - \overline{R}_t + \hat{v}(S_{t+1}) - \hat{v}(S_t)
+\end{aligned}
+$$
+
+$$
+A \rightarrow B: 0 - \frac{1}{3} + \hat{v}(B) - \hat{v}(A) = -\frac{1}{3} + 0 - (-\frac{1}{3}) = 0
+$$
+
+$$
+B \rightarrow C: 0 - \frac{1}{3} + \hat{v}(C) - \hat{v}(B) = -\frac{1}{3} + \frac{1}{3} - 0 = 0
+$$
+
+$$
+C \rightarrow A: 1 - \frac{1}{3} + \hat{v}(A) - \hat{v}(C) = \frac{2}{3} + (-\frac{1}{3}) - \frac{1}{3} = 0
+$$
+
+> Which error sequence would produce a more stable estimate of the average reward if the estimate were allowed to change in response to the errors?
+
+The sequence using $\delta_t$ errors.
+
+> Why?
+
+The $\delta_t$ errors are all 0 and thus $\overline{R}_t$ would not change. The $R_{t+1} - \overline{R}_t$ errors are not 0, and if used in updates, $\overline{R}_t$ would change after every update assuming $\beta>0$.

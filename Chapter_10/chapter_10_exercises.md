@@ -57,13 +57,13 @@ Give pseudocode for a differential version of semi-gradient Q-learning.
 * Input: a differentiable action-value function parametrization $\hat{q}:\mathcal{S} \times \mathcal{A} \times \mathbb{R}^d \rightarrow \mathbb{R}$
 * Algorithm parameters: step sizes $\alpha,\beta > 0$, small $\epsilon > 0$
 * Initialize value-function weights $\textbf{w} \in \mathbb{R}^d$ arbitrarily (e.g., $\textbf{w} = \textbf{0}$)
-* Initialize average reward estimate $\overline{R} \in \mathbb{R}$ arbitrarily (e.g., $\overline{R} = 0$)
+* Initialize average reward estimate $\={R} \in \mathbb{R}$ arbitrarily (e.g., $\={R} = 0$)
 * Initialize state $S$
 * Loop for each step:
   * Choose $A$ as a function of $\hat{q}(S,\cdot,\textbf{w})$ (e.g., $\epsilon$-greedy)
   * Take action $A$, observe $R,S^\prime$
-  * $\delta \leftarrow R - \overline{R} + \max_a \hat{q}(S^\prime, a, \textbf{w}) - \hat{q}(S, A, \textbf{w})$
-  * $\overline{R} \leftarrow \overline{R} + \beta \delta$
+  * $\delta \leftarrow R - \={R} + \max_a \hat{q}(S^\prime, a, \textbf{w}) - \hat{q}(S, A, \textbf{w})$
+  * $\={R} \leftarrow \={R} + \beta \delta$
   * $\textbf{w} \leftarrow \textbf{w} + \alpha \delta \nabla \hat{q}(S,A,\textbf{w})$
   * $S \leftarrow S^\prime$
 
@@ -73,10 +73,10 @@ What equations are needed (beyond 10.10) to specify the differential version of 
 
 **My answer:**
 
-$\overline{R}$-update:
+$\={R}$-update:
 
 $$
-\overline{R}_{t+1} \leftarrow \overline{R}_t + \beta \delta_t
+\={R}_{t+1} \leftarrow \={R}_t + \beta \delta_t
 $$
 
 $\textbf{w}$-update:
@@ -194,11 +194,11 @@ $$
 
 ## Exercise 10.8
 
-The pseudocode in the box on page 251 updates $\overline{R}_t$ using $\delta_t$ as an error rather than simply $R_{t+1} - \overline{R}_t$. Both errors work, but using $\delta_t$ is better. To see why, consider the ring MRP of three states from Exercise 10.7. The estimate of the average reward should tend towards its true value of $\frac{1}{3}$. Suppose it was already there and was held stuck there. What would the sequence of $R_{t+1} - \overline{R}_t$ errors be? What would the sequence of $\delta_t$ errors be (using Equation 10.10)? Which error sequence would produce a more stable estimate of the average reward if the estimate were allowed to change in response to the errors? Why?
+The pseudocode in the box on page 251 updates $\={R}_t$ using $\delta_t$ as an error rather than simply $R_{t+1} - \={R}_t$. Both errors work, but using $\delta_t$ is better. To see why, consider the ring MRP of three states from Exercise 10.7. The estimate of the average reward should tend towards its true value of $\frac{1}{3}$. Suppose it was already there and was held stuck there. What would the sequence of $R_{t+1} - \={R}_t$ errors be? What would the sequence of $\delta_t$ errors be (using Equation 10.10)? Which error sequence would produce a more stable estimate of the average reward if the estimate were allowed to change in response to the errors? Why?
 
 **My answer:**
 
-> Suppose it was already there and was held stuck there. What would the sequence of $R_{t+1} - \overline{R}_t$ errors be?
+> Suppose it was already there and was held stuck there. What would the sequence of $R_{t+1} - \={R}_t$ errors be?
 
 $$
 A \rightarrow B: 0 - \frac{1}{3} = -\frac{1}{3}
@@ -216,7 +216,7 @@ $$
 
 $$
 \begin{aligned}
-\delta_t \overset{.}{=} R_{t+1} - \overline{R}_t + \hat{v}(S_{t+1}) - \hat{v}(S_t)
+\delta_t \overset{.}{=} R_{t+1} - \={R}_t + \hat{v}(S_{t+1}) - \hat{v}(S_t)
 \end{aligned}
 $$
 
@@ -238,4 +238,17 @@ The sequence using $\delta_t$ errors.
 
 > Why?
 
-The $\delta_t$ errors are all 0 and thus $\overline{R}_t$ would not change. The $R_{t+1} - \overline{R}_t$ errors are not 0, and if used in updates, $\overline{R}_t$ would change after every update assuming $\beta>0$.
+The $\delta_t$ errors are all 0 and thus $\={R}_t$ would not change. The $R_{t+1} - \={R}_t$ errors are not 0, and if used in updates, $\={R}_t$ would change after every update assuming $\beta>0$.
+
+## Exercise 10.9
+
+In the differential semi-gradient $n$-step Sarsa algorithm, the step-size parameter on the average reward, $\beta$, needs to be quite small so that $\={R}$ becomes a good long-term estimate of the average reward. Unfortunately, $\={R}$ will then be biased by its initial value for many steps, which may make learning inefficient. Alternatively, one could use a sample average of the observed rewards for $\={R}$. That would initially adapt rapidly but in the long run would also adapt slowly. As the policy slowly changed, $\={R}$ would also change; the potential for such long-term nonstationarity makes sample-average methods ill-suited. In fact, the step-size parameter on the average reward is a perfect place to use the unbiased constant-step-size trick from Exercise 2.7. Describe the specific changes needed to the boxed algorithm for differential semi-gradient $n$-step Sarsa to use this trick.
+
+**My answer:**
+
+* Add to initialization:
+  * $\={\omicron} = 0$
+* Add before updating $\={R}$:
+  * $\={\omicron} \leftarrow \={\omicron} + \beta (1 - \={\omicron})$
+* Change $\={R} \leftarrow \={R} + \beta \delta$ to:
+  * $\={R} \leftarrow \={R} + (\beta/\={\omicron}) \delta$

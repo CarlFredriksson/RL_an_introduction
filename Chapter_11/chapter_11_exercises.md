@@ -73,3 +73,11 @@ G_{t:h} \overset{.}{=} R_{t+1} - \={R}_t + \bigg(\sigma_{t+1}\rho_{t+1} + (1-\si
 $$
 
 The recursion ends with $G_{h:h} \overset{.}{=} \hat{q}(S_h,A_h,\textbf{w}_{h-1})$.
+
+## Exercise 11.3 (programming)
+
+Apply one-step semi-gradient Q-learning to Baird’s counterexample and show empirically that its weights diverge.
+
+**My answer:**
+
+![Ex 11.3 Plot](Exercise_11_3/exercise_11_3_plot.png)

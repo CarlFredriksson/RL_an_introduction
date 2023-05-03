@@ -81,3 +81,21 @@ Apply one-step semi-gradient Q-learning to Baird’s counterexample and show emp
 **My answer:**
 
 ![Ex 11.3 Plot](Exercise_11_3/exercise_11_3_plot.png)
+
+## Exercise 11.4
+
+Prove (11.24). Hint: Write the $\overline{RE}$ as an expectation over possible states $s$ of the expectation of the squared error given that $S_t=s$. Then add and subtract the true value of state $s$ from the error (before squaring), grouping the subtracted true value with the return and the added true value with the estimated value. Then, if you expand the square, the most complex term will end up being zero, leaving you with (11.24).
+
+**My answer:**
+
+$$
+\begin{aligned}
+\overline{RE}(\textbf{w}) &= \mathbb{E}\bigg[\big(G_t - \hat{v}(S_t,\textbf{w})\big)^2\bigg] \\
+&= \mathbb{E}\bigg[\mathbb{E}\bigg[\big(G_t - \hat{v}(s,\textbf{w})\big)^2 \;|\;S_t=s\bigg]\bigg] \\
+&= \sum_{s \in \mathcal{S}} \mu(s) \mathbb{E}\bigg[\big([G_t - v_\pi(s)] + [v_\pi(s) - \hat{v}(s,\textbf{w})]\big)^2 \;|\;S_t=s\bigg] \\
+&= \sum_{s \in \mathcal{S}} \mu(s) \mathbb{E}\bigg[\big(G_t - v_\pi(s)\big)^2 + 2\big(G_t - v_\pi(s)\big)\big(v_\pi(s) - \hat{v}(s,\textbf{w})\big) + \big(v_\pi(s) - \hat{v}(s,\textbf{w})\big)^2 \;|\;S_t=s\bigg] \\
+&= \overline{VE}(\textbf{w}) + \mathbb{E}\bigg[\big(G_t - v_\pi(S_t)\big)^2\bigg] + 2 \sum_{s \in \mathcal{S}} \mu(s) \mathbb{E}\bigg[G_t v_\pi(s) - G_t \hat{v}(s,\textbf{w}) - v_\pi(s)^2 + v_\pi(s) \hat{v}(s,\textbf{w}) \;|\;S_t=s\bigg] \\
+&= \overline{VE}(\textbf{w}) + \mathbb{E}\bigg[\big(G_t - v_\pi(S_t)\big)^2\bigg] + 2 \sum_{s \in \mathcal{S}} \mu(s) \bigg[v_\pi(s)^2 - v_\pi(s) \hat{v}(s,\textbf{w}) - v_\pi(s)^2 + v_\pi(s) \hat{v}(s,\textbf{w})\bigg] \\
+&= \overline{VE}(\textbf{w}) + \mathbb{E}\bigg[\big(G_t - v_\pi(S_t)\big)^2\bigg]
+\end{aligned}
+$$

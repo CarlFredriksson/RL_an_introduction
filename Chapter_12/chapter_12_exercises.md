@@ -19,3 +19,25 @@ G_t^\lambda &\overset{.}{=} (1-\lambda) \sum_{n=1}^\infty \lambda^{n-1} G_{t:t+n
 &= R_{t+1} + (1-\lambda) \gamma \hat{v}(S_{t+1}, w_t) + \lambda\gamma G_{t+1}^\lambda
 \end{aligned}
 $$
+
+## Exercise 12.2
+
+The parameter $\lambda$ characterizes how fast the exponential weighting in Figure 12.2 falls off, and thus how far into the future the $\lambda$-return algorithm looks in determining its update. But a rate factor such as  is sometimes an awkward way of characterizing the speed of the decay. For some purposes it is better to specify a time constant, or half-life. What is the equation relating $\lambda$ and the half-life, $\tau_\lambda$, the time by which the weighting sequence will have fallen to half of its initial value?
+
+**My answer:**
+
+$$
+\begin{aligned}
+(1-\lambda)\lambda^\tau &= (1-\lambda)\frac{1}{2} \\
+\lambda^\tau &= \frac{1}{2} \\
+\tau &= \log_\lambda(\frac{1}{2})
+\end{aligned}
+$$
+
+$$
+\begin{aligned}
+\tau_\lambda = t + \tau + 1 = t + \log_\lambda(\frac{1}{2}) + 1
+\end{aligned}
+$$
+
+Adding 1 since the $n$-step return $G_{t:t+n}$ is weighted by $\lambda^{n-1}$.

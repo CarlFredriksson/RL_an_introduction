@@ -59,3 +59,23 @@ G_t^\lambda - \hat{v}(S_t,\textbf{w}) &= R_{t+1} + (1-\lambda) \gamma \hat{v}(S_
 &= \sum_{k=t}^{T-1} (\lambda\gamma)^{k-t} \delta_k
 \end{aligned}
 $$
+
+## Exercise 12.4
+
+Use your result from the preceding exercise to show that, if the weight updates over an episode were computed on each step but not actually used to change the weights ($\textbf{w}$ remained fixed), then the sum of TD($\lambda$)’s weight updates would be the same as the sum of the off-line $\lambda$-return algorithm’s updates.
+
+**My answer:**
+
+The sum of TD($\lambda$)’s weight updates would be
+
+$$
+\begin{aligned}
+\sum_{t=0}^{T-1} \alpha \delta_t z_t &= \alpha \bigg(\delta_0\nabla\hat{v}(S_0,\textbf{w}) + \delta_1\big[\gamma\lambda\nabla\hat{v}(S_0,\textbf{w}) + \nabla\hat{v}(S_1,\textbf{w})\big] + \delta_2\big[(\gamma\lambda)^2\nabla\hat{v}(S_0,\textbf{w}) + \gamma\lambda\nabla\hat{v}(S_1,\textbf{w}) + \nabla\hat{v}(S_2,\textbf{w})\big] + \dots\bigg) \\
+&= \alpha \bigg(\nabla\hat{v}(S_0,\textbf{w})\big[\delta_0 + \gamma\lambda\delta_1 + (\gamma\lambda)^2\delta_2 + \dots + (\gamma\lambda)^T-1\delta_{T-1}\big] + \\ &\qquad \quad \nabla\hat{v}(S_1,\textbf{w})\big[\delta_1 + \gamma\lambda\delta_2 + (\gamma\lambda)^2\delta_3 + \dots + (\gamma\lambda)^{T-2}\delta_{T-1}\big] + \dots + \\ &\qquad \quad \nabla\hat{v}(S_{T-1},\textbf{w})\big[\delta_{T-1}\big]\bigg) \\
+&= \alpha \bigg(\nabla\hat{v}(S_0,\textbf{w})\sum_{k=0}^{T-1} (\gamma\lambda)^k\delta_k + \nabla\hat{v}(S_1,\textbf{w})\sum_{k=1}^{T-1} (\gamma\lambda)^{k-1}\delta_k + \dots + \nabla\hat{v}(S_{T-1},\textbf{w})\sum_{k=T-1}^{T-1} (\gamma\lambda)^{k-(T-1)}\delta_k\bigg) \\
+&= \alpha \bigg(\big[G_0^\lambda - \hat{v}(S_0,\textbf{w})\big]\nabla\hat{v}(S_0,\textbf{w}) + \big[G_1^\lambda - \hat{v}(S_1,\textbf{w})\big]\nabla\hat{v}(S_1,\textbf{w}) + \dots + \big[G_{T-1}^\lambda - \hat{v}(S_{T-1},\textbf{w})\big]\nabla\hat{v}(S_{T-1},\textbf{w})\bigg) \\
+&= \alpha \sum_{t=0}^{T-1} \big[G_t^\lambda - \hat{v}(S_t,\textbf{w})\big]\nabla\hat{v}(S_t,\textbf{w})
+\end{aligned}
+$$
+
+which is the same as the sum of the offline $\lambda$-return algorithm’s updates (12.4).

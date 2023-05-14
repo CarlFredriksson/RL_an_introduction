@@ -79,3 +79,45 @@ $$
 $$
 
 which is the same as the sum of the offline $\lambda$-return algorithm’s updates (12.4).
+
+## Exercise 12.5
+
+Several times in this book (often in exercises) we have established that returns can be written as sums of TD errors if the value function is held constant. Why is (12.10) another instance of this? Prove (12.10).
+
+**My answer:**
+
+Let's start by writing the $k$-step $\lambda$-return recursively ($h=t+k$)
+
+$$
+\begin{aligned}
+G_{t:t+k}^\lambda &\overset{.}{=} (1-\lambda)\sum_{n=1}^{k-1}\lambda^{n-1}G_{t:t+n} + \lambda^{k-1}G_{t:t+k} \\
+&= (1-\lambda)\bigg(\big[R_{t+1} + \gamma\hat{v}(S_{t+1},\textbf{w}_t)\big] + \lambda\big[R_{t+1} + \gamma R_{t+2} + \gamma^2\hat{v}(S_{t+2},\textbf{w}_{t+1})\big] + \dots + \\
+&\qquad\qquad\qquad \lambda^{k-2}\big[R_{t+1} + \gamma R_{t+2} + \dots + \gamma^{k-1}\hat{v}(S_{t+k-1},\textbf{w}_{t+k-2})\big]\bigg) + \lambda^{k-1}\big[R_{t+1} + \gamma R_{t+2} + \dots + \gamma^k\hat{v}(S_{t+k},\textbf{w}_{t+k-1})\big] \\
+&= (1-\lambda)\gamma\hat{v}(S_{t+1},\textbf{w}_t) + R_{t+1}\bigg(\lambda^{k-1} + (1-\lambda)\sum_{n=0}^{k-2}\lambda^n\bigg) + \\
+&\qquad (1-\lambda)\bigg(\gamma\lambda\big[R_{t+2} + \gamma\hat{v}(S_{t+2},\textbf{w}_{t+1})\big] + \dots + \gamma\lambda^{k-2}\big[R_{t+2} + \dots + \gamma^{k-2}\hat{v}(S_{t+k-1},\textbf{w}_{t+k-2})\big]\bigg) + \\
+&\qquad \gamma\lambda^{k-1}\big[R_{t+2} + \dots + \gamma^{k-1}\hat{v}(S_{t+k},\textbf{w}_{t+k-1})\big] \\
+&= (1-\lambda)\gamma\hat{v}(S_{t+1},\textbf{w}_t) + R_{t+1}\bigg(\lambda^{k-1}(1-\lambda)\sum_{n=0}^\infty\lambda^n + (1-\lambda)\sum_{n=0}^{k-2}\lambda^n\bigg) + \\
+&\qquad \gamma\lambda\bigg((1-\lambda)\bigg(\big[R_{t+2} + \gamma\hat{v}(S_{t+2},\textbf{w}_{t+1})\big] + \dots + \lambda^{k-3}\big[R_{t+2} + \dots + \gamma^{k-2}\hat{v}(S_{t+k-1},\textbf{w}_{t+k-2})\big]\bigg) + \\
+&\qquad \lambda^{k-2}\big[R_{t+2} + \dots + \gamma^{k-1}\hat{v}(S_{t+k},\textbf{w}_{k+t-1})\big]\bigg) \\
+&= (1-\lambda)\gamma\hat{v}(S_{t+1},\textbf{w}_t) + R_{t+1}\bigg((1-\lambda)\sum_{n=k-1}^\infty\lambda^{n} + (1-\lambda)\sum_{n=0}^{k-2}\lambda^n\bigg) + \\
+&\qquad \gamma\lambda\bigg((1-\lambda)\sum_{n=1}^{k-2}\lambda^{n-1}G_{t+1:t+1+n} + \lambda^{k-2}G_{t+1:t+k}\bigg) \\
+&= (1-\lambda)\gamma\hat{v}(S_{t+1},\textbf{w}_t) + R_{t+1}\bigg((1-\lambda)\sum_{n=0}^\infty\lambda^n\bigg) + \gamma\lambda G_{t+1:t+k}^\lambda \\
+&= R_{t+1} + (1-\lambda)\gamma\hat{v}(S_{t+1},\textbf{w}_t) + \gamma\lambda G_{t+1:t+k}^\lambda \\
+\end{aligned}
+$$
+
+We can now use the recursive relationship to prove (12.10)
+
+$$
+\begin{aligned}
+G_{t:t+k}^\lambda &= R_{t+1} + (1-\lambda)\gamma\hat{v}(S_{t+1},\textbf{w}_t) + \gamma\lambda G_{t+1:t+k}^\lambda \\
+&= R_{t+1} + \gamma\hat{v}(S_{t+1},\textbf{w}_t) - \lambda\gamma\hat{v}(S_{t+1},\textbf{w}_t) + \gamma\lambda G_{t+1:t+k}^\lambda + \hat{v}(S_t,\textbf{w}_{t-1}) - \hat{v}(S_t,\textbf{w}_{t-1}) \\
+&= \hat{v}(S_t,\textbf{w}_{t-1}) + \delta_t^\prime + \gamma\lambda\big[G_{t+1:t+k}^\lambda - \hat{v}(S_{t+1},\textbf{w}_t)\big] \\
+&= \hat{v}(S_t,\textbf{w}_{t-1}) + \delta_t^\prime + \gamma\lambda\big[R_{t+2} + (1-\lambda)\gamma\hat{v}(S_{t+2},\textbf{w}_{t+1}) + \gamma\lambda G_{t+2:t+k}^\lambda - \hat{v}(S_{t+1},\textbf{w}_t)\big] \\
+&= \hat{v}(S_t,\textbf{w}_{t-1}) + \delta_t^\prime + \gamma\lambda\delta_{t+1}^\prime + (\gamma\lambda)^2\big[G_{t+2:t+k}^\lambda - \hat{v}(S_{t+2},\textbf{w}_{t+1})\big] \\
+&= \hat{v}(S_t,\textbf{w}_{t-1}) + \delta_t^\prime + \gamma\lambda\delta_{t+1}^\prime + (\gamma\lambda)^2\delta_{t+2}^\prime + \dots + (\gamma\lambda)^{k-1}\delta_{t+k-1}^\prime + (\gamma\lambda)^k\big[G_{t+k:t+k}^\lambda - \hat{v}(S_{t+k},\textbf{w}_{t+k-1})\big] \\
+&= \hat{v}(S_t,\textbf{w}_{t-1}) + \delta_t^\prime + \gamma\lambda\delta_{t+1}^\prime + (\gamma\lambda)^2\delta_{t+2}^\prime + \dots + (\gamma\lambda)^{k-1}\delta_{t+k-1}^\prime + (\gamma\lambda)^k\big[\hat{v}(S_{t+k},\textbf{w}_{t+k-1}) - \hat{v}(S_{t+k},\textbf{w}_{t+k-1})\big] \\
+&= \hat{v}(S_t,\textbf{w}_{t-1}) + \delta_t^\prime + \gamma\lambda\delta_{t+1}^\prime + (\gamma\lambda)^2\delta_{t+2}^\prime + \dots + (\gamma\lambda)^{k-1}\delta_{t+k-1}^\prime \\
+&= \hat{v}(S_t,\textbf{w}_{t-1}) + \sum_{i=t}^{t+k-1}(\gamma\lambda)^{i-t}\delta_i^\prime
+\end{aligned}
+$$

@@ -121,3 +121,25 @@ G_{t:t+k}^\lambda &= R_{t+1} + (1-\lambda)\gamma\hat{v}(S_{t+1},\textbf{w}_t) + 
 &= \hat{v}(S_t,\textbf{w}_{t-1}) + \sum_{i=t}^{t+k-1}(\gamma\lambda)^{i-t}\delta_i^\prime
 \end{aligned}
 $$
+
+## Exercise 12.6
+
+Modify the pseudocode for Sarsa($\lambda$) to use dutch traces (12.11) without the other distinctive features of a true online algorithm. Assume linear function approximation and binary features.
+
+**My answer:**
+
+Change this part
+
+* Loop for $i$ in $\mathcal{F}(S,A)$:
+  * $\delta \leftarrow \delta - w_i$
+  * $z_i \leftarrow z_i + 1$
+  * or $z_i \leftarrow 1$
+
+to
+
+* $s \leftarrow 0$
+* Loop for $i$ in $\mathcal{F}(S,A)$:
+  * $s \leftarrow s + z_i$
+* Loop for $i$ in $\mathcal{F}(S,A)$:
+  * $\delta \leftarrow \delta - w_i$
+  * $z_i \leftarrow z_i + (1 - \alpha s)$

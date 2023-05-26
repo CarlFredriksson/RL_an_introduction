@@ -143,3 +143,21 @@ to
 * Loop for $i$ in $\mathcal{F}(S,A)$:
   * $\delta \leftarrow \delta - w_i$
   * $z_i \leftarrow z_i + (1 - \alpha s)$
+
+## Exercise 12.7
+
+Generalize the three recursive equations above to their truncated versions, defining $G_{t:h}^{\lambda s}$ and $G_{t:h}^{\lambda a}$.
+
+**My answer:**
+
+$$
+G_{t:h}^{\lambda s} \overset{.}{=} R_{t+1} + \gamma_{t+1} \bigg((1-\lambda_{t+1}) \hat{v}(S_{t+1},\textbf{w}_t) + \lambda_{t+1}G_{t+1:h}^{\lambda s}\bigg)
+$$
+
+$$
+G_{t:h}^{\lambda a} \overset{.}{=} R_{t+1} + \gamma_{t+1} \bigg((1-\lambda_{t+1}) \hat{q}(S_{t+1},A_{t+1},\textbf{w}_t) + \lambda_{t+1}G_{t+1:h}^{\lambda a}\bigg)
+$$
+
+$$
+G_{t:h}^{\lambda a} \overset{.}{=} R_{t+1} + \gamma_{t+1} \bigg((1-\lambda_{t+1}) \={V}_t(S_{t+1}) + \lambda_{t+1}G_{t+1:h}^{\lambda a}\bigg)
+$$

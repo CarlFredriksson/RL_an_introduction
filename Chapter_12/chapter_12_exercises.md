@@ -180,3 +180,13 @@ G_0^{\lambda s} &\overset{.}{=} \rho_0 \bigg(R_1 + \gamma_1\big[(1-\lambda_1)V_1
 &= V_0 + \rho_0 \sum_{k=0}^\infty \delta_k^s \prod_{i=1}^k \gamma_i \lambda_i \rho_i
 \end{aligned}
 $$
+
+## Exercise 12.9
+
+The truncated version of the general off-policy return is denoted $G_{t:h}^{\lambda s}$. Guess the correct equation, based on (12.24).
+
+**My answer:**
+
+$$
+G_{t:h}^{\lambda s} \approx \hat{v}(S_t,\textbf{w}) + \rho_t \sum_{k=t}^{h-1} \delta_k^s \prod_{i=t+1}^k \gamma_i \lambda_i \rho_i
+$$

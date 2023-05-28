@@ -161,3 +161,22 @@ $$
 $$
 G_{t:h}^{\lambda a} \overset{.}{=} R_{t+1} + \gamma_{t+1} \bigg((1-\lambda_{t+1}) \={V}_t(S_{t+1}) + \lambda_{t+1}G_{t+1:h}^{\lambda a}\bigg)
 $$
+
+## Exercise 12.8
+
+Prove that (12.24) becomes exact if the value function does not change. To save writing, consider the case of $t = 0$, and use the notation $V_k=\hat{v}(S_k,\textbf{w})$.
+
+**My answer:**
+
+$$
+\begin{aligned}
+G_0^{\lambda s} &\overset{.}{=} \rho_0 \bigg(R_1 + \gamma_1\big[(1-\lambda_1)V_1 + \lambda_1 G_1^{\lambda s}\big]\bigg) + (1-\rho_0)V_0 \\
+&= \rho_0 R_1 + \rho_0 \gamma_1 V_1 - \rho_0 \gamma_1 \lambda_1 V_1 + \rho_0 \gamma_1 \lambda_1 G_1^{\lambda s} + V_0 - \rho_0 V_0 \\
+&= V_0 + \rho_0(R_1 + \gamma_1 V_1 - V_0) - \rho_0 \gamma_1 \lambda_1 V_1 + \rho_0 \gamma_1 \lambda_1 G_1^{\lambda s} \\
+&= V_0 + \rho_0 \delta_0^s + \rho_0 \gamma_1 \lambda_1(G_1^{\lambda s} - V_1) \\
+&= V_0 + \rho_0 \delta_0^s + \rho_0 \gamma_1 \lambda_1\big(V_1 + \rho_1 \delta_1^s + \rho_1 \gamma_2 \lambda_2(G_2^{\lambda s} - V_2) - V_1\big) \\
+&= V_0 + \rho_0 \delta_0^s + \rho_0 \rho_1 \gamma_1 \lambda_1 \delta_1^s + \rho_0 \rho_1 \gamma_1 \lambda_1 \gamma_2 \lambda_2(G_2^{\lambda s} - V_2) \\
+&= V_0 + \rho_0 \delta_0^s + \rho_0 \rho_1 \gamma_1 \lambda_1 \delta_1^s + \rho_0 \rho_1 \rho_2 \gamma_1 \lambda_1 \gamma_2 \lambda_2 \delta_2^s + \dots \\
+&= V_0 + \rho_0 \sum_{k=0}^\infty \delta_k^s \prod_{i=1}^k \gamma_i \lambda_i \rho_i
+\end{aligned}
+$$

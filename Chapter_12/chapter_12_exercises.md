@@ -212,3 +212,13 @@ G_0^{\lambda a} &= R_1 + \gamma_1 \bigg(\={V}_0(S_1) + \lambda_1 \rho_1 \big[G_1
 &= Q_0 + \sum_{k=0}^\infty \delta_k^a \prod_{i=1}^k \gamma_i \lambda_i \rho_i
 \end{aligned}
 $$
+
+## Exercise 12.11
+
+The truncated version of the general off-policy return is denoted $G_{t:h}^{\lambda a}$. Guess the correct equation for it, based on (12.27).
+
+**My answer:**
+
+$$
+G_{t:h}^{\lambda a} \approx \hat{q}(S_t,A_t,\textbf{w}_t) + \sum_{k=t}^{h-1} \delta_k^a \prod_{i=t+1}^k \gamma_i \lambda_i \rho_i
+$$

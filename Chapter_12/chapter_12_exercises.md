@@ -190,3 +190,25 @@ The truncated version of the general off-policy return is denoted $G_{t:h}^{\lam
 $$
 G_{t:h}^{\lambda s} \approx \hat{v}(S_t,\textbf{w}) + \rho_t \sum_{k=t}^{h-1} \delta_k^s \prod_{i=t+1}^k \gamma_i \lambda_i \rho_i
 $$
+
+## Exercise 12.10
+
+Prove that (12.27) becomes exact if the value function does not change. To save writing, consider the case of $t = 0$, and use the notation $Q_k = \hat{q}(S_k, A_k, \textbf{w})$. Hint: Start by writing out $\delta_0^a$ and $G_0^{\lambda a}$, then $G_0^{\lambda a} - Q_0$.
+
+**My answer:**
+
+$$
+\delta_0^a = R_1 + \gamma_1 \={V}_0(S_1) - Q_0
+$$
+
+$$
+\begin{aligned}
+G_0^{\lambda a} &= R_1 + \gamma_1 \bigg(\={V}_0(S_1) + \lambda_1 \rho_1 \big[G_1^{\lambda a} - Q_1\big]\bigg) \\
+&= R_1 + \gamma_1 \={V}_0(S_1) + \gamma_1 \lambda_1 \rho_1 \big[G_1^{\lambda a} - Q_1\big] + Q_0 - Q_0 \\
+&= Q_0 + \delta_0^a + \gamma_1 \lambda_1 \rho_1 \big[G_1^{\lambda a} - Q_1\big] \\
+&= Q_0 + \delta_0^a + \gamma_1 \lambda_1 \rho_1 \bigg(R_2 + \gamma_2 \={V}_1(S_2) + \gamma_2 \lambda_2 \rho_2 \big[G_2^{\lambda a} - Q_2\big] - Q_1\bigg) \\
+&= Q_0 + \delta_0^a + \gamma_1 \lambda_1 \rho_1 \delta_1^a + \gamma_1 \lambda_1 \rho_1 \gamma_2 \lambda_2 \rho_2 \big[G_2^{\lambda a} - Q_2\big] \\
+&= Q_0 + \delta_0^a + \gamma_1 \lambda_1 \rho_1 \delta_1^a + \gamma_1 \lambda_1 \rho_1 \gamma_2 \lambda_2 \rho_2 \delta_2^a + \dots \\
+&= Q_0 + \sum_{k=0}^\infty \delta_k^a \prod_{i=1}^k \gamma_i \lambda_i \rho_i
+\end{aligned}
+$$

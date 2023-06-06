@@ -222,3 +222,43 @@ The truncated version of the general off-policy return is denoted $G_{t:h}^{\lam
 $$
 G_{t:h}^{\lambda a} \approx \hat{q}(S_t,A_t,\textbf{w}_t) + \sum_{k=t}^{h-1} \delta_k^a \prod_{i=t+1}^k \gamma_i \lambda_i \rho_i
 $$
+
+## Exercise 12.12
+
+Show in detail the steps outlined above for deriving (12.29) from (12.27). Start with the update (12.15), substitute $G_t^{\lambda a}$ from (12.26) for $G_t^\lambda$, then follow similar steps as led to (12.25).
+
+**My answer:**
+
+$$
+\begin{aligned}
+w_{t+1} &\overset{.}{=} w_t + \alpha \big[G_t^{\lambda a} - \hat{q}(S_t,A_t,\textbf{w}_t)\big] \nabla \hat{q}(S_t,A_t,\textbf{w}_t) \\
+&\approx w_t + \alpha \big[\sum_{k=t}^\infty \delta_k^a \prod_{i=t+1}^k \gamma_i \lambda_i \rho_i \big] \nabla \hat{q}(S_t,A_t,\textbf{w}_t)
+\end{aligned}
+$$
+
+The sum of the forward update over time is
+
+$$
+\begin{aligned}
+\sum_{t=0}^\infty (w_{t+1}-w_t) &\approx \sum_{t=0}^\infty \sum_{k=t}^\infty \alpha \delta_k^a \nabla \hat{q}(S_t,A_t,\textbf{w}_t) \prod_{i=t+1}^k \gamma_i \lambda_i \rho_i \\
+&= \sum_{k=0}^\infty \sum_{t=0}^k \alpha \delta_k^a \nabla \hat{q}(S_t,A_t,\textbf{w}_t) \prod_{i=t+1}^k \gamma_i \lambda_i \rho_i \\
+&= \sum_{k=0}^\infty \alpha \delta_k^a \sum_{t=0}^k \nabla \hat{q}(S_t,A_t,\textbf{w}_t) \prod_{i=t+1}^k \gamma_i \lambda_i \rho_i
+\end{aligned}
+$$
+
+Now we show that if the entire expression from the second sum on was the trace at time $k$, we could update it from its value at time $k-1$ by:
+
+$$
+\begin{aligned}
+\textbf{z}_k &= \sum_{t=0}^k \nabla \hat{q}(S_t,A_t,\textbf{w}_t) \prod_{i=t+1}^k \gamma_i \lambda_i \rho_i \\
+&= \sum_{t=0}^{k-1} \nabla \hat{q}(S_t,A_t,\textbf{w}_t) \prod_{i=t+1}^k \gamma_i \lambda_i \rho_i + \nabla \hat{q}(S_k,A_k,\textbf{w}_k) \\
+&= \gamma_k \lambda_k \rho_k \sum_{t=0}^{k-1} \nabla \hat{q}(S_t,A_t,\textbf{w}_t) \prod_{i=t+1}^{k-1} \gamma_i \lambda_i \rho_i + \nabla \hat{q}(S_k,A_k,\textbf{w}_k) \\
+&= \gamma_k \lambda_k \rho_k \textbf{z}_{k-1} + \nabla \hat{q}(S_k,A_k,\textbf{w}_k)
+\end{aligned}
+$$
+
+which, changing the index from $k$ to $t$, is the general accumulating trace update for action values:
+
+$$
+\textbf{z}_t = \gamma_t \lambda_t \rho_t \textbf{z}_{t-1} + \nabla \hat{q}(S_t,A_t,\textbf{w}_t)
+$$

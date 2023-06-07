@@ -262,3 +262,43 @@ which, changing the index from $k$ to $t$, is the general accumulating trace upd
 $$
 \textbf{z}_t = \gamma_t \lambda_t \rho_t \textbf{z}_{t-1} + \nabla \hat{q}(S_t,A_t,\textbf{w}_t)
 $$
+
+## Exercise 12.13
+
+What are the dutch-trace and replacing-trace versions of off-policy eligibility traces for state-value and action-value methods?
+
+**My answer:**
+
+I guessed using the on-policy versions of all traces and the off-policy accumulating traces.
+
+Dutch-trace, state-values:
+
+$$
+\textbf{z}_{-1} \overset{.}{=} 0 \\
+\textbf{z}_t = \rho_t \bigg(\gamma_t \lambda_t \textbf{z}_{t-1} + (1 - \alpha \gamma_t \lambda_t \textbf{z}_{t-1}^\top\textbf{x}_t) \textbf{x}_t\bigg)
+$$
+
+Dutch-trace, action-values:
+
+$$
+\textbf{z}_{-1} \overset{.}{=} 0 \\
+\textbf{z}_t = \gamma_t \lambda_t \rho_t \textbf{z}_{t-1} + (1 - \alpha \gamma_t \lambda_t \textbf{z}_{t-1}^\top\textbf{x}_t) \textbf{x}_t
+$$
+
+Replacing-trace, state-values:
+
+$$
+\begin{cases}
+\rho_t & \text{if}\ x_{i,t}=1 \\
+\gamma_t \lambda_t \rho_t z_{i,t-1} & \text{otherwise.}
+\end{cases}
+$$
+
+Replacing-trace, action-values:
+
+$$
+\begin{cases}
+1 & \text{if}\ x_{i,t}=1 \\
+\gamma_t \lambda_t \rho_t z_{i,t-1} & \text{otherwise.}
+\end{cases}
+$$

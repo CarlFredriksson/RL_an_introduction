@@ -302,3 +302,11 @@ $$
 \gamma_t \lambda_t \rho_t z_{i,t-1} & \text{otherwise.}
 \end{cases}
 $$
+
+## Exercise 12.14
+
+How might Double Expected Sarsa be extended to eligibility traces?
+
+**My answer:**
+
+I'm far from confident about this one. I think you have two different weight vectors, let's call them $\textbf{w}^1, \textbf{w}^2$, and two different eligibility traces, one for each weight vector. I think you do the update $\textbf{w}_{t+1} = \textbf{w}_t + \alpha \delta_t \textbf{z}_t$ for both weight vectors on every timestep, but flip a coin for which eligibility trace gets updated each step. $\textbf{w}^1$ is used in the expectation $\={V}_t(S_t)$ when computing $\delta_t$ for the $\textbf{w}^2$ and vice versa. $\epsilon$-greedy action selection would use $Q(S_t,A_t,\textbf{w}^1) + Q(S_t,A_t,\textbf{w}^2)$.

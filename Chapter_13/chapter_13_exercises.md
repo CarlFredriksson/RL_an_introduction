@@ -24,7 +24,7 @@ v_\pi(S) = \pi(right) \big[-1\big] + \pi(left) \big[-1 + v_\pi(A)\big]
 \end{cases}
 $$
 
-Let $p\overset{.}{=}\pi(right)$ and note that $\pi(left) = 1-p$, we can rewrite the equations as
+Let $p=\pi(right)$ and note that $\pi(left) = 1-p$, we can rewrite the equations as
 
 $$
 \begin{cases}
@@ -48,3 +48,26 @@ $$
 v_\pi(S) = -2 \frac{2-p}{p(1-p)}
 $$
 
+Our goal is to compute $\max{\{v_\pi(S) \; | \;0<p<1\}}$ ($p$ is a probability and both $p=0$ and $p=1$ means that the agent will never get to the goal state from the starting state). First we find all critical points, i.e. where the derivative is either zero or doesn't exist.
+
+$$
+\frac{\delta v_\pi(S)}{\delta p} = -2 \frac{p(1-p)(-1) - (2-p)(1-2p)}{p^2(1-p)^2}
+$$
+
+The derivative doesn't exist for $p=0$ or $p=1$, but since neither critical point satisfies $0<p<1$, we can disregard them. That leaves us with the points where the derivative is zero.
+
+$$
+\frac{\delta v_\pi(S)}{\delta p} = 0 \implies p(1-p)(-1) = (2-p)(1-2p)
+$$
+
+This equation can be solved to get
+
+$$
+p = 2 \plusmn \sqrt{2}
+$$
+
+Only $p=2-\sqrt{2} \approx 0.5858$ satisfies $0<p<1$, which means that we have found our optimal probability $p$ of selecting the **right** action. We can use this probability to check that we get the same value for the start state as given in example 13.1
+
+$$
+v_\pi(S) = -2 \frac{2-p}{p(1-p)} = -2 \frac{2-(2-\sqrt{2})}{(2-\sqrt{2})(1-(2-\sqrt{2}))} = -6 - 4 \sqrt{2} \approx 11.66
+$$

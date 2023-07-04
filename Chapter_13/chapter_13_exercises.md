@@ -161,3 +161,62 @@ $$
 using the definitions and elementary calculus.
 
 **My answer:**
+
+We have
+
+$$
+\pi(a|s,\bm{\theta}) = \frac{e^{h(s,a,\bm{\theta})}}{\sum_b e^{h(s,b,\bm{\theta})}}
+$$
+
+with
+
+$$
+h(s,a,\bm{\theta}) = \bm{\theta}^\top \textbf{x}(s,a)
+$$
+
+Let's start by rewriting the gradient
+
+$$
+\begin{aligned}
+\nabla \ln \pi(a|s,\bm{\theta}) &= \nabla \ln \bigg(\frac{e^{\bm{\theta}^\top \textbf{x}(s,a)}}{\sum_b e^{\bm{\theta}^\top \textbf{x}(s,b)}}\bigg) \\
+&= \nabla \bigg(\ln e^{\bm{\theta}^\top \textbf{x}(s,a)} - \ln \sum_b e^{\bm{\theta}^\top \textbf{x}(s,b)}\bigg) \\
+&= \nabla \ln e^{\bm{\theta}^\top \textbf{x}(s,a)} - \nabla \ln \sum_b e^{\bm{\theta}^\top \textbf{x}(s,b)}
+\end{aligned}
+$$
+
+Let
+
+$$
+\frac{\delta}{\delta \bm{\theta}_i}
+$$
+
+denote the $i$:th element of $\nabla$. We have
+
+$$
+\begin{aligned}
+\frac{\delta \ln e^{\bm{\theta}^\top \textbf{x}(s,a)}}{\delta \bm{\theta}_i} &= \frac{\delta \ln e^{\bm{\theta}^\top \textbf{x}(s,a)}}{\delta e^{\bm{\theta}^\top \textbf{x}(s,a)}} \frac{\delta e^{\bm{\theta}^\top \textbf{x}(s,a)}}{\delta \bm{\theta}_i} \\
+&= \frac{1}{e^{\bm{\theta}^\top \textbf{x}(s,a)}} \frac{\delta e^{\bm{\theta}^\top \textbf{x}(s,a)}}{\delta \bm{\theta}^\top \textbf{x}(s,a)} \frac{\delta \bm{\theta}^\top \textbf{x}(s,a)}{\delta \bm{\theta}_i} \\
+&= \frac{1}{e^{\bm{\theta}^\top \textbf{x}(s,a)}} e^{\bm{\theta}^\top \textbf{x}(s,a)} \textbf{x}(s,a)_i \\
+&= \textbf{x}(s,a)_i
+\end{aligned}
+$$
+
+$$
+\begin{aligned}
+\frac{\delta \ln \sum_b e^{\bm{\theta}^\top \textbf{x}(s,b)}}{\delta \bm{\theta}_i} &= \frac{\delta \ln \sum_b e^{\bm{\theta}^\top \textbf{x}(s,b)}}{\delta \sum_b e^{\bm{\theta}^\top \textbf{x}(s,b)}} \frac{\delta \sum_b e^{\bm{\theta}^\top \textbf{x}(s,b)}}{\delta \bm{\theta}_i} \\
+&= \frac{1}{\sum_b e^{\bm{\theta}^\top \textbf{x}(s,b)}} \sum_b \frac{\delta e^{\bm{\theta}^\top \textbf{x}(s,b)}}{\delta \bm{\theta}_i} \\
+&= \frac{1}{\sum_b e^{\bm{\theta}^\top \textbf{x}(s,b)}} \sum_b \frac{\delta e^{\bm{\theta}^\top \textbf{x}(s,b)}}{\delta \bm{\theta}^\top \textbf{x}(s,b)} \frac{\delta \bm{\theta}^\top \textbf{x}(s,b)}{\delta \bm{\theta}_i} \\
+&= \frac{1}{\sum_b e^{\bm{\theta}^\top \textbf{x}(s,b)}} \sum_b e^{\bm{\theta}^\top \textbf{x}(s,b)} \textbf{x}(s,b)_i \\
+&= \sum_b \frac{e^{\bm{\theta}^\top \textbf{x}(s,b)}}{\sum_b e^{\bm{\theta}^\top \textbf{x}(s,b)}} \textbf{x}(s,b)_i \\
+&= \sum_b \pi(b|s,\bm{\theta}) \textbf{x}(s,b)_i
+\end{aligned}
+$$
+
+We can put the pieces together and finish the proof
+
+$$
+\begin{aligned}
+\nabla \ln \pi(a|s,\bm{\theta}) &= \nabla \ln e^{\bm{\theta}^\top \textbf{x}(s,a)} - \nabla \ln \sum_b e^{\bm{\theta}^\top \textbf{x}(s,b)} \\
+&= \textbf{x}(s,a) - \sum_b \pi(b|s,\bm{\theta}) \textbf{x}(s,b)
+\end{aligned}
+$$

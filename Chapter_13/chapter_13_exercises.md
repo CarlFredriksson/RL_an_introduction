@@ -78,7 +78,7 @@ Generalize the box on page 199, the policy gradient theorem (13.5), the proof of
 
 **My answer:**
 
-This exercise was tough for me. I asked this question about it: https://ai.stackexchange.com/questions/40894/gammat-in-reinforce-update-sutton-barto-rl-book-exercise-13-2.
+This exercise was tough for me. I asked this question about it: https://ai.stackexchange.com/questions/40894/gammat-in-reinforce-update-sutton-barto-rl-book-exercise-13-2 (no response at the time of writing this).
 
 **Generalize box on 199**
 
@@ -218,5 +218,90 @@ $$
 \begin{aligned}
 \nabla \ln \pi(a|s,\bm{\theta}) &= \nabla \ln e^{\bm{\theta}^\top \textbf{x}(s,a)} - \nabla \ln \sum_b e^{\bm{\theta}^\top \textbf{x}(s,b)} \\
 &= \textbf{x}(s,a) - \sum_b \pi(b|s,\bm{\theta}) \textbf{x}(s,b)
+\end{aligned}
+$$
+
+## Exercise 13.4
+
+Show that for the Gaussian policy parameterization (Equations 13.19 and 13.20) the eligibility vector has the following two parts:
+
+$$
+\nabla \ln \pi(a|s,\bm{\theta}_\mu) = \frac{\nabla \pi(a|s,\bm{\theta}_\mu)}{\pi(a|s,\bm{\theta})} = \frac{1}{\sigma(s,\bm{\theta})^2} \big(a-\mu(s,\bm{\theta})\big) \textbf{x}_\mu(s)\text{, and}
+$$
+
+$$
+\nabla \ln \pi(a|s,\bm{\theta}_\sigma) = \frac{\nabla \pi(a|s,\bm{\theta}_\sigma)}{\pi(a|s,\bm{\theta})} = \bigg(\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{\sigma(s,\bm{\theta})^2} - 1\bigg) \textbf{x}_\sigma(s)
+$$
+
+**My answer:**
+
+Let
+
+$$
+\frac{\delta}{\delta \bm{\theta}_{\mu,i}}
+$$
+
+denote the $i$:th element of $\nabla_{\bm{\theta}_\mu}$, and 
+
+$$
+\frac{\delta}{\delta \bm{\theta}_{\sigma,i}}
+$$
+
+ the $i$:th element of $\nabla_{\bm{\theta}_\sigma}$.
+ 
+Proof for the first part:
+
+$$
+\begin{aligned}
+\frac{\frac{\delta}{\delta \bm{\theta}_{\mu,i}} \pi(a|s,\bm{\theta}_\mu)}{\pi(a|s,\bm{\theta})} &= \frac{1}{\pi(a|s,\bm{\theta})} \frac{\delta}{\delta \bm{\theta}_{\mu,i}} \bigg[\frac{1}{\sigma(s,\bm{\theta})\sqrt{2}} \exp{\bigg(-\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{2\sigma(s,\bm{\theta})^2}\bigg)}\bigg] \\
+&= \frac{1}{\pi(a|s,\bm{\theta})} \bigg[\frac{\delta}{\delta \bm{\theta}_{\mu,i}} \bigg(\frac{1}{\sigma(s,\bm{\theta})\sqrt{2}}\bigg) \exp{\bigg(-\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{2\sigma(s,\bm{\theta})^2}\bigg)} + \frac{1}{\sigma(s,\bm{\theta})\sqrt{2}} \frac{\delta}{\delta \bm{\theta}_{\mu,i}} \exp{\bigg(-\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{2\sigma(s,\bm{\theta})^2}\bigg)}\bigg] \\
+&= \frac{1}{\pi(a|s,\bm{\theta})} \bigg[\frac{1}{\sigma(s,\bm{\theta})\sqrt{2}} \frac{\delta}{\delta \bm{\theta}_{\mu,i}} \exp{\bigg(-\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{2\sigma(s,\bm{\theta})^2}\bigg)}\bigg] \\
+&= \frac{1}{\pi(a|s,\bm{\theta}) \sigma(s,\bm{\theta})\sqrt{2}} \exp{\bigg(-\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{2\sigma(s,\bm{\theta})^2}\bigg)} \frac{\delta}{\delta \bm{\theta}_{\mu,i}} \bigg(-\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{2\sigma(s,\bm{\theta})^2}\bigg) \\
+&= \frac{1}{\pi(a|s,\bm{\theta}) \sigma(s,\bm{\theta})\sqrt{2}} \exp{\bigg(-\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{2\sigma(s,\bm{\theta})^2}\bigg)} \frac{-1}{2} \bigg(\frac{\sigma(s,\bm{\theta})^2 \frac{\delta}{\delta \bm{\theta}_{\mu,i}} \big(a-\mu(s,\bm{\theta})\big)^2 + \big(a-\mu(s,\bm{\theta})\big)^2 \frac{\delta}{\delta \bm{\theta}_{\mu,i}} \sigma(s,\bm{\theta})^2}{\sigma(s,\bm{\theta})^4}\bigg) \\
+&= \frac{1}{\pi(a|s,\bm{\theta}) \sigma(s,\bm{\theta})\sqrt{2}} \exp{\bigg(-\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{2\sigma(s,\bm{\theta})^2}\bigg)} \frac{-1}{2} \frac{-2\big(a-\mu(s,\bm{\theta})\big) \frac{\delta}{\delta \bm{\theta}_{\mu,i}} \mu(s,\bm{\theta})}{\sigma(s,\bm{\theta})^2} \\
+&= \frac{1}{\pi(a|s,\bm{\theta}) \sigma(s,\bm{\theta})\sqrt{2}} \exp{\bigg(-\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{2\sigma(s,\bm{\theta})^2}\bigg)} \frac{\big(a-\mu(s,\bm{\theta})\big) \textbf{x}_\mu(s)_i}{\sigma(s,\bm{\theta})^2} \\
+&= \frac{1}{\bigg(\frac{1}{\sigma(s,\bm{\theta})\sqrt{2}} \exp{\bigg(-\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{2\sigma(s,\bm{\theta})^2}\bigg)}\bigg) \sigma(s,\bm{\theta})\sqrt{2}} \exp{\bigg(-\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{2\sigma(s,\bm{\theta})^2}\bigg)} \frac{\big(a-\mu(s,\bm{\theta})\big) \textbf{x}_\mu(s)_i}{\sigma(s,\bm{\theta})^2} \\
+&= \frac{1}{\sigma(s,\bm{\theta})^2} \big(a-\mu(s,\bm{\theta})\big) \textbf{x}_\mu(s)_i
+\end{aligned}
+$$
+
+$$
+\implies \nabla \ln \pi(a|s,\bm{\theta}_\mu) = \frac{\nabla \pi(a|s,\bm{\theta}_\mu)}{\pi(a|s,\bm{\theta})} = \frac{1}{\sigma(s,\bm{\theta})^2} \big(a-\mu(s,\bm{\theta})\big) \textbf{x}_\mu(s)
+$$
+
+Proof for the second part:
+
+$$
+\begin{aligned}
+\frac{\frac{\delta}{\delta \bm{\theta}_{\sigma,i}} \pi(a|s,\bm{\theta}_\sigma)}{\pi(a|s,\bm{\theta})} &= \frac{1}{\pi(a|s,\bm{\theta})} \frac{\delta}{\delta \bm{\theta}_{\sigma,i}} \bigg[\frac{1}{\sigma(s,\bm{\theta})\sqrt{2}} \exp{\bigg(-\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{2\sigma(s,\bm{\theta})^2}\bigg)}\bigg] \\
+&= \frac{1}{\pi(a|s,\bm{\theta})} \bigg[\frac{\delta}{\delta \bm{\theta}_{\sigma,i}} \bigg(\frac{1}{\sigma(s,\bm{\theta})\sqrt{2}}\bigg) \exp{\bigg(-\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{2\sigma(s,\bm{\theta})^2}\bigg)} + \frac{1}{\sigma(s,\bm{\theta})\sqrt{2}} \frac{\delta}{\delta \bm{\theta}_{\sigma,i}} \exp{\bigg(-\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{2\sigma(s,\bm{\theta})^2}\bigg)}\bigg] \\
+&= \frac{1}{\pi(a|s,\bm{\theta})} \bigg[\frac{-\exp{\bigg(-\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{2\sigma(s,\bm{\theta})^2}\bigg)}}{\sigma(s,\bm{\theta})^2 \sqrt{2}} \textbf{x}_\sigma(s)_i + \frac{\exp{\bigg(-\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{2\sigma(s,\bm{\theta})^2}\bigg)}}{\sigma(s,\bm{\theta})\sqrt{2}} \frac{\big(a-\mu(s,\bm{\theta})\big)^2}{\sigma(s,\bm{\theta})^2} \textbf{x}_\sigma(s)_i\bigg] \\
+&= \frac{1}{\bigg(\frac{1}{\sigma(s,\bm{\theta})\sqrt{2}} \exp{\bigg(-\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{2\sigma(s,\bm{\theta})^2}\bigg)}\bigg)} \bigg[\frac{-\exp{\bigg(-\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{2\sigma(s,\bm{\theta})^2}\bigg)}}{\sigma(s,\bm{\theta})^2 \sqrt{2}} + \frac{\exp{\bigg(-\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{2\sigma(s,\bm{\theta})^2}\bigg)}}{\sigma(s,\bm{\theta})\sqrt{2}} \frac{\big(a-\mu(s,\bm{\theta})\big)^2}{\sigma(s,\bm{\theta})^2}\bigg] \textbf{x}_\sigma(s)_i \\
+&= \bigg(\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{\sigma(s,\bm{\theta})^2} - 1\bigg) \textbf{x}_\sigma(s)_i 
+\end{aligned}
+$$
+
+$$
+\implies \nabla \ln \pi(a|s,\bm{\theta}_\sigma) = \frac{\nabla \pi(a|s,\bm{\theta}_\sigma)}{\pi(a|s,\bm{\theta})} = \bigg(\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{\sigma(s,\bm{\theta})^2} - 1\bigg) \textbf{x}_\sigma(s)
+$$
+
+Here are the steps for computing the derivates in the second equality:
+
+$$
+\begin{aligned}
+\frac{\delta}{\delta \bm{\theta}_{\sigma,i}} \frac{1}{\sigma(s,\bm{\theta})\sqrt{2}} &= \frac{1}{\sqrt{2}} \frac{-1}{\sigma(s,\bm{\theta})^2} \frac{\delta}{\delta \bm{\theta}_{\sigma,i}} \sigma(s,\bm{\theta}) \\
+&= \frac{-1}{\sigma(s,\bm{\theta})^2 \sqrt{2}} \textbf{x}_\sigma(s)_i
+\end{aligned}
+$$
+
+and
+
+$$
+\begin{aligned}
+\frac{\delta}{\delta \bm{\theta}_{\sigma,i}} \exp{\bigg(-\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{2\sigma(s,\bm{\theta})^2}\bigg)} &= \exp{\bigg(-\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{2\sigma(s,\bm{\theta})^2}\bigg)} \frac{-1}{2} \frac{\delta}{\delta \bm{\theta}_{\sigma,i}} \frac{\big(a-\mu(s,\bm{\theta})\big)^2}{\sigma(s,\bm{\theta})^2} \\
+&= \exp{\bigg(-\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{2\sigma(s,\bm{\theta})^2}\bigg)} \frac{-1}{2} \frac{\sigma(s,\bm{\theta})^2 \frac{\delta}{\delta \bm{\theta}_{\sigma,i}} \big(a-\mu(s,\bm{\theta})\big)^2 - \big(a-\mu(s,\bm{\theta})\big)^2 \frac{\delta}{\delta \bm{\theta}_{\sigma,i}} \sigma(s,\bm{\theta})^2}{\sigma(s,\bm{\theta})^4} \\
+&= \exp{\bigg(-\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{2\sigma(s,\bm{\theta})^2}\bigg)} \frac{\big(a-\mu(s,\bm{\theta})\big)^2 \sigma(s,\bm{\theta}) \frac{\delta}{\delta \bm{\theta}_{\sigma,i}} \sigma(s,\bm{\theta})}{\sigma(s,\bm{\theta})^4} \\
+&= \exp{\bigg(-\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{2\sigma(s,\bm{\theta})^2}\bigg)} \frac{\big(a-\mu(s,\bm{\theta})\big)^2 \sigma(s,\bm{\theta})^2 \textbf{x}_\sigma(s)_i}{\sigma(s,\bm{\theta})^4} \\
+&= \exp{\bigg(-\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{2\sigma(s,\bm{\theta})^2}\bigg)} \frac{\big(a-\mu(s,\bm{\theta})\big)^2}{\sigma(s,\bm{\theta})^2} \textbf{x}_\sigma(s)_i \\
 \end{aligned}
 $$

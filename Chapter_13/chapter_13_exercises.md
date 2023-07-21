@@ -254,7 +254,7 @@ Proof for the first part:
 $$
 \begin{aligned}
 \frac{\frac{\delta}{\delta \bm{\theta}_{\mu,i}} \pi(a|s,\bm{\theta}_\mu)}{\pi(a|s,\bm{\theta})} &= \frac{1}{\pi(a|s,\bm{\theta})} \frac{\delta}{\delta \bm{\theta}_{\mu,i}} \bigg[\frac{1}{\sigma(s,\bm{\theta})\sqrt{2}} \exp{\bigg(-\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{2\sigma(s,\bm{\theta})^2}\bigg)}\bigg] \\
-&= \frac{1}{\pi(a|s,\bm{\theta})} \bigg[\frac{\delta}{\delta \bm{\theta}_{\mu,i}} \bigg(\frac{1}{\sigma(s,\bm{\theta})\sqrt{2}}\bigg) \exp{\bigg(-\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{2\sigma(s,\bm{\theta})^2}\bigg)} + \frac{1}{\sigma(s,\bm{\theta})\sqrt{2}} \frac{\delta}{\delta \bm{\theta}_{\mu,i}} \exp{\bigg(-\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{2\sigma(s,\bm{\theta})^2}\bigg)}\bigg] \\
+&= \frac{1}{\pi(a|s,\bm{\theta})} \bigg[\exp{\bigg(-\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{2\sigma(s,\bm{\theta})^2}\bigg)} \frac{\delta}{\delta \bm{\theta}_{\mu,i}} \frac{1}{\sigma(s,\bm{\theta})\sqrt{2}} + \frac{1}{\sigma(s,\bm{\theta})\sqrt{2}} \frac{\delta}{\delta \bm{\theta}_{\mu,i}} \exp{\bigg(-\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{2\sigma(s,\bm{\theta})^2}\bigg)}\bigg] \\
 &= \frac{1}{\pi(a|s,\bm{\theta})} \bigg[\frac{1}{\sigma(s,\bm{\theta})\sqrt{2}} \frac{\delta}{\delta \bm{\theta}_{\mu,i}} \exp{\bigg(-\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{2\sigma(s,\bm{\theta})^2}\bigg)}\bigg] \\
 &= \frac{1}{\pi(a|s,\bm{\theta}) \sigma(s,\bm{\theta})\sqrt{2}} \exp{\bigg(-\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{2\sigma(s,\bm{\theta})^2}\bigg)} \frac{\delta}{\delta \bm{\theta}_{\mu,i}} \bigg(-\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{2\sigma(s,\bm{\theta})^2}\bigg) \\
 &= \frac{1}{\pi(a|s,\bm{\theta}) \sigma(s,\bm{\theta})\sqrt{2}} \exp{\bigg(-\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{2\sigma(s,\bm{\theta})^2}\bigg)} \frac{-1}{2} \bigg(\frac{\sigma(s,\bm{\theta})^2 \frac{\delta}{\delta \bm{\theta}_{\mu,i}} \big(a-\mu(s,\bm{\theta})\big)^2 + \big(a-\mu(s,\bm{\theta})\big)^2 \frac{\delta}{\delta \bm{\theta}_{\mu,i}} \sigma(s,\bm{\theta})^2}{\sigma(s,\bm{\theta})^4}\bigg) \\
@@ -274,9 +274,9 @@ Proof for the second part:
 $$
 \begin{aligned}
 \frac{\frac{\delta}{\delta \bm{\theta}_{\sigma,i}} \pi(a|s,\bm{\theta}_\sigma)}{\pi(a|s,\bm{\theta})} &= \frac{1}{\pi(a|s,\bm{\theta})} \frac{\delta}{\delta \bm{\theta}_{\sigma,i}} \bigg[\frac{1}{\sigma(s,\bm{\theta})\sqrt{2}} \exp{\bigg(-\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{2\sigma(s,\bm{\theta})^2}\bigg)}\bigg] \\
-&= \frac{1}{\pi(a|s,\bm{\theta})} \bigg[\frac{\delta}{\delta \bm{\theta}_{\sigma,i}} \bigg(\frac{1}{\sigma(s,\bm{\theta})\sqrt{2}}\bigg) \exp{\bigg(-\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{2\sigma(s,\bm{\theta})^2}\bigg)} + \frac{1}{\sigma(s,\bm{\theta})\sqrt{2}} \frac{\delta}{\delta \bm{\theta}_{\sigma,i}} \exp{\bigg(-\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{2\sigma(s,\bm{\theta})^2}\bigg)}\bigg] \\
-&= \frac{1}{\pi(a|s,\bm{\theta})} \bigg[\frac{-\exp{\bigg(-\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{2\sigma(s,\bm{\theta})^2}\bigg)}}{\sigma(s,\bm{\theta})^2 \sqrt{2}} \textbf{x}_\sigma(s)_i + \frac{\exp{\bigg(-\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{2\sigma(s,\bm{\theta})^2}\bigg)}}{\sigma(s,\bm{\theta})\sqrt{2}} \frac{\big(a-\mu(s,\bm{\theta})\big)^2}{\sigma(s,\bm{\theta})^2} \textbf{x}_\sigma(s)_i\bigg] \\
-&= \frac{1}{\bigg(\frac{1}{\sigma(s,\bm{\theta})\sqrt{2}} \exp{\bigg(-\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{2\sigma(s,\bm{\theta})^2}\bigg)}\bigg)} \bigg[\frac{-\exp{\bigg(-\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{2\sigma(s,\bm{\theta})^2}\bigg)}}{\sigma(s,\bm{\theta})^2 \sqrt{2}} + \frac{\exp{\bigg(-\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{2\sigma(s,\bm{\theta})^2}\bigg)}}{\sigma(s,\bm{\theta})\sqrt{2}} \frac{\big(a-\mu(s,\bm{\theta})\big)^2}{\sigma(s,\bm{\theta})^2}\bigg] \textbf{x}_\sigma(s)_i \\
+&= \frac{1}{\pi(a|s,\bm{\theta})} \bigg[\exp{\bigg(-\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{2\sigma(s,\bm{\theta})^2}\bigg)} \frac{\delta}{\delta \bm{\theta}_{\sigma,i}} \frac{1}{\sigma(s,\bm{\theta})\sqrt{2}}  + \frac{1}{\sigma(s,\bm{\theta})\sqrt{2}} \frac{\delta}{\delta \bm{\theta}_{\sigma,i}} \exp{\bigg(-\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{2\sigma(s,\bm{\theta})^2}\bigg)}\bigg] \\
+&= \frac{1}{\pi(a|s,\bm{\theta})} \bigg[\frac{-\exp{\bigg(-\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{2\sigma(s,\bm{\theta})^2}\bigg)}}{\sigma(s,\bm{\theta}) \sqrt{2}} \textbf{x}_\sigma(s)_i + \frac{\exp{\bigg(-\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{2\sigma(s,\bm{\theta})^2}\bigg)}}{\sigma(s,\bm{\theta})\sqrt{2}} \frac{\big(a-\mu(s,\bm{\theta})\big)^2}{\sigma(s,\bm{\theta})^2} \textbf{x}_\sigma(s)_i\bigg] \\
+&= \frac{1}{\bigg(\frac{1}{\sigma(s,\bm{\theta})\sqrt{2}} \exp{\bigg(-\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{2\sigma(s,\bm{\theta})^2}\bigg)}\bigg)} \bigg[\frac{-\exp{\bigg(-\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{2\sigma(s,\bm{\theta})^2}\bigg)}}{\sigma(s,\bm{\theta}) \sqrt{2}} + \frac{\exp{\bigg(-\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{2\sigma(s,\bm{\theta})^2}\bigg)}}{\sigma(s,\bm{\theta})\sqrt{2}} \frac{\big(a-\mu(s,\bm{\theta})\big)^2}{\sigma(s,\bm{\theta})^2}\bigg] \textbf{x}_\sigma(s)_i \\
 &= \bigg(\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{\sigma(s,\bm{\theta})^2} - 1\bigg) \textbf{x}_\sigma(s)_i 
 \end{aligned}
 $$
@@ -285,16 +285,15 @@ $$
 \implies \nabla \ln \pi(a|s,\bm{\theta}_\sigma) = \frac{\nabla \pi(a|s,\bm{\theta}_\sigma)}{\pi(a|s,\bm{\theta})} = \bigg(\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{\sigma(s,\bm{\theta})^2} - 1\bigg) \textbf{x}_\sigma(s)
 $$
 
-Here are the steps for computing the derivates in the second equality:
+I computed the derivatives in the second equality separately:
 
 $$
 \begin{aligned}
 \frac{\delta}{\delta \bm{\theta}_{\sigma,i}} \frac{1}{\sigma(s,\bm{\theta})\sqrt{2}} &= \frac{1}{\sqrt{2}} \frac{-1}{\sigma(s,\bm{\theta})^2} \frac{\delta}{\delta \bm{\theta}_{\sigma,i}} \sigma(s,\bm{\theta}) \\
-&= \frac{-1}{\sigma(s,\bm{\theta})^2 \sqrt{2}} \textbf{x}_\sigma(s)_i
+&= \frac{1}{\sqrt{2}} \frac{-1}{\sigma(s,\bm{\theta})^2} \sigma(s,\bm{\theta}) \textbf{x}_\sigma(s)_i \\
+&= \frac{-1}{\sigma(s,\bm{\theta}) \sqrt{2}} \textbf{x}_\sigma(s)_i
 \end{aligned}
 $$
-
-and
 
 $$
 \begin{aligned}

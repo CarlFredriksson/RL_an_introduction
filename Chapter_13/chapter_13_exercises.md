@@ -304,3 +304,77 @@ $$
 &= \exp{\bigg(-\frac{\big(a-\mu(s,\bm{\theta})\big)^2}{2\sigma(s,\bm{\theta})^2}\bigg)} \frac{\big(a-\mu(s,\bm{\theta})\big)^2}{\sigma(s,\bm{\theta})^2} \textbf{x}_\sigma(s)_i \\
 \end{aligned}
 $$
+
+## Exercise 13.5
+
+A *Bernoulli-logistic unit* is a stochastic neuron-like unit used in some ANNs (Section 9.7). Its input at time $t$ is a feature vector $\textbf{x}(S_t)$; its output, $A_t$, is a random variable having two values, 0 and 1, with $Pr\{A_t=1\} = P_t$ and $Pr\{A_t=0\} = 1-P_t$ (the Bernoulli distribution). Let $h(s,0,\bm{\theta})$ and $h(s,1,\bm{\theta})$ be the preferences in state $s$ for the unit's two actions given policy parameter $\bm{\theta}$. Assume that the difference between the action preferences is given by a weighted sum of the unit's input vector, that is, assume that $h(s,1,\bm{\theta}) - h(s,0,\bm{\theta}) = \bm{\theta}^\top\textbf{x}(s)$, where $\bm{\theta}$ is the unit's weight vector.
+
+* (a) Show that if the exponential soft-max distribution (13.2) is used to convert action preferences to policies, then $P_t = \pi(1|S_t,\bm{\theta}_t) = 1/(1 + \exp(-\bm{\theta}^\top\textbf{x}(S_t)))$ (the logistic function).
+
+* (b) What is the Monte-Carlo REINFORCE update of $\bm{\theta}_t$ to $\bm{\theta}_{t+1}$ upon receipt of return $G_t$?
+
+* (c) Express the eligibility $\nabla \ln \pi(a|s,\bm{\theta})$ for a Bernoulli-logistic unit, in terms of $a$, $\textbf{x}(s)$, and $\pi(a|s,\bm{\theta})$ by calculating the gradient.
+
+Hint for part (c): Define $P = \pi(1|s,\bm{\theta})$ and compute the derivative of the logarithm, for each action, using the chain rule on $P$. Combine the two results into one expression that depends on $a$ and $P$, and then use the chain rule again, this time on $\bm{\theta}^\top\textbf{x}(S_t)$, noting that the derivative of the logistic function $f(x)=1/(1+e^{-x})$ is $f(x)(1-f(x))$.
+
+**My answer:**
+
+(a):
+
+$$
+\begin{aligned}
+\pi(1|S_t,\bm{\theta}_t) &= \frac{e^{h(S_t,1,\bm{\theta})}}{\sum_b e^{h(S_t,b,\bm{\theta})}} \\
+&= \frac{e^{h(S_t,1,\bm{\theta})}}{e^{h(S_t,0,\bm{\theta})} + e^{h(S_t,1,\bm{\theta})}} \\
+&= \frac{e^{\bm{\theta}_t^\top\textbf{x}(S_t) + h(S_t,0,\bm{\theta})}}{e^{h(S_t,0,\bm{\theta})} + e^{\bm{\theta}_t^\top\textbf{x}(S_t) + h(S_t,0,\bm{\theta})}} \\
+&= \frac{e^{\bm{\theta}_t^\top\textbf{x}(S_t)}}{1 + e^{\bm{\theta}_t^\top\textbf{x}(S_t)}} \\
+&= \frac{e^{\bm{\theta}_t^\top\textbf{x}(S_t)} e^{-\bm{\theta}_t^\top\textbf{x}(S_t)}}{e^{-\bm{\theta}_t^\top\textbf{x}(S_t)}(1 + e^{\bm{\theta}_t^\top\textbf{x}(S_t)})} \\
+&= \frac{1}{1 + e^{-\bm{\theta}_t^\top\textbf{x}(S_t)}} \\
+\end{aligned}
+$$
+
+(b):
+
+From the box on page 328:
+
+$$
+\bm{\theta}_{t+1} = \bm{\theta}_t + \alpha \gamma^t G_t \nabla \ln \pi(A_t|S_t,\bm{\theta}_t)
+$$
+
+(c):
+
+Let
+
+$$
+\frac{\delta}{\delta \bm{\theta}_i}
+$$
+
+denote the $i$:th element of $\nabla$. We have
+
+$$
+\begin{aligned}
+\frac{\delta \ln \pi(1|s,\bm{\theta})}{\delta \bm{\theta}_i} &= \frac{\delta \ln P}{\delta \bm{\theta}_i} \\
+&= \frac{\delta \ln P}{\delta P} \frac{\delta P}{\delta \bm{\theta}_i} \\
+&= \frac{1}{P} \frac{\delta P}{\delta \bm{\theta}^\top\textbf{x}(s)} \frac{\delta \bm{\theta}^\top\textbf{x}(s)}{\delta \bm{\theta}_i} \\
+&= \frac{1}{P} P(1-P) \textbf{x}(s)_i \\
+&= (1-P) \textbf{x}(s)_i
+\end{aligned}
+$$
+
+$$
+\begin{aligned}
+\frac{\delta \ln \pi(0|s,\bm{\theta})}{\delta \bm{\theta}_i} &= \frac{\delta \ln (1-P)}{\delta \bm{\theta}_i} \\
+&= \frac{\delta \ln (1-P)}{\delta (1-P)} \frac{\delta (1-P)}{\delta P} \frac{\delta P}{\delta \bm{\theta}_i} \\
+&= \frac{1}{1-P} (-1) P(1-P) \textbf{x}(s)_i \\
+&= -P \textbf{x}(s)_i \\
+\end{aligned}
+$$
+
+Combining these expressions as a function of $a$ (where $a=0$ or $a=1$) yields:
+
+$$
+\frac{\delta \ln \pi(a|s,\bm{\theta})}{\delta \bm{\theta}_i} = \big(a-P\big) \textbf{x}(s)_i = \big(a-\pi(1|s,\bm{\theta})\big) \textbf{x}(s)_i
+$$
+
+$$
+\implies \nabla \ln \pi(a|s,\bm{\theta}) = \big(a-\pi(1|s,\bm{\theta})\big) \textbf{x}(s)
+$$
